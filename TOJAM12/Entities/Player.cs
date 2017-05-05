@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TOJAM12
 {
-	public class Player
+	public class Player : Entity
 	{
 		float speed = 0.1f;
 		Input input;

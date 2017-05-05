@@ -45,6 +45,7 @@
     <Compile Include="scenes\PlayerSelectScene.cs" />
     <Compile Include="scenes\GameScene.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Entity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

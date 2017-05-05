@@ -8,7 +8,7 @@ namespace TOJAM12
 	public class GameScene : Scene
 	{
 
-		List<Player> entities = new List<Player>();
+		List<Entity> entities = new List<Entity>();
 		Texture2D alex;
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -43,8 +43,8 @@ namespace TOJAM12
 
 		public void Update(TojamGame game, GameTime gameTime)
 		{
-			foreach(Player p in entities) {
-				p.Update(game, gameTime);
+			foreach(Entity e in entities) {
+				e.Update(game, gameTime);
 			}
 		}
 
