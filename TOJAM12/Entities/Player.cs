@@ -54,8 +54,8 @@ namespace TOJAM12
                   new Rectangle(
 					  (int)position.X,
                       (int)position.Y,
-					  texture.Width,
-                      texture.Height),
+					  64,
+                      64),
                   Color.White
 			      );
 		}

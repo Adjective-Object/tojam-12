@@ -50,6 +50,8 @@
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="Content\misc\alex.png" />
+    <None Include="Content\fonts\Cutive_Mono.ttf" />
+    <None Include="Content\fonts\Helvetica.ttf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -97,6 +99,7 @@
     <Folder Include="Content\misc\" />
     <Folder Include="scenes\" />
     <Folder Include="Entities\" />
+    <Folder Include="Content\fonts\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

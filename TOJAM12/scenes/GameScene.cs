@@ -22,11 +22,11 @@ namespace TOJAM12
 				string key = "player" + (i + 1);
 				if (!parameters.ContainsKey(key)) continue;
 
-				Input input = (Input) (parameters[key]);
-				if (input == null) continue;
+				PlayerSelection selection = (PlayerSelection) (parameters[key]);
+				if (selection == null) continue;
 
 				Player p = new Player();
-				p.Initialize(input, new Vector2(100 + i * 100, 100), alex);
+				p.Initialize(selection.input, new Vector2(100 + i * 100, 100), PlayerSelectScene.playerCostumes[selection.playerSpriteId].texture);
 				entities.Add(p);
 			}
 		}

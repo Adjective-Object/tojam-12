@@ -6,11 +6,37 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TOJAM12
 {
+	public class PlayerSelection
+	{
+		public Input input;
+		public int playerSpriteId;
+
+		public PlayerSelection(Input i, int playerSpriteId)
+		{
+			this.input = i;
+			this.playerSpriteId = playerSpriteId;
+		}
+
+	};
+
+	public class PlayerCostume
+	{
+		public Texture2D texture;
+		public string name;
+
+		public PlayerCostume(Texture2D texture, string name)
+		{
+			this.texture = texture;
+			this.name = name;
+		}
+	}
+
 	public class PlayerSelectScene : Scene
 	{
-		List<Texture2D> playerSprites = new List<Texture2D>(4);
+		public static List<PlayerCostume> playerCostumes = new List<PlayerCostume>();
 		List<Input> inputs = new List<Input>(5);
-		List<Input> boundInputs = new List<Input>(4);
+		List<PlayerSelection> selectedPlayers = new List<PlayerSelection>(4);
+		SpriteFont renderFont;
 
 		public void Initialize(TojamGame game)
 		{
@@ -28,13 +54,17 @@ namespace TOJAM12
 
 			game.spriteBatch.Begin(SpriteSortMode.Immediate);
 			// Draw each current player
-			for (int i = 0; i < boundInputs.Count; i++)
+			for (int i = 0; i < selectedPlayers.Count; i++)
 			{
+				PlayerCostume costume = playerCostumes[selectedPlayers[i].playerSpriteId];
+
 				game.spriteBatch.Draw(
-					playerSprites[i],
-					new Rectangle(i * 50, 0, playerSprites[i].Width, playerSprites[i].Height),
+					costume.texture,
+					new Rectangle(i * 50, 0, 64, 64),
 					Color.White
 				);
+
+				game.spriteBatch.DrawString(renderFont, costume.name, new Vector2(i*50, 80), Color.White);
 			}
 			game.spriteBatch.End();
 		}
@@ -42,10 +72,20 @@ namespace TOJAM12
 		public void LoadContent(TojamGame game)
 		{
 			Texture2D alex = game.Content.Load<Texture2D>("misc/alex");
-			playerSprites.Add(alex);
-			playerSprites.Add(alex);
-			playerSprites.Add(alex);
-			playerSprites.Add(alex);
+			PlayerCostume alexCostume = new PlayerCostume(
+				alex,
+				"alexander biggs"
+			);
+			playerCostumes.Add(alexCostume);
+
+			Texture2D baby = game.Content.Load<Texture2D>("misc/baby");
+			PlayerCostume babyCostume = new PlayerCostume(
+				baby,
+				"a dumb baby"
+			);
+			playerCostumes.Add(babyCostume);
+
+			renderFont = game.Content.Load<SpriteFont>("fonts/Cutive_Mono");
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -56,17 +96,17 @@ namespace TOJAM12
 		public void Update(TojamGame game, GameTime gameTime)
 		{
 			// check for a player that has pressed start or something that hasn't
-			for (int i = boundInputs.Count - 1; i >= 0; i--)
+			for (int i = selectedPlayers.Count - 1; i >= 0; i--)
 			{
-				if (boundInputs[i].KeyPressed(Key.ESCAPE)) 
+				if (selectedPlayers[i].input.KeyPressed(Key.ESCAPE)) 
 				{
-					boundInputs.RemoveAt(i);
+					selectedPlayers.RemoveAt(i);
 				}
 
-				if (boundInputs[i].KeyPressed(Key.ENTER))
+				else if (selectedPlayers[i].input.KeyPressed(Key.ENTER))
 				{
 					// transition into the actual game if 2+ players have joined
-					if (boundInputs.Count >= 2)
+					if (selectedPlayers.Count >= 2)
 					{
 						StartGame(game);
 					}
@@ -77,11 +117,28 @@ namespace TOJAM12
 			// check for a player pressing start and put them in the boundInputs page
 			foreach (Input i in inputs)
 			{
-				if (i.KeyPressed(Key.ENTER) && !(boundInputs.Contains(i)))
+				if (i.KeyPressed(Key.ENTER) && selectedPlayers.TrueForAll(p => p.input != i))
 				{
-					boundInputs.Add(i);
+					PlayerSelection selection = new PlayerSelection(i, 0);
+					selectedPlayers.Add(selection);
 				}
 			}
+
+			// check for a player pressing start and put them in the boundInputs page
+			foreach (PlayerSelection selection in selectedPlayers)
+			{
+				if (selection.input.KeyPressed(Key.DOWN))
+				{
+					selection.playerSpriteId = (selection.playerSpriteId + 1) % playerCostumes.Count;
+				}
+
+				if (selection.input.KeyPressed(Key.UP))
+				{
+					selection.playerSpriteId = (selection.playerSpriteId - 1 + playerCostumes.Count) % playerCostumes.Count;
+				}
+
+			}
+
 		}
 
 		private void StartGame(TojamGame game)
@@ -90,7 +147,7 @@ namespace TOJAM12
 
 			for (int i = 0; i < 4; i++)
 			{
-				parameters["player" + (i+1)] = boundInputs.Count > i ? boundInputs[i] : null;
+				parameters["player" + (i+1)] = selectedPlayers.Count > i ? selectedPlayers[i] : null;
 			}
 
 			game.SwitchScene(TojamGame.GameScenes.Game, parameters);
