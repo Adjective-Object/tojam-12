@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TOJAM12
 {
-	public class PlayerSelect : Scene
+	public class PlayerSelectScene : Scene
 	{
 		List<Texture2D> playerSprites = new List<Texture2D>(4);
 		List<Input> inputs = new List<Input>(5);

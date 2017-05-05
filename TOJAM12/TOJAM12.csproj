@@ -42,8 +42,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="lib\Input.cs" />
     <Compile Include="scenes\Scene.cs" />
-    <Compile Include="scenes\PlayerSelectState.cs" />
-    <Compile Include="scenes\GameState.cs" />
+    <Compile Include="scenes\PlayerSelectScene.cs" />
+    <Compile Include="scenes\GameScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
