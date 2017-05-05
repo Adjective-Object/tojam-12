@@ -47,6 +47,9 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="lib\PlayerCostume.cs" />
+    <Compile Include="Entities\PlayerSelector.cs" />
+    <Compile Include="Entities\Vector2D.cs" />
+    <Compile Include="lib\Easing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

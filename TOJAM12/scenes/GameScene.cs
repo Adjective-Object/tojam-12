@@ -49,7 +49,7 @@ namespace TOJAM12
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
 			game.graphics.GraphicsDevice.Clear(Color.Gainsboro);
-			game.spriteBatch.Begin(SpriteSortMode.Immediate);
+			game.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
 			foreach (Player p in entities)
 			{

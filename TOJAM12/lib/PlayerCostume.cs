@@ -32,6 +32,14 @@ namespace TOJAM12
 				"a dumb baby"
 			);
 			playerCostumes.Add(babyCostume);
+
+			Texture2D cheetoes = game.Content.Load<Texture2D>("misc/cheeotes");
+			PlayerCostume cheetoesCostume = new PlayerCostume(
+				cheetoes,
+				"Flamin' Hot Cheetoes (tm)"
+			);
+			playerCostumes.Add(cheetoesCostume);
+
 		}
 	}
 

@@ -85,15 +85,13 @@ namespace TOJAM12
 		{
 			// re-evaluate the current frame dictionary
 			KeyboardState state = Keyboard.GetState();
-			pressedThisFrame[Key.ENTER] = state.IsKeyDown(Keys.Enter);
-			pressedThisFrame[Key.ESCAPE] = state.IsKeyDown(Keys.Delete);
+			pressedThisFrame[Key.START] = state.IsKeyDown(Keys.Enter);
+			pressedThisFrame[Key.CONFIRM] = state.IsKeyDown(Keys.Z);
+			pressedThisFrame[Key.CANCEL] = state.IsKeyDown(Keys.X);
 			pressedThisFrame[Key.UP] = state.IsKeyDown(Keys.Up) || state.IsKeyDown(Keys.W);
 			pressedThisFrame[Key.DOWN] = state.IsKeyDown(Keys.Down) || state.IsKeyDown(Keys.S);
 			pressedThisFrame[Key.LEFT] = state.IsKeyDown(Keys.Left) || state.IsKeyDown(Keys.A);
 			pressedThisFrame[Key.RIGHT] = state.IsKeyDown(Keys.Right) || state.IsKeyDown(Keys.D);
-			pressedThisFrame[Key.TAB] = state.IsKeyDown(Keys.Tab);
-			pressedThisFrame[Key.SHIFT] = state.IsKeyDown(Keys.LeftShift) || state.IsKeyDown(Keys.RightShift);
-			pressedThisFrame[Key.I] = state.IsKeyDown(Keys.I);
 			pressedThisFrame[Key.DEBUG] = state.IsKeyDown(Keys.Z);
 
 		}
@@ -103,15 +101,13 @@ namespace TOJAM12
 			GamePadState gps = GamePad.GetState((PlayerIndex)padIndex);
 
 			// re-evaluate the current frame dictionary
-			pressedThisFrame[Key.ENTER] = gps.Buttons.A == ButtonState.Pressed;
-			pressedThisFrame[Key.ESCAPE] = gps.Buttons.B == ButtonState.Pressed;
+			pressedThisFrame[Key.START] = gps.Buttons.Start == ButtonState.Pressed;
+			pressedThisFrame[Key.CONFIRM] = gps.Buttons.A == ButtonState.Pressed;
+			pressedThisFrame[Key.CANCEL] = gps.Buttons.B == ButtonState.Pressed;
 			pressedThisFrame[Key.UP] = gps.ThumbSticks.Left.Y > deadZone;
 			pressedThisFrame[Key.DOWN] = gps.ThumbSticks.Left.Y < -deadZone;
 			pressedThisFrame[Key.LEFT] = gps.ThumbSticks.Left.X < - deadZone;
 			pressedThisFrame[Key.RIGHT] = gps.ThumbSticks.Left.X > deadZone;
-			pressedThisFrame[Key.TAB] = gps.Buttons.RightShoulder == ButtonState.Pressed;
-			pressedThisFrame[Key.SHIFT] = gps.Buttons.LeftShoulder == ButtonState.Pressed;
-			pressedThisFrame[Key.I] = gps.Buttons.X == ButtonState.Pressed;
 			pressedThisFrame[Key.DEBUG] = state.IsKeyDown(Keys.Z);
 		}
 
@@ -137,6 +133,6 @@ namespace TOJAM12
 
 	public enum Key
 	{
-		ENTER, ESCAPE, UP, DOWN, LEFT, RIGHT, TAB, SHIFT, I, DEBUG
+		UP, DOWN, LEFT, RIGHT, START, CONFIRM, CANCEL, DEBUG
 	}
 }

@@ -52,6 +52,7 @@ namespace TOJAM12
 		/// and initialize them as well.
 		/// </summary>
 		protected override void Initialize()
+
 		{
 			base.Initialize();
 			foreach (Scene s in scenes)
