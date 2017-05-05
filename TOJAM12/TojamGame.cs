@@ -17,7 +17,8 @@ namespace TOJAM12
 
 		// declaration of scenes in the game
 		Scene[] scenes = {
-			new PlayerSelect(),
+			new PlayerSelectScene(),
+			new GameScene(),
 		};
 		public enum GameScenes
 		{
@@ -36,7 +37,7 @@ namespace TOJAM12
 			activeScene = scenes[(int) activeSceneType];
 		}
 
-		public void switchScene(GameScenes newSceneType, Dictionary<string, object> sceneParameters = null)
+		public void SwitchScene(GameScenes newSceneType, Dictionary<string, object> sceneParameters = null)
 		{
 			this.activeSceneType = newSceneType;
 			Scene nextScene = scenes[(int)activeSceneType];
@@ -72,6 +73,13 @@ namespace TOJAM12
 			{
 				s.LoadContent(this);
 			}
+
+			// for debug purposes, jump immediately into a 2p game
+			//Dictionary<string, object> parameters = new Dictionary<string, object>();
+			//parameters["player1"] = new Input(Input.Type.Keyboard);
+			//parameters["player2"] = new Input(Input.Type.JoypadOne);
+			//this.SwitchScene(GameScenes.Game, parameters);
+
 		}
 
 		/// <summary>
@@ -87,6 +95,12 @@ namespace TOJAM12
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 #endif
+
+			foreach (Input i in Input.getAllInstances())
+			{
+				i.Update();
+			}
+
 
 			activeScene.Update(this, gameTime);
 

@@ -55,21 +55,6 @@ namespace TOJAM12
 
 		public void Update(TojamGame game, GameTime gameTime)
 		{
-			foreach (Input i in inputs)
-			{
-				i.Update();
-			}
-
-			// check for a player pressing start and put them in the boundInputs page
-			foreach (Input i in inputs)
-			{
-				if (i.KeyPressed(Key.ENTER) && !(boundInputs.Contains(i)))
-				{
-					Debug.WriteLine("Player Joined");
-					boundInputs.Add(i);
-				}
-			}
-
 			// check for a player that has pressed start or something that hasn't
 			for (int i = boundInputs.Count - 1; i >= 0; i--)
 			{
@@ -83,11 +68,32 @@ namespace TOJAM12
 					// transition into the actual game if 2+ players have joined
 					if (boundInputs.Count >= 2)
 					{
-						game.SwitchScene(TojamGame.GameScenes.Game);
+						StartGame(game);
 					}
 				}
 			}
 
+		
+			// check for a player pressing start and put them in the boundInputs page
+			foreach (Input i in inputs)
+			{
+				if (i.KeyPressed(Key.ENTER) && !(boundInputs.Contains(i)))
+				{
+					boundInputs.Add(i);
+				}
+			}
+		}
+
+		private void StartGame(TojamGame game)
+		{
+			Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+			for (int i = 0; i < 4; i++)
+			{
+				parameters["player" + (i+1)] = boundInputs.Count > i ? boundInputs[i] : null;
+			}
+
+			game.SwitchScene(TojamGame.GameScenes.Game, parameters);
 		}
 	}
 }

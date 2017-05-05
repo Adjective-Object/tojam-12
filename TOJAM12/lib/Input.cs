@@ -12,6 +12,12 @@ namespace TOJAM12
 		protected Dictionary<Key, Boolean> pressedThisFrame;
 		protected Dictionary<Key, Boolean> pressedLastFrame;
 
+		static protected List<Input> allInstances = new List<Input>();
+		public static List<Input> getAllInstances()
+		{
+			return allInstances;
+		}
+
 		public Input() {
 			this.Initialize();
 		}
@@ -51,6 +57,8 @@ namespace TOJAM12
 				pressedThisFrame.Add(k, false);
 				pressedLastFrame.Add(k, false);
 			}
+
+			allInstances.Add(this);
 		}
 
 		public const float deadZone = 0.1f;
@@ -99,10 +107,10 @@ namespace TOJAM12
 			// re-evaluate the current frame dictionary
 			pressedThisFrame[Key.ENTER] = gps.Buttons.A == ButtonState.Pressed;
 			pressedThisFrame[Key.ESCAPE] = gps.Buttons.B == ButtonState.Pressed;
-			pressedThisFrame[Key.UP] = gps.ThumbSticks.Left.Y < -deadZone;
-			pressedThisFrame[Key.DOWN] = gps.ThumbSticks.Left.Y > deadZone;
-			pressedThisFrame[Key.LEFT] = gps.ThumbSticks.Left.X > deadZone;
-			pressedThisFrame[Key.RIGHT] = gps.ThumbSticks.Left.X < -deadZone;
+			pressedThisFrame[Key.UP] = gps.ThumbSticks.Left.Y > deadZone;
+			pressedThisFrame[Key.DOWN] = gps.ThumbSticks.Left.Y < -deadZone;
+			pressedThisFrame[Key.LEFT] = gps.ThumbSticks.Left.X < - deadZone;
+			pressedThisFrame[Key.RIGHT] = gps.ThumbSticks.Left.X > deadZone;
 			pressedThisFrame[Key.TAB] = gps.Buttons.RightShoulder == ButtonState.Pressed;
 			pressedThisFrame[Key.SHIFT] = gps.Buttons.LeftShoulder == ButtonState.Pressed;
 			pressedThisFrame[Key.I] = gps.Buttons.X == ButtonState.Pressed;

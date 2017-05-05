@@ -44,6 +44,7 @@
     <Compile Include="scenes\Scene.cs" />
     <Compile Include="scenes\PlayerSelectScene.cs" />
     <Compile Include="scenes\GameScene.cs" />
+    <Compile Include="Entities\Player.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
@@ -94,6 +95,7 @@
     <Folder Include="lib\" />
     <Folder Include="Content\misc\" />
     <Folder Include="scenes\" />
+    <Folder Include="Entities\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
