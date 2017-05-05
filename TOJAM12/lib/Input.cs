@@ -102,8 +102,6 @@ namespace TOJAM12
 			KeyboardState state = Keyboard.GetState();
 			GamePadState gps = GamePad.GetState((PlayerIndex)padIndex);
 
-			Debug.WriteLine(gps);
-
 			// re-evaluate the current frame dictionary
 			pressedThisFrame[Key.ENTER] = gps.Buttons.A == ButtonState.Pressed;
 			pressedThisFrame[Key.ESCAPE] = gps.Buttons.B == ButtonState.Pressed;

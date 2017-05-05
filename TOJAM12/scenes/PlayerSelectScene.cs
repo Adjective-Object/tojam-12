@@ -19,21 +19,8 @@ namespace TOJAM12
 
 	};
 
-	public class PlayerCostume
-	{
-		public Texture2D texture;
-		public string name;
-
-		public PlayerCostume(Texture2D texture, string name)
-		{
-			this.texture = texture;
-			this.name = name;
-		}
-	}
-
 	public class PlayerSelectScene : Scene
 	{
-		public static List<PlayerCostume> playerCostumes = new List<PlayerCostume>();
 		List<Input> inputs = new List<Input>(5);
 		List<PlayerSelection> selectedPlayers = new List<PlayerSelection>(4);
 		SpriteFont renderFont;
@@ -56,7 +43,7 @@ namespace TOJAM12
 			// Draw each current player
 			for (int i = 0; i < selectedPlayers.Count; i++)
 			{
-				PlayerCostume costume = playerCostumes[selectedPlayers[i].playerSpriteId];
+				PlayerCostume costume = PlayerCostume.playerCostumes[selectedPlayers[i].playerSpriteId];
 
 				game.spriteBatch.Draw(
 					costume.texture,
@@ -71,19 +58,6 @@ namespace TOJAM12
 
 		public void LoadContent(TojamGame game)
 		{
-			Texture2D alex = game.Content.Load<Texture2D>("misc/alex");
-			PlayerCostume alexCostume = new PlayerCostume(
-				alex,
-				"alexander biggs"
-			);
-			playerCostumes.Add(alexCostume);
-
-			Texture2D baby = game.Content.Load<Texture2D>("misc/baby");
-			PlayerCostume babyCostume = new PlayerCostume(
-				baby,
-				"a dumb baby"
-			);
-			playerCostumes.Add(babyCostume);
 
 			renderFont = game.Content.Load<SpriteFont>("fonts/Cutive_Mono");
 		}
@@ -129,12 +103,12 @@ namespace TOJAM12
 			{
 				if (selection.input.KeyPressed(Key.DOWN))
 				{
-					selection.playerSpriteId = (selection.playerSpriteId + 1) % playerCostumes.Count;
+					selection.playerSpriteId = (selection.playerSpriteId + 1) % PlayerCostume.playerCostumes.Count;
 				}
 
 				if (selection.input.KeyPressed(Key.UP))
 				{
-					selection.playerSpriteId = (selection.playerSpriteId - 1 + playerCostumes.Count) % playerCostumes.Count;
+					selection.playerSpriteId = (selection.playerSpriteId - 1 + PlayerCostume.playerCostumes.Count) % PlayerCostume.playerCostumes.Count;
 				}
 
 			}

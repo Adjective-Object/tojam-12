@@ -9,7 +9,6 @@ namespace TOJAM12
 	{
 
 		List<Entity> entities = new List<Entity>();
-		Texture2D alex;
 
 		public void onTransition(Dictionary<string, object> parameters)
 		{
@@ -26,7 +25,7 @@ namespace TOJAM12
 				if (selection == null) continue;
 
 				Player p = new Player();
-				p.Initialize(selection.input, new Vector2(100 + i * 100, 100), PlayerSelectScene.playerCostumes[selection.playerSpriteId].texture);
+				p.Initialize(selection.input, new Vector2(100 + i * 100, 100), PlayerCostume.playerCostumes[selection.playerSpriteId].texture);
 				entities.Add(p);
 			}
 		}
@@ -38,7 +37,6 @@ namespace TOJAM12
 
 		public void LoadContent(TojamGame game)
 		{
-			alex = game.Content.Load<Texture2D>("misc/alex");
 		}
 
 		public void Update(TojamGame game, GameTime gameTime)
