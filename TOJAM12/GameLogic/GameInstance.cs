@@ -15,11 +15,13 @@ namespace TOJAM12
 
         Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
+        bool carIsDriving;
 
         public GameInstance(TojamGame game)
         {
 			this.game = game;
             myPlayerId = 0;
+            carIsDriving = false;
         }
 
 		public void Update()
@@ -176,6 +178,12 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, command.PlayerId));
                     }
                     break;
+                case "DRIVE":
+                    ParseDriveCommand(command);
+                    break;
+                case "STOP":
+                    ParseStopCommand(command);
+                    break;
                 case "ENTER":
                     ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
@@ -242,8 +250,49 @@ namespace TOJAM12
 			}
 		}
 
+        private void ParseStopCommand(Command command)
+        {
+            if (players[command.PlayerId].carLocation == Player.CarLocation.DriversSeat)
+            {
+                if (!carIsDriving)
+                    network.SendCommand(new Command(Command.CommandType.Text, "The car is already stopped...", command.PlayerId));
+                else
+                {
+                    carIsDriving = false;
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
+                }
+            }
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're not in the driver's seat", command.PlayerId));
+            }
+        }
+        private void ParseDriveCommand(Command command)
+        {
+            if (players[command.PlayerId].carLocation == Player.CarLocation.DriversSeat)
+            {
+                if (carIsDriving)
+                    network.SendCommand(new Command(Command.CommandType.Text, "The car is already moving!!!", command.PlayerId));
+                else
+                {
+                    carIsDriving = true;
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and drives away.", Network.SEND_ALL));
+                }
+            }
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're not in the driver's seat", command.PlayerId));
+            }
+        }
+
         private void ParseExitCommand(String data, int PlayerId, String[] tokens)
         {
+            if (carIsDriving)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "The car is moving... you might die...", PlayerId));
+                return;
+            }
+
             if (players[PlayerId].carLocation != Player.CarLocation.NotInCar)
             {
                 SetPlayerCarLocation(PlayerId, Player.CarLocation.NotInCar);
@@ -256,6 +305,12 @@ namespace TOJAM12
 
         private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
         {
+            if (carIsDriving)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "The car is moving...", PlayerId));
+                return;
+            }
+
             if (tokens.Length > 1)
             {
                 string destination = data.Substring(6).ToUpper();
