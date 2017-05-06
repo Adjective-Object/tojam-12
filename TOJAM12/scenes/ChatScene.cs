@@ -59,7 +59,8 @@ namespace TOJAM12
 			// initialize displayable scene
 			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing * 2- 5));
 			carPicture.Initialize(game);
-			carPicture.SetBackground(CarPicture.Background.Driving);
+			carPicture.SetSky(CarPicture.Sky.Day);
+			carPicture.SetBackground(CarPicture.Background.Walmart);
 
 			playerStatusIndicator = new PlayerStatusIndicator(game.GameFont, new Vector2(0, screenBounds.Height - game.GameFont.LineSpacing * 2));
 		}

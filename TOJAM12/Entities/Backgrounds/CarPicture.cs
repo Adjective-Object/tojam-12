@@ -10,6 +10,17 @@ namespace TOJAM12
 
 		// static global behavior
 
+		public enum Sky
+		{
+			None,
+			Day,
+			Night,
+			Evening,
+			Morning,
+			Storm
+		};
+		static Dictionary<Sky, PicturePart> knownSkies = new Dictionary<Sky, PicturePart>();
+
 		public enum Background
 		{
 			None,
@@ -36,6 +47,13 @@ namespace TOJAM12
 		// load some shit fam
 		public static void LoadContent(TojamGame game)
 		{
+			knownSkies[Sky.None] = null;
+			knownSkies[Sky.Day] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyClear"));
+			knownSkies[Sky.Night] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyNight"));
+			knownSkies[Sky.Morning] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyMorning"));
+			knownSkies[Sky.Evening] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyEvening"));
+			knownSkies[Sky.Storm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyStorm"));
+
 			knownBackgrounds[Background.None] = null;
             knownBackgrounds[Background.Driving] = new CompoundPicturePart(
 				new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic")),
@@ -43,7 +61,7 @@ namespace TOJAM12
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-				}, 400)
+				}, 300)
             );
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
             knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
@@ -59,6 +77,8 @@ namespace TOJAM12
 		// local behavior
 
 		Rectangle bounds;
+
+		PicturePart sky;
 
 		// setting / scene
 		PicturePart background;
@@ -96,12 +116,22 @@ namespace TOJAM12
 			this.foreground = knownForegrounds[f];
 		}
 
+		public void SetSky(Sky s)
+		{
+			this.sky = knownSkies[s];
+		}
+
 		public void UpdateRenderTarget(TojamGame game, GameTime gameTime)
 		{
 
 			game.graphics.GraphicsDevice.SetRenderTarget(renderTarget);
 			game.graphics.GraphicsDevice.Clear(Color.White);
 			game.spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp);
+
+			if (sky != null)
+			{
+				sky.Draw(this.bounds, game, gameTime);
+			}
 
 			if (background != null)
 			{
