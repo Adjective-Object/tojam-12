@@ -145,7 +145,7 @@ namespace TOJAM12
                                     {
                                         connections[i] = message.SenderConnection;
                                         Console.WriteLine("Added connection as player id " + (i+1));
-										SendCommand(new Command(Command.CommandType.PlayerJoined, (i+1).ToString(), 0));
+										SendCommand(new Command(Command.CommandType.PlayerJoined, (i+1).ToString(), 0, i + 1));
                                         SendCommand(new Command(Command.CommandType.PlayerJoined, (i + 1).ToString(), (i+1)));
                                         addedConnection = true;
                                         break;
