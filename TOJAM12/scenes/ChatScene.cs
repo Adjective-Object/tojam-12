@@ -57,7 +57,8 @@ namespace TOJAM12
 			// initialize displayable scene
 			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing - 5));
 			carPicture.Initialize(game);
-			carPicture.SetBackground(CarPicture.Background.Road_Day);
+			carPicture.SetBackground(CarPicture.Background.Barrie_SpiritCatcher);
+			carPicture.SetMidground(CarPicture.Midground.Store_Car);
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
