@@ -67,9 +67,32 @@ namespace TOJAM12
         }
 
         private void SendPlayerInfoCommand(int player, int toPlayer)
+
         {
-            network.SendCommand(new Command(Command.CommandType.PlayerInfo, ((int)players[player].carLocation).ToString(), toPlayer));
+			List<String> values = new List<String>();
+			// location, health, hunger, thirst, tired
+			Player p = players[player];
+
+			values.Add(((int)p.carLocation).ToString());
+			values.Add(p.health.ToString());
+			values.Add(p.hunger.ToString());
+   			values.Add(p.thirst.ToString());
+			values.Add(p.tired.ToString());
+
+			network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
         }
+
+		private void ParsePlayerInfoCommand(Player player, String data)
+		{
+			String[] values = data.Split(',');
+			player.carLocation = (Player.CarLocation) (Int32.Parse(values[0]));
+			player.health = Int32.Parse(values[1]);
+			player.hunger = Int32.Parse(values[2]);
+			player.thirst = Int32.Parse(values[3]);
+			player.tired = Int32.Parse(values[4]);
+
+			Debug.Write("Player got updated info " + player);
+		}
 
 		private void ParseClientCommand(string command)
 		{
@@ -147,8 +170,7 @@ namespace TOJAM12
 			}
             else if (command.Type == Command.CommandType.PlayerInfo)
             {
-                players[myPlayerId].carLocation = (Player.CarLocation)Int32.Parse(command.Data);
-                Console.WriteLine("My location is now " + Player.GetCarLocationName(players[myPlayerId].carLocation));
+				ParsePlayerInfoCommand(players[myPlayerId], command.Data);
             }
 
         }
@@ -177,7 +199,7 @@ namespace TOJAM12
                     {
                         string oldname = players[command.PlayerId].name;
                         players[command.PlayerId].name = tokens[1];
-                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, command.PlayerId));
+                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL));
                     }
                     break;
                 case "DRIVE":
@@ -190,9 +212,7 @@ namespace TOJAM12
                     ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
                 case "LEAVE":
-                    ParseExitCommand(command.Data, command.PlayerId, tokens);
-                    break;
-                case "EXIT":
+				case "EXIT":
                     ParseExitCommand(command.Data, command.PlayerId, tokens);
                     break;
                 case "GIVEME!":
@@ -209,7 +229,7 @@ namespace TOJAM12
 					}
 
 					players[command.PlayerId].inventory.Add(foundItem);
-					network.SendCommand(new Command(Command.CommandType.Text, "magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
+					network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
 					break;
 
 				case "HELP":
@@ -237,6 +257,10 @@ namespace TOJAM12
 					// otherwise, don't
 					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
 					break;
+			}
+			foreach (int playerId in players.Keys)
+			{
+				SendPlayerInfoCommand(playerId, playerId);
 			}
 		}
 
@@ -278,7 +302,18 @@ namespace TOJAM12
                 else
                 {
                     carIsDriving = true;
-                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and drives away.", Network.SEND_ALL));
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
+					List<String> abandonedPlayers = new List<String>();
+					foreach (Player p in this.players.Values)
+					{
+						if (p.carLocation == Player.CarLocation.NotInCar)
+							abandonedPlayers.Add(p.name);
+					}
+					if (abandonedPlayers.Count != 0)
+					{
+						// TODO gameovers? ingame locations?
+						network.SendCommand(new Command(Command.CommandType.Text, String.Join(", ", abandonedPlayers) + " were left behind", Network.SEND_ALL));
+					}
                 }
             }
             else
@@ -372,5 +407,10 @@ namespace TOJAM12
             if (playerId != 0)
                 SendPlayerInfoCommand(playerId, playerId);
         }
-    }
+
+		public Player GetMyPlayer() {
+			return this.players[myPlayerId];
+		}
+
+	}
 }

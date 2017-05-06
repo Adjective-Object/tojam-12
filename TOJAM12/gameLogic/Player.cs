@@ -50,6 +50,7 @@ namespace TOJAM12
 		public int hunger = 100;
 		public int tired = 100;
 		public int thirst = 100;
+		public int health = 100;
 
 		public Player(string name)
 		{
@@ -109,6 +110,21 @@ namespace TOJAM12
 			}
 		}
 
+
+		internal void HealHealth(int health)
+		{
+			this.health += health;
+			if (this.health > 100)
+			{
+				this.health = 100;
+			}
+
+			if (this.health < 0)
+			{
+				this.health = 0;
+			}
+		}
+
 		public bool ItemVerb(GameInstance g, string[] command)
 		{
 			Item.ItemParams args = new Item.ItemParams();
@@ -123,6 +139,11 @@ namespace TOJAM12
 				if (item.Verb(args)) return true;
 			}
 			return false;
+		}
+
+		public override string ToString()
+		{
+			return string.Format("[Player hunger=" + hunger + " tired=" + tired + " thirst=" + thirst + " health=" + health + "]");
 		}
 	}
 }
