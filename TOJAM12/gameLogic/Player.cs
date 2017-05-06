@@ -26,5 +26,34 @@ namespace TOJAM12
 
 			return null;
 		}
+
+		public void HealHunger(int hunger)
+		{
+			this.hunger += hunger;
+			if (this.hunger > 100)
+			{
+				this.hunger = 100;
+			}
+
+			if (this.hunger < 0)
+			{
+				this.hunger = 0;
+			}
+		}
+
+		public void HealTired(int tired)
+		{
+			this.tired += tired;
+			if (this.tired > 100)
+			{
+				this.tired = 100;
+			}
+
+			if (this.tired < 0)
+			{
+				this.tired = 0;
+			}
+		}
+
 	}
 }
