@@ -157,7 +157,7 @@ namespace TOJAM12
 						players[command.PlayerId].name = tokens[1];
 					break;
 				default:
-					network.SendCommand(new Command(Command.CommandType.Text, "Unknown Command", command.PlayerId));
+					network.SendCommand(new Command(Command.CommandType.Text, "Unknown Command '" + command.Data + "'", command.PlayerId));
 					break;
 			}
 		}
