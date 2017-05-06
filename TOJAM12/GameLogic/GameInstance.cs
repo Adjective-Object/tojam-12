@@ -65,9 +65,32 @@ namespace TOJAM12
         }
 
         private void SendPlayerInfoCommand(int player, int toPlayer)
+
         {
-            network.SendCommand(new Command(Command.CommandType.PlayerInfo, ((int)players[player].carLocation).ToString(), toPlayer));
+			List<String> values = new List<String>();
+			// location, health, hunger, thirst, tired
+			Player p = players[player];
+
+			values.Add(((int)p.carLocation).ToString());
+			values.Add(p.health.ToString());
+			values.Add(p.hunger.ToString());
+   			values.Add(p.thirst.ToString());
+			values.Add(p.tired.ToString());
+
+			network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
         }
+
+		private void ParsePlayerInfoCommand(Player player, String data)
+		{
+			String[] values = data.Split(',');
+			player.carLocation = (Player.CarLocation) (Int32.Parse(values[0]));
+			player.health = Int32.Parse(values[1]);
+			player.hunger = Int32.Parse(values[2]);
+			player.thirst = Int32.Parse(values[3]);
+			player.tired = Int32.Parse(values[4]);
+
+			Debug.Write("Player got updated info " + player);
+		}
 
 		private void ParseClientCommand(string command)
 		{
@@ -145,8 +168,7 @@ namespace TOJAM12
 			}
             else if (command.Type == Command.CommandType.PlayerInfo)
             {
-                players[myPlayerId].carLocation = (Player.CarLocation)Int32.Parse(command.Data);
-                Console.WriteLine("My location is now " + Player.GetCarLocationName(players[myPlayerId].carLocation));
+				ParsePlayerInfoCommand(players[myPlayerId], command.Data);
             }
 
         }
@@ -233,6 +255,10 @@ namespace TOJAM12
 					// otherwise, don't
 					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
 					break;
+			}
+			foreach (int playerId in players.Keys)
+			{
+				SendPlayerInfoCommand(playerId, playerId);
 			}
 		}
 
@@ -379,5 +405,10 @@ namespace TOJAM12
             if (playerId != 0)
                 SendPlayerInfoCommand(playerId, playerId);
         }
-    }
+
+		public Player GetMyPlayer() {
+			return this.players[myPlayerId];
+		}
+
+	}
 }

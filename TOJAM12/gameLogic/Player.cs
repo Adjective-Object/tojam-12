@@ -102,7 +102,7 @@ namespace TOJAM12
 		}
 
 
-		internal void HealHealth(int v)
+		internal void HealHealth(int health)
 		{
 			this.health += health;
 			if (this.health > 100)
@@ -132,5 +132,9 @@ namespace TOJAM12
 			return false;
 		}
 
-}
+		public override string ToString()
+		{
+			return string.Format("[Player hunger=" + hunger + " tired=" + tired + " thirst=" + thirst + " health=" + health + "]");
+		}
+	}
 }
