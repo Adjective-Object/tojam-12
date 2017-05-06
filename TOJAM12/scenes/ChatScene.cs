@@ -57,18 +57,18 @@ namespace TOJAM12
 
 		public void Update(TojamGame game, GameTime gameTime)
 		{
-			// TODO process messages from the server
 			chatLog.Update(game, gameTime);
 			textBox.Update(game, gameTime);
 
+			// TODO process messages from the server
+
+			// broadcast ready messages to the server
 			if (Keyboard.GetState().IsKeyDown(Keys.Enter))
 			{
 				String textString = textBox.GetAndClear();
 				if (textString != "")
 				{
-					chatLog.AppendMessage(textString);
-					// TODO broadcast message to peers
-					// game.network.broadcastMessage(textString);
+					game.gameInstance.SendPlayerCommand(textString);
 				}
 			}
 		}

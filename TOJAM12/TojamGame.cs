@@ -33,6 +33,7 @@ namespace TOJAM12
 
 		GameScenes activeSceneType = GameScenes.PlayerSelect;
 		Scene activeScene = null;
+        public GameInstance gameInstance;
 
 		public TojamGame()
 		{
@@ -64,10 +65,8 @@ namespace TOJAM12
 			{
 				s.Initialize(this);
 			}
+            gameInstance = new GameInstance();
 		}
-
-        NetServer server;
-        NetPeer peer;
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -75,25 +74,6 @@ namespace TOJAM12
         /// </summary>
         protected override void LoadContent()
 		{
-
-
-            if (true)//Console.ReadKey().Key == ConsoleKey.S)
-            {
-                Console.WriteLine("Server");
-                var config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };
-                server = new NetServer(config);
-                server.Start();
-                peer = server;
-            }
-            else
-            {
-                var config = new NetPeerConfiguration("TOJAM12");
-                NetClient client = new NetClient(config);
-                client.Start();
-                client.Connect(host: "127.0.0.1", port: 12345);
-                peer = client;
-            }
-
             
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -106,7 +86,7 @@ namespace TOJAM12
 			}
 
 			// for debug purposes, jump immediately into a 2p game
-			//Dictionary<string, object> parameters = new Dictionary<string, object>();
+			//Dictionary<str====ing, object> parameters = new Dictionary<string, object>();
 			//parameters["player1"] = new Input(Input.Type.Keyboard);
 			//parameters["player2"] = new Input(Input.Type.JoypadOne);
 			//this.SwitchScene(GameScenes.Game, parameters);
@@ -133,40 +113,10 @@ namespace TOJAM12
 			{
 				i.Update();
 			}
-
-
-			activeScene.Update(this, gameTime);
-
-            NetIncomingMessage message;
-            while ((message = peer.ReadMessage()) != null)
-            {
-                switch (message.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        // handle custom messages
-                        Console.WriteLine("Message: " + message.ReadString());
-                        break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        // handle connection status messages
-                        Console.WriteLine(message.SenderConnection.RemoteEndPoint.Address.ToString() + ": Status Changed " + message.SenderConnection.Status.ToString());
-                        break;
-
-                    case NetIncomingMessageType.DebugMessage:
-                        // handle debug messages
-                        // (only received when compiled in DEBUG mode)
-                        Console.WriteLine(message.ReadString());
-                        break;
-
-                    /* .. */
-                    default:
-                        Console.WriteLine("unhandled message with type: "
-                            + message.MessageType);
-                        break;
-                }
-            }
-
             
+			activeScene.Update(this, gameTime);
+			gameInstance.Update();
+
             base.Update(gameTime);
 		}
 
