@@ -11,10 +11,29 @@ namespace TOJAM12
 
         public enum CarLocation
         {
-            DriversSeat = 0,
-            FrontSeat = 1,
-            BackLeft = 2,
-            BackRight = 3
+            NotInCar = 0,
+            DriversSeat = 1,
+            FrontSeat = 2,
+            BackLeft = 3,
+            BackRight = 4
+        }
+
+        public static String GetCarLocationName(CarLocation location)
+        {
+            switch (location){
+                case CarLocation.DriversSeat:
+                    return "Driver's Seat";
+                case CarLocation.FrontSeat:
+                    return "Front Seat";
+                case CarLocation.BackLeft:
+                    return "Back Left Seat";
+                case CarLocation.BackRight:
+                    return "Back Right Seat";
+                case CarLocation.NotInCar:
+                    return "Outside Car";
+                default:
+                    return "ERROR";
+            }
         }
 
         public CarLocation carLocation;
@@ -27,6 +46,7 @@ namespace TOJAM12
 		public Player(string name)
 		{
 			this.name = name;
+            carLocation = CarLocation.NotInCar;
 		}
 
 		public Item getItem(string itemName)

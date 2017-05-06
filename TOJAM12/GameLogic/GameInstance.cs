@@ -164,37 +164,66 @@ namespace TOJAM12
 						players[command.PlayerId].name = tokens[1];
 					break;
                 case "ENTER":
-                    if (tokens.Length > 1)
-                    {
-                        string destination = command.Data.Substring(6).ToUpper();
-                        if (destination == "CAR")
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the car", Network.SEND_ALL));
-                        else if (destination.StartsWith("DRIVER"))
-                        {
-                            bool isSeatAvailable = true;
-                            foreach (KeyValuePair<int, Player> entry in players)
-                            {
-                                if (entry.Value.carLocation == Player.CarLocation.DriversSeat)
-                                {
-                                    isSeatAvailable = false;
-                                    network.SendCommand(new Command(Command.CommandType.Text, players[entry.Key].name + " is already in the driver's seat", command.PlayerId));
-                                    break;
-                                }
-                            }
-                            if (isSeatAvailable)
-                            {
-                                network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the driver's seat", Network.SEND_ALL));
-                            }
-                            
-                        }
-                    }
-                    else
-                        network.SendCommand(new Command(Command.CommandType.Text, "Not sure what you're trying to enter...", command.PlayerId));
+                    ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
 				default:
 					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
 					break;
 			}
 		}
+
+        private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
+        {
+            if (tokens.Length > 1)
+            {
+                string destination = data.Substring(6).ToUpper();
+                if (destination == "CAR")
+                {
+                    // Find a free seat
+                    for(int i = 1; i < 5; i++)
+                    {
+                        if (GetSeatPlayer((Player.CarLocation)i) == -1)
+                        {
+                            SetPlayerCarLocation(PlayerId, (Player.CarLocation)i);
+                            return;
+                        }
+                    }
+                }
+                else if (destination.StartsWith("DRIVER"))
+                {
+                    int seatPlayer = GetSeatPlayer(Player.CarLocation.DriversSeat);
+                    if (seatPlayer == -1)
+                    {
+                        SetPlayerCarLocation(PlayerId, Player.CarLocation.DriversSeat);
+                        return;
+                    }else
+                    {
+                        network.SendCommand(new Command(Command.CommandType.Text, players[seatPlayer].name + " is already in the driver's seat", PlayerId));
+                        return;
+                    }
+
+                }
+            }
+            
+            network.SendCommand(new Command(Command.CommandType.Text, "Not sure what you're trying to enter...", PlayerId));
+        }
+
+        private int GetSeatPlayer(Player.CarLocation location)
+        {
+            foreach (KeyValuePair<int, Player> entry in players)
+            {
+                if (entry.Value.carLocation == location)
+                {
+                    return entry.Key;
+                }
+            }
+            return -1;
+        }
+
+        private void SetPlayerCarLocation(int playerId, Player.CarLocation location)
+        {
+            players[playerId].carLocation = location;
+            network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL));
+        }
     }
 }
