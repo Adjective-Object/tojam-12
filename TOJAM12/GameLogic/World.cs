@@ -47,6 +47,14 @@ namespace TOJAM12
             Location GasStation = new Location("Gas Station", CarPicture.Background.GasStation, false);
             Drive1.DriveLocation = GasStation;
             Add(GasStation);
+
+            Location Drive2 = new Location("Drive2", CarPicture.Background.Driving2, true, 5000);
+            Add(Drive2);
+            GasStation.DriveLocation = Drive2;
+
+            Location FruitStand = new Location("FruitStand", CarPicture.Background.FruitStand, false);
+            Drive2.DriveLocation = FruitStand;
+            Add(FruitStand);
         }
 
         public void Add(Location location)
