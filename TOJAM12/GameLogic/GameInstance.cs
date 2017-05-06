@@ -273,6 +273,15 @@ namespace TOJAM12
                 network.SendCommand(new Command(Command.CommandType.Text, "the current time is " + thetime, command.PlayerId));
                 didsomething = true;
             }
+            if ((words.Contains("switch") || words.Contains("change")) && (words.Contains("seat") || words.Contains("seats") || words.Contains("spots") || words.Contains("spot")))
+            {
+                int loc = (int)players[command.PlayerId].carLocation;
+                if(loc != 0)
+                {
+                    command.Data = "ENTER CAR";
+                    tokens = new string[] { "enter", "CAR" };
+                }
+            }
 
             if (!didsomething)
             {
