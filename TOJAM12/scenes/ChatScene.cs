@@ -13,13 +13,11 @@ namespace TOJAM12
 
 		public enum BackgroundId
 		{
-			Car_Neutral
+			Car_Neutral = 0
 		};
 
 		// TODO fill this with entities
-		static Entity[] backgrounds = {
-		};
-
+		List<Entity> backgrounds;
 		BackgroundId currentBackgroundId = BackgroundId.Car_Neutral;
 		Entity background;
 		ChatLog chatLog;
@@ -40,7 +38,7 @@ namespace TOJAM12
 			style.messagePadding = 20;
 			style.externalPadding = 20;
 			style.internalBounds = new Rectangle(
-				screenBounds.Width - messageBufferWidth + style.externalPadding * 2,
+				screenBounds.Width - messageBufferWidth + style.externalPadding,
 				style.externalPadding,
 				messageBufferWidth - style.externalPadding * 2,
 				screenBounds.Height - style.externalPadding
@@ -60,6 +58,14 @@ namespace TOJAM12
 					game.GameFont.LineSpacing
 				));
 
+			backgrounds = new List<Entity>();
+			DebugBackground b = new DebugBackground(
+				new Rectangle(0, 0,
+							  screenBounds.Width - messageBufferWidth,
+							  screenBounds.Height - game.GameFont.LineSpacing
+							 ));
+			b.Initialize(game);
+			backgrounds.Add(b);
 			SetBackground(currentBackgroundId);
 		}
 
@@ -99,9 +105,10 @@ namespace TOJAM12
 
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
-			game.graphics.GraphicsDevice.Clear(Color.Bisque);
+			game.graphics.GraphicsDevice.Clear(Color.Black);
 			game.spriteBatch.Begin(SpriteSortMode.Immediate);
 
+			background.Draw(game, gameTime);
 			chatLog.Draw(game, gameTime);
 			textBox.Draw(game, gameTime);
 
