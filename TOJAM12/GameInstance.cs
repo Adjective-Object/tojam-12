@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,45 +17,86 @@ namespace TOJAM12
         public GameInstance(TojamGame game)
         {
             this.game = game;
-            network = new Network();
-            network.Start(Console.ReadKey().Key == ConsoleKey.S);
 
             players = new Player[4];
         }
         public void Update()
         {
-            if (network.IsServer())
-            {
-                // Parse server generated messages
-                foreach (Command command in network.GetLocalCommands())
-                {
-                    ParseCommand(command);
-                }
-            }
+			if (network != null)
+			{
+				if (network.IsServer())
+				{
+					// Parse server generated messages
+					foreach (Command command in network.GetLocalCommands())
+					{
+						ParseCommand(command);
+					}
+				}
 
-            network.Update();
-            foreach(Command command in network.GetCommands())
-            {
-                ParseCommand(command);
-            }
+				network.Update();
+				foreach (Command command in network.GetCommands())
+				{
+					ParseCommand(command);
+				}
+			}
         }
 
         public void SendPlayerCommand(String command)
         {
-            if (network.IsServer())
-            {
-                ParseCommand(new Command(Command.CommandType.Player, command, 1));
-            }
-            else
-            {
-                network.SendCommand(new Command(Command.CommandType.Player, command, 0));
-            }
+			if (network != null)
+			{
+				if (network.IsServer())
+				{
+					ParseCommand(new Command(Command.CommandType.Player, command, 1));
+				}
+				else
+				{
+					network.SendCommand(new Command(Command.CommandType.Player, command, 0));
+				}
+			}
+			else {
+				ParseClientCommand(command);
+
+			}
         }
 
         private void SendTextCommand(String command, int player)
         {
 
         }
+
+		private void ParseClientCommand(string command)
+		{
+			// join or start server
+			String[] tokens = command.ToLower().Split(' ');
+			if (tokens.Length == 0) return;
+			ChatScene chatScene = (ChatScene)game.GetScene(TojamGame.GameScenes.Chat);
+			switch (tokens[0])
+			{
+				case "join":
+					string ip = (tokens.Length > 1) ? tokens[1] : "10.206.236.146";
+					IPAddress address;
+					if (!IPAddress.TryParse(ip, out address))
+					{
+						chatScene.AddMessage("'" + ip + "' is not not an IP address");
+						break;
+
+					}
+					chatScene.AddMessage("joining " + ip);
+					network = new Network();
+					network.Start(false, ip);
+
+					break;
+				case "host":
+					network = new Network();
+					network.Start(true, null);
+					break;
+				default:
+					chatScene.AddMessage("you must 'join <ip>' a game or 'host' a game ");
+					break;
+			}
+
+		}
 
         private void ParseCommand(Command command)
         {
