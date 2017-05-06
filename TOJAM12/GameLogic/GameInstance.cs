@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,17 +14,23 @@ namespace TOJAM12
         Network network;
         TojamGame game;
 
+        public World world;
         Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
+
+        int driveTime = 0;
         bool carIsDriving;
         int carLocation;
+        int lastLocation = 0;
+        
 
         public GameInstance(TojamGame game)
         {
 			this.game = game;
             myPlayerId = 0;
             carIsDriving = false;
-            carLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
+            carLocation = 0;
+            world = new World();
         }
 
         public bool GameStarted()
@@ -36,11 +43,33 @@ namespace TOJAM12
             return false;
         }
 
-		public void Update()
+		public void Update(GameTime gameTime)
         {
 			if (network != null)
 			{
-				if (network.IsServer())
+
+                if (carIsDriving)
+                {
+                    driveTime += gameTime.ElapsedGameTime.Milliseconds;
+
+                    if (driveTime >= world.GetLocation(carLocation).DriveLength)
+                    {
+                        Console.WriteLine("Finished drive");
+                        int newLocation = world.GetLocation(carLocation).DriveLocation.Id;
+                        carLocation = newLocation;
+                        foreach (Player p in players.Values)
+                        {
+                            if (p.carLocation != Player.CarLocation.NotInCar)
+                                p.worldLocation = carLocation;
+                        }
+                        driveTime = 0;
+                        carIsDriving = false;
+                        network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
+                        SendAllPlayerInfoCommand();
+                    }
+                }
+
+                if (network.IsServer())
 				{
 					// Parse server generated messages
 					foreach (Command command in network.GetLocalCommands())
@@ -48,7 +77,7 @@ namespace TOJAM12
 						ParseCommand(command);
 					}
 				}
-
+                
 				network.Update();
 				foreach (Command command in network.GetCommands())
 				{
@@ -72,7 +101,6 @@ namespace TOJAM12
 			}
 			else {
 				ParseClientCommand(command);
-
 			}
         }
 
@@ -203,84 +231,137 @@ namespace TOJAM12
 
 		private void ParsePlayerCommand(Command command)
 		{
-			command.Data = command.Data.Trim();
-			String[] tokens = command.Data.Split(' ');
-			if (tokens.Length <= 0) return;
+            command.Data = command.Data.Trim();
+            String[] tokens = command.Data.Split(' ');
+            if (tokens.Length <= 0) return;
 
-			switch (tokens[0].ToUpper())
-			{
-				case "SAY":
-					if (tokens.Length == 1)
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
-					else
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
-					break;
-				case "SETNAME":
-					if (tokens.Length != 2)
-						network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
-					else
-                    {
-                        string oldname = players[command.PlayerId].name;
-                        players[command.PlayerId].name = tokens[1];
-                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL, command.PlayerId));
-                    }
-                    break;
-                case "DRIVE":
-                    ParseDriveCommand(command);
-                    break;
-                case "STOP":
-                    ParseStopCommand(command);
-                    break;
-                case "ENTER":
-                    ParseEnterCommand(command.Data, command.PlayerId, tokens);
-                    break;
-                case "LEAVE":
-				case "EXIT":
-                    ParseExitCommand(command.Data, command.PlayerId, tokens);
-                    break;
-                case "GIVEME!":
-					if (tokens.Length != 2)
-					{
-						network.SendCommand(new Command(Command.CommandType.Text, "takes 2 args", command.PlayerId));
-						break;
-					}
-					Item foundItem = Item.Get(tokens[1]);
-					if (foundItem == null)
-					{
-						network.SendCommand(new Command(Command.CommandType.Text, "no such item " + tokens[1], command.PlayerId));
-						break;
-					}
+            List<string> words = new List<string>();
+            bool didsomething = false;
 
-					players[command.PlayerId].inventory.Add(foundItem);
-					network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
-					break;
+            string upper = command.Data.ToLower();
+            words.AddRange(upper.Split(' '));
 
-				case "HELP":
-					network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
-					break;
+            if ((words.Contains("change") && words.Contains("name")) || (words.Contains("set") && words.Contains("name")))
+            {
+                if (words.Count > 2 && words[words.Count - 1] != "name")
+                {
+                    tokens = new string[] { "setname", words[words.Count - 1] };
+                    //string oldname = players[command.PlayerId].name;
+                    //players[command.PlayerId].name = words[words.Count - 1];
+                    //network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, command.PlayerId));
+                    //didsomething = true;
+                }
+            }
+            if (words.Contains("weather"))
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "the current temperture is 28 degrees and partly cloudy", command.PlayerId));
+                didsomething = true;
+            }
+            if (words.Contains("get") && words.Contains("in") && words.Contains("car"))
+            {
+                command.Data = "ENTER CAR";
+                tokens = new string[] { "enter", "CAR" };
+            }
+            if (words.Contains("get") && words.Contains("out") && words.Contains("car"))
+            {
+                tokens = new string[] { "exit", "CAR" };
+            }
+            if ((words.Contains("current") || words.Contains("what")) && (words.Contains("time")))
+            {
+                DateTime dt = DateTime.Now;
+                string thetime = dt.Hour.ToString() + ":" + dt.Minute.ToString();
+                network.SendCommand(new Command(Command.CommandType.Text, "the current time is " + thetime, command.PlayerId));
+                didsomething = true;
+            }
 
-				case "INV":
-				case "INVENTORY":
-					List<String> builder = new List<String>();
-					foreach (Item i in players[command.PlayerId].inventory)
-					{
-						builder.Add(i.GetPrimaryName());
-					}
-					if (builder.Count == 0)
-						network.SendCommand(new Command(Command.CommandType.Text, "You have: Nothing!", command.PlayerId));
-					else
-						network.SendCommand(new Command(Command.CommandType.Text, "You have: " + String.Join(", ", builder), command.PlayerId));
-					break;
+            if (!didsomething)
+            {
 
-				default:
-					// perform action on player's inventory
-					Player p = players[command.PlayerId];
-					if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
 
-					// otherwise, don't
-					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
-					break;
-			}
+                switch (tokens[0].ToUpper())
+                {
+                    case "SAY":
+                        if (tokens.Length == 1)
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
+                        else
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
+                        break;
+
+                    case "YELL":
+                        if (tokens.Length == 1)
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled nothing", Network.SEND_ALL, command.PlayerId));
+                        else
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(4).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
+                        break;
+
+                    case "SETNAME":
+                        if (tokens.Length != 2)
+                            network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
+                        else
+                        {
+                            string oldname = players[command.PlayerId].name;
+                            players[command.PlayerId].name = tokens[1];
+                            network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL, command.PlayerId));
+                        }
+                        break;
+                    case "DRIVE":
+                        ParseDriveCommand(command);
+                        break;
+                    case "STOP":
+                        ParseStopCommand(command);
+                        break;
+                    case "ENTER":
+                        ParseEnterCommand(command.Data, command.PlayerId, tokens);
+                        break;
+                    case "LEAVE":
+                    case "EXIT":
+                        ParseExitCommand(command.Data, command.PlayerId, tokens);
+                        break;
+                    case "GIVEME!":
+                        if (tokens.Length != 2)
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, "takes 2 args", command.PlayerId));
+                            break;
+                        }
+                        Item foundItem = Item.Get(tokens[1]);
+                        if (foundItem == null)
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, "no such item " + tokens[1], command.PlayerId));
+                            break;
+                        }
+
+                        players[command.PlayerId].inventory.Add(foundItem);
+                        network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
+                        break;
+
+                    case "HELP":
+                        network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
+                        break;
+
+                    case "INV":
+                    case "INVENTORY":
+                        List<String> builder = new List<String>();
+                        foreach (Item i in players[command.PlayerId].inventory)
+                        {
+                            builder.Add(i.GetPrimaryName());
+                        }
+                        if (builder.Count == 0)
+                            network.SendCommand(new Command(Command.CommandType.Text, "You have: Nothing!", command.PlayerId));
+                        else
+                            network.SendCommand(new Command(Command.CommandType.Text, "You have: " + String.Join(", ", builder), command.PlayerId));
+                        break;
+
+                    default:
+                        // perform action on player's inventory
+                        Player p = players[command.PlayerId];
+                        if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
+
+                        // otherwise, don't
+                        network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
+                        break;
+                }
+            }
+
 			foreach (int playerId in players.Keys)
 			{
 				SendPlayerInfoCommand(playerId, playerId);
@@ -311,9 +392,10 @@ namespace TOJAM12
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
                     foreach(Player p in players.Values)
                     {
+                        carLocation = world.GetLocation(lastLocation).DriveLocation.Id;
                         if (p.carLocation != Player.CarLocation.NotInCar)
                         {
-                            p.worldLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
+                            p.worldLocation = carLocation;
                         }
                     }
                     SendAllPlayerInfoCommand();
@@ -333,7 +415,15 @@ namespace TOJAM12
                 else
                 {
                     carIsDriving = true;
+                    
+                    if (!world.GetLocation(carLocation).IsDriveLocation)
+                    {
+                        carLocation = world.GetLocation(carLocation).DriveLocation.Id;
+                    }
+
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
+                    lastLocation = players[command.PlayerId].worldLocation;
+
 					List<String> abandonedPlayers = new List<String>();
 					foreach (Player p in this.players.Values)
 					{
@@ -341,7 +431,8 @@ namespace TOJAM12
                             abandonedPlayers.Add(p.name);
                         else
                         {
-                            p.worldLocation = (int)Player.WorldLocation.Driving;
+                            p.worldLocation = world.GetLocation(lastLocation).DriveLocation.Id;
+                            driveTime = 0;
                         }
 					}
 					if (abandonedPlayers.Count != 0)

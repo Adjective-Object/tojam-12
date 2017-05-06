@@ -99,6 +99,9 @@ namespace TOJAM12
                     carPicture.SetMidground(CarPicture.Midground.Car);
                 else
                     carPicture.SetMidground(CarPicture.Midground.None);
+
+                Location currentLocation = game.gameInstance.world.GetLocation(game.gameInstance.GetMyPlayer().worldLocation);
+                carPicture.SetBackground(currentLocation.Background);
             }
 
             // TODO process messages from the server

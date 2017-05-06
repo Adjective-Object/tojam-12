@@ -120,7 +120,7 @@ namespace TOJAM12
 			}
             
 			activeScene.Update(this, gameTime);
-			gameInstance.Update();
+			gameInstance.Update(gameTime);
 
             base.Update(gameTime);
 		}
