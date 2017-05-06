@@ -139,7 +139,7 @@ namespace TOJAM12
             else if (command.Type == Command.CommandType.Text)
             {
                 ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data);
-            }
+			}
 
         }
 

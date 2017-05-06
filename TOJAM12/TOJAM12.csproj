@@ -84,6 +84,7 @@
     <Compile Include="GameLogic\Player.cs" />
     <Compile Include="GameLogic\GameInstance.cs" />
     <Compile Include="GameLogic\Command.cs" />
+    <Compile Include="GameLogic\Item.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
