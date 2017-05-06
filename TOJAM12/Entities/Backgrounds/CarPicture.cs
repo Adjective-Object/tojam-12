@@ -20,7 +20,7 @@ namespace TOJAM12
 		public enum Midground
 		{
 			None,
-			Store_Car
+			Car
 		};
 		static Dictionary<Midground, PicturePart> knownMidgrounds = new Dictionary<Midground, PicturePart>();
 
@@ -38,7 +38,8 @@ namespace TOJAM12
 
 
 			knownMidgrounds[Midground.None] = null;
-			knownMidgrounds[Midground.Store_Car] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/store_car"));
+			knownMidgrounds[Midground.Car] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/Layer-1"));
+
 
 			knownForegrounds[Foreground.None] = null;
 		}

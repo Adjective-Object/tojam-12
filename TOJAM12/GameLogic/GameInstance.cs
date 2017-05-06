@@ -26,6 +26,16 @@ namespace TOJAM12
             carLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
         }
 
+        public bool GameStarted()
+        {
+            if (network != null && network.IsServer() && players[0] != null)
+                return true;
+            else if (network != null && !network.IsServer() && myPlayerId != 0)
+                return true;
+
+            return false;
+        }
+
 		public void Update()
         {
 			if (network != null)
@@ -74,7 +84,8 @@ namespace TOJAM12
 			Player p = players[player];
 
 			values.Add(((int)p.carLocation).ToString());
-			values.Add(p.health.ToString());
+            values.Add(((int)p.worldLocation).ToString());
+            values.Add(p.health.ToString());
 			values.Add(p.hunger.ToString());
    			values.Add(p.thirst.ToString());
 			values.Add(p.tired.ToString());
@@ -86,10 +97,11 @@ namespace TOJAM12
 		{
 			String[] values = data.Split(',');
 			player.carLocation = (Player.CarLocation) (Int32.Parse(values[0]));
-			player.health = Int32.Parse(values[1]);
-			player.hunger = Int32.Parse(values[2]);
-			player.thirst = Int32.Parse(values[3]);
-			player.tired = Int32.Parse(values[4]);
+            player.worldLocation = (Int32.Parse(values[1]));
+            player.health = Int32.Parse(values[2]);
+			player.hunger = Int32.Parse(values[3]);
+			player.thirst = Int32.Parse(values[4]);
+			player.tired = Int32.Parse(values[5]);
 
 			Debug.Write("Player got updated info " + player);
 		}
