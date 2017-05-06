@@ -8,6 +8,16 @@ namespace TOJAM12
 {
 	public class Player
 	{
+
+        public enum CarLocation
+        {
+            DriversSeat = 0,
+            FrontSeat = 1,
+            BackLeft = 2,
+            BackRight = 3
+        }
+
+        public CarLocation carLocation;
 		public string name;
 		public List<Item> inventory = new List<Item>();
 		public int hunger = 100;
