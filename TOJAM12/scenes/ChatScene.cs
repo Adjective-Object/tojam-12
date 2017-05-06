@@ -10,6 +10,18 @@ namespace TOJAM12
 {
 	public class ChatScene : Scene
 	{
+
+		public enum BackgroundId
+		{
+			Car_Neutral
+		};
+
+		// TODO fill this with entities
+		static Entity[] backgrounds = {
+		};
+
+		BackgroundId currentBackgroundId = BackgroundId.Car_Neutral;
+		Entity background;
 		ChatLog chatLog;
 		TextBox textBox;
 
@@ -21,9 +33,9 @@ namespace TOJAM12
 		public void Initialize(TojamGame game)
 		{
 			Rectangle screenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
+			int messageBufferWidth = 200;
 
 			ChatLogStyle style = new ChatLogStyle();
-			int messageBufferWidth = 200;
 			style.font = game.GameFont;
 			style.messagePadding = 20;
 			style.externalPadding = 20;
@@ -37,7 +49,6 @@ namespace TOJAM12
 
 			chatLog = new ChatLog(style);
 			chatLog.Initialize(game);
-
 			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!");
 
 			textBox = new TextBox(
@@ -48,11 +59,24 @@ namespace TOJAM12
 					screenBounds.Width - messageBufferWidth,
 					game.GameFont.LineSpacing
 				));
+
+			SetBackground(currentBackgroundId);
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
 		{
-			// do nothing on init
+			// do nothing on scene enter
+		}
+
+		public void SetBackground(BackgroundId backgroundId)
+		{
+			this.currentBackgroundId = backgroundId;
+			background = backgrounds[(int) currentBackgroundId];
+		}
+
+		public void AddMessage(string message)
+		{	// add a message to the chatlog
+			this.chatLog.AppendMessage(message);
 		}
 
 		public void Update(TojamGame game, GameTime gameTime)
