@@ -33,6 +33,7 @@ namespace TOJAM12
 
 		GameScenes activeSceneType = GameScenes.PlayerSelect;
 		Scene activeScene = null;
+        GameInstance gameInstance;
 
 		public TojamGame()
 		{
@@ -64,11 +65,10 @@ namespace TOJAM12
 			{
 				s.Initialize(this);
 			}
+            gameInstance = new GameInstance();
 		}
 
-        NetServer server;
-        NetPeer peer;
-
+        
         TextBox textbox;
 
         /// <summary>
@@ -77,25 +77,6 @@ namespace TOJAM12
         /// </summary>
         protected override void LoadContent()
 		{
-
-
-            if (true)//Console.ReadKey().Key == ConsoleKey.S)
-            {
-                Console.WriteLine("Server");
-                var config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };
-                server = new NetServer(config);
-                server.Start();
-                peer = server;
-            }
-            else
-            {
-                var config = new NetPeerConfiguration("TOJAM12");
-                NetClient client = new NetClient(config);
-                client.Start();
-                client.Connect(host: "127.0.0.1", port: 12345);
-                peer = client;
-            }
-
             
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -136,55 +117,19 @@ namespace TOJAM12
 			{
 				i.Update();
 			}
-
-
+            
 			activeScene.Update(this, gameTime);
-
-
+        
             textbox.Update(this, gameTime);
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 String textString = textbox.GetAndClear();
                 if (textString != "")
                 {
-                    foreach (NetConnection connection in peer.Connections)
-                    {
-                        NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
-                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
-                    }
+                    gameInstance.SendPlayerCommand(textString);
                 }
             }
 
-            NetIncomingMessage message;
-            while ((message = peer.ReadMessage()) != null)
-            {
-                switch (message.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        // handle custom messages
-                        Console.WriteLine("Message: " + message.ReadString());
-                        break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        // handle connection status messages
-                        Console.WriteLine(message.SenderConnection.RemoteEndPoint.Address.ToString() + ": Status Changed " + message.SenderConnection.Status.ToString());
-                        break;
-
-                    case NetIncomingMessageType.DebugMessage:
-                        // handle debug messages
-                        // (only received when compiled in DEBUG mode)
-                        Console.WriteLine(message.ReadString());
-                        break;
-
-                    /* .. */
-                    default:
-                        Console.WriteLine("unhandled message with type: "
-                            + message.MessageType);
-                        break;
-                }
-            }
-
-            
             base.Update(gameTime);
 		}
 
