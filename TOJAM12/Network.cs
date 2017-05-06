@@ -37,6 +37,7 @@ namespace TOJAM12
             {
                 Console.WriteLine("Server");
                 NetPeerConfiguration config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };
+				SendCommand(new Command(Command.CommandType.PlayerJoined, "0", 0));
                 server = new NetServer(config);
                 server.Start();
                 peer = server;
@@ -58,14 +59,14 @@ namespace TOJAM12
             if (!connected)
                 return;
 
-            if (isServer && (command.PlayerId == 1 || command.PlayerId == 0))
+            if (isServer && (command.PlayerId == 0 || command.PlayerId == -1))
                 localCommands.Add(command);
             
-            if (command.PlayerId != 1)
+            if (command.PlayerId != 0)
             {
                 foreach (NetConnection connection in peer.Connections)
                 {
-                    if (command.PlayerId == 0 || (command.PlayerId > 1 && connection == connections[command.PlayerId - 2]))
+                    if (command.PlayerId == -1 || (command.PlayerId > 0 && connection == connections[command.PlayerId - 1]))
                     {
                         NetOutgoingMessage sendMsg = peer.CreateMessage();
                         sendMsg.Write((Int32)command.Type);
@@ -103,14 +104,14 @@ namespace TOJAM12
                         int messageType = message.ReadInt32();
                         String messageData = message.ReadString();
 
-                        int playerId = 0;
+                        int playerId = -1;
                         if (isServer)
                         {
                             for (int i = 0; i < 3; i++)
                             {
                                 if (connections[i] != null && connections[i] == message.SenderConnection)
                                 {
-                                    playerId = i + 2;
+                                    playerId = i+1;
                                     break;
                                 }
                             }
@@ -126,27 +127,33 @@ namespace TOJAM12
                         {
                             if (message.SenderConnection.Status == NetConnectionStatus.Connected)
                             {
+                                bool addedConnection = false;
                                 for (int i = 0; i < 3; i++)
                                 {
                                     if (connections[i]  == null)
                                     {
                                         connections[i] = message.SenderConnection;
                                         Console.WriteLine("Added connection as player id " + i);
-										SendCommand(new Command(Command.CommandType.PlayerJoined, i.ToString(), 1));
+										SendCommand(new Command(Command.CommandType.PlayerJoined, i.ToString(), 0));
                                         break;
                                     }
+                                }
+                                if (!addedConnection)
+                                {
+                                    Console.WriteLine("Max players reached, disconnecting");
+                                    message.SenderConnection.Deny();
                                 }
                             }
                         }
                         break;
 
                     case NetIncomingMessageType.DebugMessage:
-                        // handle debug messages
-                        // (only received when compiled in DEBUG mode)
                         Console.WriteLine(message.ReadString());
                         break;
 
-                    /* .. */
+                    case NetIncomingMessageType.WarningMessage:
+                        Console.WriteLine("Warning: " + message.ReadString());
+                        break;
                     default:
                         Console.WriteLine("unhandled message with type: " + message.MessageType);
                         break;

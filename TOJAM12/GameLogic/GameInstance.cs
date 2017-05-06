@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -46,11 +47,11 @@ namespace TOJAM12
 			{
 				if (network.IsServer())
 				{
-					ParseCommand(new Command(Command.CommandType.Player, command, 1));
+					ParseCommand(new Command(Command.CommandType.Player, command, 0));
 				}
 				else
 				{
-					network.SendCommand(new Command(Command.CommandType.Player, command, 0));
+					network.SendCommand(new Command(Command.CommandType.Player, command, -1));
 				}
 			}
 			else {
@@ -84,12 +85,12 @@ namespace TOJAM12
 					chatScene.AddMessage("joining " + ip);
 					network = new Network();
 					network.Start(false, ip);
-
 					break;
 				case "host":
 					network = new Network();
 					network.Start(true, null);
-					chatScene.AddMessage("started hosting ");
+                    string lip = GetLocalIPAddress();
+					chatScene.AddMessage("started hosting on: " + lip);
 					break;
 				default:
 					chatScene.AddMessage("you must 'join <ip>' a game or 'host' a game ");
@@ -97,6 +98,19 @@ namespace TOJAM12
 			}
 
 		}
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("Local IP Address Not Found!");
+        }
 
         private void ParseCommand(Command command)
         {
@@ -113,6 +127,7 @@ namespace TOJAM12
 			{
 				int id = int.Parse(command.Data);
 				players[id] = new Player("player_" + id);
+				Debug.WriteLine("added Player with name " + players[id].name);
 			}
             else if (command.Type == Command.CommandType.Text)
             {
@@ -131,9 +146,9 @@ namespace TOJAM12
 			{
 				case "SAY":
 					if (tokens.Length == 1)
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", 0));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", -1));
 					else
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", 0));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", -1));
 					break;
 				case "SETNAME":
 					if (tokens.Length != 2)
