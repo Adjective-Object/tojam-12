@@ -49,8 +49,6 @@ namespace TOJAM12.Entities
                             currentString += key.ToString();
                         else if (key >= Keys.D0 && key <= Keys.D9)
                             currentString += (key - (Keys.D0)).ToString();
-
-                        Console.WriteLine(currentString);
                     }
                     curPressedKeys[(int)key] = true;
                 }

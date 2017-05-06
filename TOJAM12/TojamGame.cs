@@ -139,10 +139,13 @@ namespace TOJAM12
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 String textString = textbox.GetAndClear();
-                foreach (NetConnection connection in peer.Connections)
+                if (textString != "")
                 {
-                    NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
-                    peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
+                    foreach (NetConnection connection in peer.Connections)
+                    {
+                        NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
+                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
+                    }
                 }
             }
 
