@@ -19,12 +19,14 @@ namespace TOJAM12.Entities
             pressedKeys = new bool[256];
         }
 
-        public void Clear()
+        public String GetAndClear()
         {
+            String retString = currentString;
             currentString = "";
             pressedKeys = new bool[256];
+            return retString;
         }
-
+      
         public void Update(TojamGame game, GameTime gameTime)
         {
             bool[] curPressedKeys = new bool[256];

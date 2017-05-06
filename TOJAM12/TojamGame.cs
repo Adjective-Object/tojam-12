@@ -129,19 +129,22 @@ namespace TOJAM12
 			foreach (Input i in Input.getAllInstances())
 			{
 				i.Update();
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
-                {
-                    foreach (NetConnection connection in peer.Connections)
-                    {
-                        NetOutgoingMessage sendMsg = peer.CreateMessage("Pressed A");
-                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
-                    }
-                }
 			}
 
 
 			activeScene.Update(this, gameTime);
 
+
+            textbox.Update(this, gameTime);
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                String textString = textbox.GetAndClear();
+                foreach (NetConnection connection in peer.Connections)
+                {
+                    NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
+                    peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
 
             NetIncomingMessage message;
             while ((message = peer.ReadMessage()) != null)
@@ -172,7 +175,7 @@ namespace TOJAM12
                 }
             }
 
-            textbox.Update(this, gameTime);
+            
             base.Update(gameTime);
 		}
 
