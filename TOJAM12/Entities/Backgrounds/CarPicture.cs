@@ -13,6 +13,7 @@ namespace TOJAM12
 		public enum Background
 		{
 			None,
+            Driving,
 			Walmart
 		};
 		static Dictionary<Background, PicturePart> knownBackgrounds = new Dictionary<Background, PicturePart>();
@@ -34,7 +35,8 @@ namespace TOJAM12
 		public static void LoadContent(TojamGame game)
 		{
 			knownBackgrounds[Background.None] = null;
-			knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
+            knownBackgrounds[Background.Driving] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic"));
+            knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
 
 
 			knownMidgrounds[Midground.None] = null;

@@ -42,7 +42,8 @@ namespace TOJAM12
         public enum WorldLocation
         {
             Walmart_ParkingLot = 0,
-            Walmart_Inside = 1
+            Walmart_Inside = 1,
+            Driving = 2 // Generic driving location
         }
 
 		public string name;

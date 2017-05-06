@@ -87,6 +87,11 @@ namespace TOJAM12
                     carPicture.SetMidground(CarPicture.Midground.Car);
                 else
                     carPicture.SetMidground(CarPicture.Midground.None);
+
+                if (game.gameInstance.GetMyPlayer().worldLocation == (int)Player.WorldLocation.Driving)
+                    carPicture.SetBackground(CarPicture.Background.Driving);
+                else if (game.gameInstance.GetMyPlayer().worldLocation == (int)Player.WorldLocation.Walmart_ParkingLot)
+                    carPicture.SetBackground(CarPicture.Background.Walmart);
             }
 
             // TODO process messages from the server

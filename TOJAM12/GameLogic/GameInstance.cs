@@ -76,9 +76,20 @@ namespace TOJAM12
 			}
         }
 
-        private void SendPlayerInfoCommand(int player, int toPlayer)
-
+        private void SendAllPlayerInfoCommand()
         {
+            foreach(int key in players.Keys)
+            {
+                SendPlayerInfoCommand(key, key);
+            }
+        }
+
+        private void SendPlayerInfoCommand(int player, int toPlayer)
+        {
+            // Skip server player
+            if (player == 0)
+                return;
+
 			List<String> values = new List<String>();
 			// location, health, hunger, thirst, tired
 			Player p = players[player];
@@ -298,6 +309,14 @@ namespace TOJAM12
                 {
                     carIsDriving = false;
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
+                    foreach(Player p in players.Values)
+                    {
+                        if (p.carLocation != Player.CarLocation.NotInCar)
+                        {
+                            p.worldLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
+                        }
+                    }
+                    SendAllPlayerInfoCommand();
                 }
             }
             else
@@ -318,14 +337,19 @@ namespace TOJAM12
 					List<String> abandonedPlayers = new List<String>();
 					foreach (Player p in this.players.Values)
 					{
-						if (p.carLocation == Player.CarLocation.NotInCar)
-							abandonedPlayers.Add(p.name);
+                        if (p.carLocation == Player.CarLocation.NotInCar)
+                            abandonedPlayers.Add(p.name);
+                        else
+                        {
+                            p.worldLocation = (int)Player.WorldLocation.Driving;
+                        }
 					}
 					if (abandonedPlayers.Count != 0)
 					{
 						// TODO gameovers? ingame locations?
 						network.SendCommand(new Command(Command.CommandType.Text, String.Join(", ", abandonedPlayers) + " were left behind", Network.SEND_ALL));
 					}
+                    SendAllPlayerInfoCommand();
                 }
             }
             else
