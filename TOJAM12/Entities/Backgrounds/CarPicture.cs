@@ -14,7 +14,9 @@ namespace TOJAM12
 		{
 			None,
             Driving,
-			Walmart
+			Walmart,
+            Walmart_Inside,
+            GasStation
 		};
 		static Dictionary<Background, PicturePart> knownBackgrounds = new Dictionary<Background, PicturePart>();
 
@@ -37,9 +39,10 @@ namespace TOJAM12
 			knownBackgrounds[Background.None] = null;
             knownBackgrounds[Background.Driving] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic"));
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
+            knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
+            knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
 
-
-			knownMidgrounds[Midground.None] = null;
+            knownMidgrounds[Midground.None] = null;
 			knownMidgrounds[Midground.Car] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/Layer-1"));
 
 

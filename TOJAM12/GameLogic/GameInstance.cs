@@ -13,17 +13,20 @@ namespace TOJAM12
         Network network;
         TojamGame game;
 
+        public World world;
         Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
         bool carIsDriving;
         int carLocation;
+        int lastLocation = 0;
 
         public GameInstance(TojamGame game)
         {
 			this.game = game;
             myPlayerId = 0;
             carIsDriving = false;
-            carLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
+            carLocation = 0;
+            world = new World();
         }
 
         public bool GameStarted()
@@ -311,9 +314,10 @@ namespace TOJAM12
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
                     foreach(Player p in players.Values)
                     {
+                        carLocation = world.GetLocation(lastLocation).DriveLocation.Id;
                         if (p.carLocation != Player.CarLocation.NotInCar)
                         {
-                            p.worldLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
+                            p.worldLocation = carLocation;
                         }
                     }
                     SendAllPlayerInfoCommand();
@@ -334,6 +338,8 @@ namespace TOJAM12
                 {
                     carIsDriving = true;
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
+                    lastLocation = players[command.PlayerId].worldLocation;
+
 					List<String> abandonedPlayers = new List<String>();
 					foreach (Player p in this.players.Values)
 					{
@@ -341,7 +347,7 @@ namespace TOJAM12
                             abandonedPlayers.Add(p.name);
                         else
                         {
-                            p.worldLocation = (int)Player.WorldLocation.Driving;
+                            p.worldLocation = world.GetLocation(lastLocation).DriveLocation.Id;
                         }
 					}
 					if (abandonedPlayers.Count != 0)

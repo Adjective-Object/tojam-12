@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameLogic\World.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="TojamGame.cs" />
     <Compile Include="Program.cs" />
