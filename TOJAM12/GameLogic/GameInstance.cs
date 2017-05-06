@@ -289,8 +289,8 @@ namespace TOJAM12
             }
             if ((words.Contains("current") && words.Contains("location")) || (words.Contains("where")))
             {
-                string loca = players[command.PlayerId].GetWordLocationName((Player.WorldLocation)players[command.PlayerId].worldLocation);
-
+                string loca = world.GetLocation(players[command.PlayerId].worldLocation).Name;
+                
                 network.SendCommand(new Command(Command.CommandType.Text, "you are currently " + loca, command.PlayerId));
                 didsomething = true;
             }
