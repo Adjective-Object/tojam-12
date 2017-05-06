@@ -59,7 +59,6 @@ namespace TOJAM12
 			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing - 5));
 			carPicture.Initialize(game);
 			carPicture.SetBackground(CarPicture.Background.Walmart);
-			carPicture.SetMidground(CarPicture.Midground.Store_Car);
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -82,11 +81,13 @@ namespace TOJAM12
 			chatLog.Update(game, gameTime);
 			textBox.Update(game, gameTime);
 
+            //if (game.gameInstance.)
+            carPicture.SetMidground(CarPicture.Midground.Car);
 
-			// TODO process messages from the server
+            // TODO process messages from the server
 
-			// broadcast ready messages to the server
-			if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            // broadcast ready messages to the server
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
 			{
 				String textString = textBox.GetAndClear();
 				if (textString != "")
