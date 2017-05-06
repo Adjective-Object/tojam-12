@@ -175,7 +175,7 @@ namespace TOJAM12
                     {
                         string oldname = players[command.PlayerId].name;
                         players[command.PlayerId].name = tokens[1];
-                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, command.PlayerId));
+                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL));
                     }
                     break;
                 case "DRIVE":
@@ -188,9 +188,7 @@ namespace TOJAM12
                     ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
                 case "LEAVE":
-                    ParseExitCommand(command.Data, command.PlayerId, tokens);
-                    break;
-                case "EXIT":
+				case "EXIT":
                     ParseExitCommand(command.Data, command.PlayerId, tokens);
                     break;
                 case "GIVEME!":
@@ -207,7 +205,7 @@ namespace TOJAM12
 					}
 
 					players[command.PlayerId].inventory.Add(foundItem);
-					network.SendCommand(new Command(Command.CommandType.Text, "magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
+					network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
 					break;
 
 				case "HELP":
@@ -276,7 +274,18 @@ namespace TOJAM12
                 else
                 {
                     carIsDriving = true;
-                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and drives away.", Network.SEND_ALL));
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
+					List<String> abandonedPlayers = new List<String>();
+					foreach (Player p in this.players.Values)
+					{
+						if (p.carLocation == Player.CarLocation.NotInCar)
+							abandonedPlayers.Add(p.name);
+					}
+					if (abandonedPlayers.Count != 0)
+					{
+						// TODO gameovers? ingame locations?
+						network.SendCommand(new Command(Command.CommandType.Text, String.Join(", ", abandonedPlayers) + " were left behind", Network.SEND_ALL));
+					}
                 }
             }
             else
