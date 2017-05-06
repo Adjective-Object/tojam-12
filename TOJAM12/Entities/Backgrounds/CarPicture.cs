@@ -40,7 +40,7 @@ namespace TOJAM12
             knownBackgrounds[Background.Driving] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic"));
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
             knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
-            knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
+            knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGas"));
 
             knownMidgrounds[Midground.None] = null;
 			knownMidgrounds[Midground.Car] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/Layer-1"));
