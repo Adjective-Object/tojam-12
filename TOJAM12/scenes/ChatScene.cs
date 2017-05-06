@@ -81,8 +81,13 @@ namespace TOJAM12
 			chatLog.Update(game, gameTime);
 			textBox.Update(game, gameTime);
 
-            //if (game.gameInstance.)
-            carPicture.SetMidground(CarPicture.Midground.Car);
+            if (game.gameInstance.GameStarted())
+            {
+                if (game.gameInstance.GetMyPlayer().carLocation != Player.CarLocation.NotInCar)
+                    carPicture.SetMidground(CarPicture.Midground.Car);
+                else
+                    carPicture.SetMidground(CarPicture.Midground.None);
+            }
 
             // TODO process messages from the server
 
