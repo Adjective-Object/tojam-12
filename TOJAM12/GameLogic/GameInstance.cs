@@ -143,6 +143,9 @@ namespace TOJAM12
 
         }
 
+		static string helpText =
+			"Commands: say, setname, enter, inventory, help";
+
 		private void ParsePlayerCommand(Command command)
 		{
 			command.Data = command.Data.Trim();
@@ -175,9 +178,60 @@ namespace TOJAM12
                     else
                         network.SendCommand(new Command(Command.CommandType.Text, "Not sure what you're trying to enter...", command.PlayerId));
                     break;
+				case "GIVEME!":
+					if (tokens.Length != 2)
+					{
+						network.SendCommand(new Command(Command.CommandType.Text, "takes 2 args", command.PlayerId));
+						break;
+					}
+					Item foundItem = Item.Get(tokens[1]);
+					if (foundItem == null)
+					{
+						network.SendCommand(new Command(Command.CommandType.Text, "no such item " + tokens[1], command.PlayerId));
+						break;
+					}
+
+					players[command.PlayerId].inventory.Add(foundItem);
+					network.SendCommand(new Command(Command.CommandType.Text, "magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
+					break;
+
+				case "HELP":
+					network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
+					break;
+
+				case "INV":
+				case "INVENTORY":
+					List<String> builder = new List<String>();
+					foreach (Item i in players[command.PlayerId].inventory)
+					{
+						builder.Add(i.GetPrimaryName());
+					}
+					if (builder.Count == 0)
+						network.SendCommand(new Command(Command.CommandType.Text, "You have: Nothing!", command.PlayerId));
+					else
+						network.SendCommand(new Command(Command.CommandType.Text, "You have: " + String.Join(", ", builder), command.PlayerId));
+					break;
+
 				default:
+					// perform action on player's inventory
+					Player p = players[command.PlayerId];
+					if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
+
+					// otherwise, don't
 					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
 					break;
+			}
+		}
+
+		public void sendToPlayer(Player p, string message)
+		{
+			foreach (KeyValuePair<int, Player> pair in players)
+			{
+				if (p == null || pair.Value == p)
+				{
+					network.SendCommand(new Command(Command.CommandType.Text, message, pair.Key));
+					return;
+				}
 			}
 		}
     }
