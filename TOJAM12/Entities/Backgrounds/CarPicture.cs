@@ -35,7 +35,14 @@ namespace TOJAM12
 		public static void LoadContent(TojamGame game)
 		{
 			knownBackgrounds[Background.None] = null;
-            knownBackgrounds[Background.Driving] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic"));
+            knownBackgrounds[Background.Driving] = new CompoundPicturePart(
+				new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic")),
+				new LoopingImage(new Texture2D[] {
+					game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
+					game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
+					game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
+				}, 400)
+            );
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
 
 

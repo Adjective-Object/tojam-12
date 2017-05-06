@@ -6,14 +6,14 @@ namespace TOJAM12
 {
 	public class StaticImage : PicturePart
 	{
-		Texture2D texture;
+		protected Texture2D texture;
 
 		public StaticImage(Texture2D texture)
 		{
 			this.texture = texture;
 		}
 
-		public void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
+		public virtual void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
 		{
 			Rectangle src = new Rectangle(0, 0, texture.Width, texture.Height);
 			Rectangle dest = new Rectangle(0, 0, bounds.Width, bounds.Height);
