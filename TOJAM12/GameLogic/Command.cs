@@ -12,7 +12,8 @@ namespace TOJAM12
         {
             Player = 0, // Command sent from a player
             Text = 1, // Command to just dump text
-			PlayerJoined = 2, // command for when a player joins
+			PlayerJoined = 2, // Command for when a player joins
+            PlayerInfo = 3, // Command to update player info
         }
 
         public String Data;

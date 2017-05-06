@@ -53,7 +53,7 @@ namespace TOJAM12
 				}
 				else
 				{
-					network.SendCommand(new Command(Command.CommandType.Player, command, -1));
+					network.SendCommand(new Command(Command.CommandType.Player, command, Network.SEND_ALL));
 				}
 			}
 			else {
@@ -62,9 +62,9 @@ namespace TOJAM12
 			}
         }
 
-        private void SendTextCommand(String command, int player)
+        private void SendPlayerInfoCommand(int player, int toPlayer)
         {
-
+            network.SendCommand(new Command(Command.CommandType.PlayerInfo, ((int)players[player].carLocation).ToString(), toPlayer));
         }
 
 		private void ParseClientCommand(string command)
@@ -135,11 +135,17 @@ namespace TOJAM12
             {
                 myPlayerId = int.Parse(command.Data);
                 Console.WriteLine("My player id: " + myPlayerId);
+                players[myPlayerId] = new Player("SELF");
             }
             else if (command.Type == Command.CommandType.Text)
             {
                 ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data);
 			}
+            else if (command.Type == Command.CommandType.PlayerInfo)
+            {
+                players[myPlayerId].carLocation = (Player.CarLocation)Int32.Parse(command.Data);
+                Console.WriteLine("My location is now " + Player.GetCarLocationName(players[myPlayerId].carLocation));
+            }
 
         }
 
@@ -224,6 +230,10 @@ namespace TOJAM12
         {
             players[playerId].carLocation = location;
             network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL));
+
+            // Dont send to server player, since already updated.
+            if (playerId != 0)
+                SendPlayerInfoCommand(playerId, playerId);
         }
     }
 }
