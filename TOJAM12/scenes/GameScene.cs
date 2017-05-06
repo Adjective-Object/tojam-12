@@ -51,9 +51,9 @@ namespace TOJAM12
 			game.graphics.GraphicsDevice.Clear(Color.Gainsboro);
 			game.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-			foreach (Player p in entities)
+			foreach (Entity e in entities)
 			{
-				p.Draw(game, gameTime);
+				e.Draw(game, gameTime);
 			}
 
 			game.spriteBatch.End();

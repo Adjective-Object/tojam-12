@@ -4,6 +4,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOJAM12", "TOJAM12\TOJAM12.csproj", "{260112C4-44FA-430A-9B12-EF3A6D700839}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network.MacOS", "..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.MacOS.csproj", "{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -17,6 +19,12 @@ Global
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.DebugServer|x86.Build.0 = DebugServer|x86
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Release|x86.ActiveCfg = Release|x86
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Release|x86.Build.0 = Release|x86
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.DebugServer|x86.ActiveCfg = Debug|Any CPU
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.DebugServer|x86.Build.0 = Debug|Any CPU
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

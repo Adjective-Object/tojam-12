@@ -18,14 +18,15 @@ namespace TOJAM12
 
 		// declaration of scenes in the game
 		Scene[] scenes = {
+			new ChatScene(),
 			new PlayerSelectScene(),
 			new GameScene(),
 		};
 		public enum GameScenes
 		{
-			PlayerSelect = 0,
-			Game = 1,
-			Results = 2,
+			Chat = 0,
+			PlayerSelect = 1,
+			Game = 2,
 		};
 
 		GameScenes activeSceneType = GameScenes.PlayerSelect;
@@ -40,6 +41,7 @@ namespace TOJAM12
 
 		public void SwitchScene(GameScenes newSceneType, Dictionary<string, object> sceneParameters = null)
 		{
+			Debug.WriteLine("switch scene to " + newSceneType);
 			this.activeSceneType = newSceneType;
 			Scene nextScene = scenes[(int)activeSceneType];
 			nextScene.onTransition(sceneParameters);
@@ -106,6 +108,7 @@ namespace TOJAM12
 			//parameters["player1"] = new Input(Input.Type.Keyboard);
 			//parameters["player2"] = new Input(Input.Type.JoypadOne);
 			//this.SwitchScene(GameScenes.Game, parameters);
+			this.SwitchScene(GameScenes.Chat);
 
 		}
 
@@ -180,7 +183,6 @@ namespace TOJAM12
 		{
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			//TODO: Add your drawing code here
 			activeScene.Draw(this, gameTime);
 
 			base.Draw(gameTime);
