@@ -83,8 +83,6 @@ namespace TOJAM12
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			PlayerCostume.LoadContent(this);
-
 			foreach (Scene s in scenes)
 			{
 				s.LoadContent(this);

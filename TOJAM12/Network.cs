@@ -47,7 +47,7 @@ namespace TOJAM12
                 NetPeerConfiguration config = new NetPeerConfiguration("TOJAM12");
                 NetClient client = new NetClient(config);
                 client.Start();
-                client.Connect(host: "127.0.0.1", port: 12345);
+                client.Connect(host: "10.206.236.146", port: 12345);
                 peer = client;
             }
             return true;

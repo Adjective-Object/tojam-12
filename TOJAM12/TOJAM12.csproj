@@ -80,13 +80,18 @@
     <Compile Include="Entities\ChatLog.cs" />
     <Compile Include="scenes\ChatScene.cs" />
     <Compile Include="Entities\TextBox.cs" />
-    <Compile Include="Entities\Backgrounds\DebugBackground.cs" />
+    <Compile Include="Entities\Backgrounds\CarPicture.cs" />
+    <Compile Include="Entities\Backgrounds\StaticImage.cs" />
+    <Compile Include="Entities\Backgrounds\PicturePart.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
     <None Include="Content\misc\alex.png" />
     <None Include="Content\fonts\Cutive_Mono.ttf" />
     <None Include="Content\fonts\Helvetica.ttf" />
+    <None Include="Content\backgrounds\road_day.png" />
+    <None Include="Content\backgrounds\road_dusk.png" />
+    <None Include="Content\backgrounds\road_night.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

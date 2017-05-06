@@ -11,28 +11,23 @@ namespace TOJAM12
 	public class ChatScene : Scene
 	{
 
-		public enum BackgroundId
-		{
-			Car_Neutral = 0
-		};
-
-		// TODO fill this with entities
-		List<Entity> backgrounds;
-		BackgroundId currentBackgroundId = BackgroundId.Car_Neutral;
-		Entity background;
 		ChatLog chatLog;
 		TextBox textBox;
+		CarPicture carPicture;
 
 		public void LoadContent(TojamGame game)
 		{
 			Debug.WriteLine("Chat : Load Content");
+			CarPicture.LoadContent(game);
 		}
 
 		public void Initialize(TojamGame game)
 		{
+			// get dimensions to size thingsa round
 			Rectangle screenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
 			int messageBufferWidth = 200;
 
+			// build chatlog
 			ChatLogStyle style = new ChatLogStyle();
 			style.font = game.GameFont;
 			style.messagePadding = 20;
@@ -49,6 +44,7 @@ namespace TOJAM12
 			chatLog.Initialize(game);
 			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!");
 
+			// build textbox
 			textBox = new TextBox(
 				game.GameFont,
 				new Rectangle(
@@ -58,15 +54,10 @@ namespace TOJAM12
 					game.GameFont.LineSpacing
 				));
 
-			backgrounds = new List<Entity>();
-			DebugBackground b = new DebugBackground(
-				new Rectangle(0, 0,
-							  screenBounds.Width - messageBufferWidth,
-							  screenBounds.Height - game.GameFont.LineSpacing
-							 ));
-			b.Initialize(game);
-			backgrounds.Add(b);
-			SetBackground(currentBackgroundId);
+			// initialize displayable scene
+			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing - 5));
+			carPicture.Initialize(game);
+			carPicture.SetBackground(CarPicture.Background.Road_Day);
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -74,10 +65,9 @@ namespace TOJAM12
 			// do nothing on scene enter
 		}
 
-		public void SetBackground(BackgroundId backgroundId)
+		public CarPicture GetCarPicture()
 		{
-			this.currentBackgroundId = backgroundId;
-			background = backgrounds[(int) currentBackgroundId];
+			return this.carPicture;
 		}
 
 		public void AddMessage(string message)
@@ -90,6 +80,7 @@ namespace TOJAM12
 			chatLog.Update(game, gameTime);
 			textBox.Update(game, gameTime);
 
+
 			// TODO process messages from the server
 
 			// broadcast ready messages to the server
@@ -101,6 +92,8 @@ namespace TOJAM12
 					game.gameInstance.SendPlayerCommand(textString);
 				}
 			}
+
+			carPicture.Update(game, gameTime);
 		}
 
 		public void Draw(TojamGame game, GameTime gameTime)
@@ -108,7 +101,7 @@ namespace TOJAM12
 			game.graphics.GraphicsDevice.Clear(Color.Black);
 			game.spriteBatch.Begin(SpriteSortMode.Immediate);
 
-			background.Draw(game, gameTime);
+			carPicture.Draw(game, gameTime);
 			chatLog.Draw(game, gameTime);
 			textBox.Draw(game, gameTime);
 
