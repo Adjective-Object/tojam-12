@@ -15,7 +15,6 @@ namespace TOJAM12
 		public int linePadding = 2;
 		public int messagePadding = 5;
 		public int externalPadding = 5;
-		public Color color = Color.White;
 		public Color backgroundColor = Color.Salmon;
 
 		public Rectangle GetExternalBounds()
@@ -34,9 +33,11 @@ namespace TOJAM12
 	{
 		public ChatLogStyle style;
 		public List<string> lines;
-		public Message(ChatLogStyle style, string message)
+		public Color lineColor;
+		public Message(ChatLogStyle style, string message, Color color)
 		{
 			this.lines = InsertNewlines(style, message);
+			this.lineColor = color;
 		}
 
 		public int getHeight(ChatLogStyle style)
@@ -55,7 +56,7 @@ namespace TOJAM12
 					style.font,
 					lines[i],
 					new Vector2(drawOrigin.X, drawOrigin.Y),
-					style.color
+					lineColor
 				);
 			}
 		}
@@ -112,9 +113,9 @@ namespace TOJAM12
 							
 		}
 
-		public void AppendMessage(String message)
+		public void AppendMessage(String message, Color color)
 		{
-			this.messages.Insert(0, new Message(style, message));
+			this.messages.Insert(0, new Message(style, message, color));
 			this.dirty = true;
 		}
 

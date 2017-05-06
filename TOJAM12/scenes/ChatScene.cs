@@ -44,7 +44,7 @@ namespace TOJAM12
 
 			chatLog = new ChatLog(style);
 			chatLog.Initialize(game);
-			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!");
+			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!", Color.White);
 
 			// build textbox
 			textBox = new TextBox(
@@ -74,9 +74,18 @@ namespace TOJAM12
 			return this.carPicture;
 		}
 
-		public void AddMessage(string message)
-		{	// add a message to the chatlog
-			this.chatLog.AppendMessage(message);
+		public void AddMessage(string message, int sourcePlayer = -1)
+		{   // add a message to the chatlog
+			Color c = Color.White; // default
+			switch (sourcePlayer)
+			{
+				case 0: c = Color.Red; break;
+				case 1: c = Color.Blue; break;
+				case 2: c = Color.Green; break;
+				case 3: c = Color.Yellow; break;
+				default: break;
+			}
+			this.chatLog.AppendMessage(message, c);
 		}
 
 		public void Update(TojamGame game, GameTime gameTime)
@@ -90,11 +99,6 @@ namespace TOJAM12
                     carPicture.SetMidground(CarPicture.Midground.Car);
                 else
                     carPicture.SetMidground(CarPicture.Midground.None);
-
-                if (game.gameInstance.GetMyPlayer().worldLocation == (int)Player.WorldLocation.Driving)
-                    carPicture.SetBackground(CarPicture.Background.Driving);
-                else if (game.gameInstance.GetMyPlayer().worldLocation == (int)Player.WorldLocation.Walmart_ParkingLot)
-                    carPicture.SetBackground(CarPicture.Background.Walmart);
             }
 
             // TODO process messages from the server

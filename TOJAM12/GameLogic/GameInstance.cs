@@ -189,7 +189,7 @@ namespace TOJAM12
             }
             else if (command.Type == Command.CommandType.Text)
             {
-                ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data);
+                ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data, command.SourcePlayerId);
 			}
             else if (command.Type == Command.CommandType.PlayerInfo)
             {
@@ -211,9 +211,9 @@ namespace TOJAM12
 			{
 				case "SAY":
 					if (tokens.Length == 1)
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
 					else
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
 					break;
 				case "SETNAME":
 					if (tokens.Length != 2)
@@ -222,7 +222,7 @@ namespace TOJAM12
                     {
                         string oldname = players[command.PlayerId].name;
                         players[command.PlayerId].name = tokens[1];
-                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL));
+                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL, command.PlayerId));
                     }
                     break;
                 case "DRIVE":
