@@ -169,8 +169,24 @@ namespace TOJAM12
                         string destination = command.Data.Substring(6).ToUpper();
                         if (destination == "CAR")
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the car", Network.SEND_ALL));
-                        else if(destination.StartsWith("DRIVER"))
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the driver's seat", Network.SEND_ALL));
+                        else if (destination.StartsWith("DRIVER"))
+                        {
+                            bool isSeatAvailable = true;
+                            foreach (KeyValuePair<int, Player> entry in players)
+                            {
+                                if (entry.Value.carLocation == Player.CarLocation.DriversSeat)
+                                {
+                                    isSeatAvailable = false;
+                                    network.SendCommand(new Command(Command.CommandType.Text, players[entry.Key].name + " is already in the driver's seat", command.PlayerId));
+                                    break;
+                                }
+                            }
+                            if (isSeatAvailable)
+                            {
+                                network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the driver's seat", Network.SEND_ALL));
+                            }
+                            
+                        }
                     }
                     else
                         network.SendCommand(new Command(Command.CommandType.Text, "Not sure what you're trying to enter...", command.PlayerId));
