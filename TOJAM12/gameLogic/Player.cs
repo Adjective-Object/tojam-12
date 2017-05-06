@@ -100,5 +100,19 @@ namespace TOJAM12
 			}
 		}
 
+		public bool ItemVerb(GameInstance g, string[] command)
+		{
+			Item.ItemParams args = new Item.ItemParams();
+			args.c = command;
+			args.g = g;
+			args.p = this;
+			foreach (Item i in this.inventory)
+			{
+				if (!i.Matches(command[1])) continue;
+				args.i = i;
+				if (i.Verb(args)) return true;
+			}
+			return false;
+		}
 	}
 }

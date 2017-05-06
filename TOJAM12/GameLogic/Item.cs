@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TOJAM12
 {
 
 	public class Item
 	{
+		public struct ItemParams
+		{
+			public Player p;
+			public Item i;
+			public String[] c;
+			public GameInstance g; 
+		}
+
 		public struct ItemAction
 		{
 			public HashSet<String> actions;
-			public Action<Player, Item> use;
-			public ItemAction(String[] actions, Action<Player, Item> use)
+			public Action<ItemParams> use;
+			public ItemAction(String[] actions, Action<ItemParams> use)
 			{
 				this.actions = new HashSet<string>();
 				foreach (String s in actions)
@@ -21,28 +30,35 @@ namespace TOJAM12
 			}
 		}
 
-
 		private static Item[] AllItems = new Item[] {
 			// water
 			new Item(
 				new String[] { "water", "bottle", "water bottle", "flask" },
 				new ItemAction[] {
-					new ItemAction(new String[] {"drink", "quaff"}, (Player p, Item i) => {
-						p.inventory.Remove(i);
-						p.HealThirst(10);
-						p.inventory.Add(Item.Get("bottle"));
+					new ItemAction(new String[] {"drink", "quaff"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						args.p.HealThirst(10);
+						args.p.inventory.Add(Item.Get("bottle"));
+						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 					}),
+
+					new ItemAction(new String[] {"pour"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						args.g.sendToPlayer(args.p, "you pour the " + args.c[1] + " out on the ground");
+					}),
+
 			}),
 
 			// soda
 			new Item(
 				new String[]{ "soda", "pop", "coke" },
 				new ItemAction[] {
-					new ItemAction(new String[] {"drink", "quaff"}, (Player p, Item i) => {
-						p.inventory.Remove(i);
-						p.HealThirst(5);
-						p.HealTired(2);
-						p.inventory.Add(Item.Get("bottle"));
+					new ItemAction(new String[] {"drink", "quaff"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						args.p.HealThirst(5);
+						args.p.HealTired(2);
+						args.p.inventory.Add(Item.Get("bottle"));
+						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 					}),
 			}),
 
@@ -52,11 +68,31 @@ namespace TOJAM12
 			),
 		};
 
-		private HashSet<String> itemNames;
+
+		public static Item Get(String name)
+		{
+			Debug.WriteLine("Get " + name);
+			foreach (Item item in AllItems)
+			{
+				if (item.Matches(name))
+				{
+					return item;
+				}
+			}
+			return null;
+		}
+
+		//////////////////
+		//////////////////
+		//////////////////
+
+		private HashSet<String> itemNames = new HashSet<String>();
+		private String primaryName;
 		private ItemAction[] actions;
 
 		public Item(string[] names, ItemAction[] actions)
 		{
+			primaryName = names[0];
 			foreach (string name in names)
 			{
 				itemNames.Add(name);
@@ -69,29 +105,24 @@ namespace TOJAM12
 			return itemNames.Contains(name);
 		}
 
-		public bool Verb(Player p, string verb)
+		public bool Verb(ItemParams args)
 		{
 			foreach (ItemAction itemAction in this.actions)
 			{
-				if (itemAction.actions.Contains(verb))
+				if (itemAction.actions.Contains(args.c[0]))
 				{
-					itemAction.use(p, this);
+					itemAction.use(args);
 					return true;
 				}
 			}
 			return false;
 		}
 
-		public static Item Get(String name)
-		{
-			foreach (Item item in AllItems)
-			{
-				if (item.Matches(name)) {
-					return item;
-				}
-			}
-			return null;
-		}
 
+		public String GetPrimaryName()
+		{
+			return this.primaryName;
+		}
+	
 	}
 }
