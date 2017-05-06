@@ -6,39 +6,50 @@ namespace TOJAM12
 
 	public class Item
 	{
-		struct ItemAction
+		public struct ItemAction
 		{
-			public String action;
+			public HashSet<String> actions;
 			public Action<Player, Item> use;
-			public ItemAction(String action, Action<Player, Item> use)
+			public ItemAction(String[] actions, Action<Player, Item> use)
 			{
-				this.action = action;
+				this.actions = new HashSet<string>();
+				foreach (String s in actions)
+				{
+					this.actions.Add(s);
+				}
 				this.use = use;
 			}
 		}
 
 
 		private static Item[] AllItems = new Item[] {
+			// water
 			new Item(
 				new String[] { "water", "bottle", "water bottle", "flask" },
 				new ItemAction[] {
-					new ItemAction("drink", (Player p, Item i) => {
+					new ItemAction(new String[] {"drink", "quaff"}, (Player p, Item i) => {
 						p.inventory.Remove(i);
-						p.HealHunger(5);
-					}),
-					new ItemAction("quaff", (Player p, Item i) => {
-						p.inventory.Remove(i);
-						p.HealHunger(5);
+						p.HealThirst(10);
+						p.inventory.Add(Item.Get("bottle"));
 					}),
 			}),
+
+			// soda
 			new Item(
 				new String[]{ "soda", "pop", "coke" },
 				new ItemAction[] {
-					new ItemAction("drink", (Player p, Item i) => {
+					new ItemAction(new String[] {"drink", "quaff"}, (Player p, Item i) => {
 						p.inventory.Remove(i);
-						p.HealHunger(5);
+						p.HealThirst(5);
+						p.HealTired(2);
+						p.inventory.Add(Item.Get("bottle"));
 					}),
 			}),
+
+			new Item(
+				new String[]{ "bottle", "empty", "empty bottle", "glass bottle" },
+				new ItemAction[] {}
+			),
 		};
 
 		private HashSet<String> itemNames;
@@ -62,7 +73,7 @@ namespace TOJAM12
 		{
 			foreach (ItemAction itemAction in this.actions)
 			{
-				if (verb == itemAction.action)
+				if (itemAction.actions.Contains(verb))
 				{
 					itemAction.use(p, this);
 					return true;

@@ -22,6 +22,7 @@ namespace TOJAM12
 		public List<Item> inventory = new List<Item>();
 		public int hunger = 100;
 		public int tired = 100;
+		public int thirst = 100;
 
 		public Player(string name)
 		{
@@ -48,6 +49,20 @@ namespace TOJAM12
 			if (this.hunger < 0)
 			{
 				this.hunger = 0;
+			}
+		}
+
+		public void HealThirst(int thirst)
+		{
+			this.thirst += thirst;
+			if (this.thirst > 100)
+			{
+				this.thirst = 100;
+			}
+
+			if (this.thirst < 0)
+			{
+				this.thirst = 0;
 			}
 		}
 
