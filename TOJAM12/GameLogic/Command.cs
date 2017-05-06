@@ -19,12 +19,14 @@ namespace TOJAM12
         public String Data;
         public CommandType Type;
         public int PlayerId;
+		public int SourcePlayerId;
 
-        public Command(CommandType type, String data, int playerId)
+        public Command(CommandType type, String data, int playerId, int sourcePlayerId = -1)
         {
             Data = data;
             Type = type;
             PlayerId = playerId;
+			SourcePlayerId = sourcePlayerId;
         }
     }
 }

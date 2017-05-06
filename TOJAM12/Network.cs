@@ -73,6 +73,7 @@ namespace TOJAM12
                     {
                         NetOutgoingMessage sendMsg = peer.CreateMessage();
                         sendMsg.Write((Int32)command.Type);
+						sendMsg.Write((Int32)command.SourcePlayerId);
                         sendMsg.Write(command.Data);
                         peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
                     }
@@ -105,6 +106,7 @@ namespace TOJAM12
                     case NetIncomingMessageType.Data:
                         // handle custom messages
                         int messageType = message.ReadInt32();
+						int sourcePlayerId = message.ReadInt32();
                         String messageData = message.ReadString();
 
                         int playerId = -1;
@@ -119,7 +121,13 @@ namespace TOJAM12
                                 }
                             }
                         }
-                        commands.Add(new Command((Command.CommandType)messageType, messageData, playerId));
+						Command c = new Command(
+							(Command.CommandType)messageType,
+							messageData,
+							playerId,
+							sourcePlayerId
+						);
+                        commands.Add(c);
 
                         break;
 
@@ -137,7 +145,7 @@ namespace TOJAM12
                                     {
                                         connections[i] = message.SenderConnection;
                                         Console.WriteLine("Added connection as player id " + (i+1));
-										SendCommand(new Command(Command.CommandType.PlayerJoined, (i+1).ToString(), 0));
+										SendCommand(new Command(Command.CommandType.PlayerJoined, (i+1).ToString(), 0, i + 1));
                                         SendCommand(new Command(Command.CommandType.PlayerJoined, (i + 1).ToString(), (i+1)));
                                         addedConnection = true;
                                         break;

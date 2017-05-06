@@ -44,7 +44,7 @@ namespace TOJAM12
 
 			chatLog = new ChatLog(style);
 			chatLog.Initialize(game);
-			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!");
+			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!", Color.White);
 
 			// build textbox
 			textBox = new TextBox(
@@ -74,9 +74,18 @@ namespace TOJAM12
 			return this.carPicture;
 		}
 
-		public void AddMessage(string message)
-		{	// add a message to the chatlog
-			this.chatLog.AppendMessage(message);
+		static Color[] PlayerColors = {
+			new Color(99, 166, 159),
+			new Color(242, 141, 88),
+			new Color(195, 111, 242),
+			new Color(214, 242, 145),
+			new Color(242, 225, 172),
+		};
+
+		public void AddMessage(string message, int sourcePlayer = -1)
+		{   // add a message to the chatlog
+			Color c = sourcePlayer < 0 ? Color.White : PlayerColors[sourcePlayer % PlayerColors.Length];
+			this.chatLog.AppendMessage(message, c);
 		}
 
 		public void Update(TojamGame game, GameTime gameTime)
