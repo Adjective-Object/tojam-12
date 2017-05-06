@@ -11,7 +11,8 @@ namespace TOJAM12
         public enum CommandType
         {
             Player = 0, // Command sent from a player
-            Text = 1 // Command to just dump text
+            Text = 1, // Command to just dump text
+			PlayerJoined = 2, // command for when a player joins
         }
 
         public String Data;

@@ -131,8 +131,8 @@ namespace TOJAM12
                                     if (connections[i]  == null)
                                     {
                                         connections[i] = message.SenderConnection;
-                                        Console.WriteLine("Added connection as played id " + i);
-                                        SendCommand(new Command(Command.CommandType.Text, "Player " + message.SenderConnection.RemoteEndPoint.Address.ToString() + " joined", 0));
+                                        Console.WriteLine("Added connection as player id " + i);
+										SendCommand(new Command(Command.CommandType.PlayerJoined, i.ToString(), 1));
                                         break;
                                     }
                                 }

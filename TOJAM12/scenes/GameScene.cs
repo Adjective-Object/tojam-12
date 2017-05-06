@@ -23,11 +23,7 @@ namespace TOJAM12
 
 				PlayerSelection selection = (PlayerSelection) (parameters[key]);
 				if (selection == null) continue;
-
-				Player p = new Player();
-				p.Initialize(selection.input, new Vector2(100 + i * 100, 100), PlayerCostume.playerCostumes[selection.playerSpriteId].texture);
-				entities.Add(p);
-			}
+				}
 		}
 
 		public void Initialize(TojamGame game)
