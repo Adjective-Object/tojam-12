@@ -77,7 +77,7 @@ namespace TOJAM12
 		{
 
 
-            if (Console.ReadKey().Key == ConsoleKey.S)
+            if (true)//Console.ReadKey().Key == ConsoleKey.S)
             {
                 Console.WriteLine("Server");
                 var config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };

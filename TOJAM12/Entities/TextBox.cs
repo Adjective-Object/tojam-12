@@ -30,7 +30,7 @@ namespace TOJAM12.Entities
             bool[] curPressedKeys = new bool[256];
             foreach(Keys key in Keyboard.GetState().GetPressedKeys())
             {
-                if ((key >= Keys.A && key <= Keys.Z) || key == Keys.Space || key == Keys.Back)
+                if ((int) key < 256)
                 {
                     if (!pressedKeys[(int)key])
                     {
@@ -43,8 +43,10 @@ namespace TOJAM12.Entities
                         }
                         else if (key == Keys.Space)
                             currentString += " ";
-                        else
+                        else if ((key >= Keys.A && key <= Keys.Z))
                             currentString += key.ToString();
+                        else if (key >= Keys.D0 && key <= Keys.D9)
+                            currentString += (key - (Keys.D0)).ToString();
 
                         Console.WriteLine(currentString);
                     }
