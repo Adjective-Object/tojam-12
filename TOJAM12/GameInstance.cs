@@ -69,7 +69,7 @@ namespace TOJAM12
                 String[] tokens = command.Data.Split(' ');
                 if (tokens.Length > 0)
                 {
-                    if (tokens[0] == "SAY")
+                    if (tokens[0].ToUpper() == "SAY")
                     {
                         if (tokens.Length == 1)
                             network.SendCommand(new Command(Command.CommandType.Text, command.PlayerId + " said nothing", 0));
