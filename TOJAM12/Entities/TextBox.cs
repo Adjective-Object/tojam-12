@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TOJAM12.Entities
 {
@@ -12,11 +13,15 @@ namespace TOJAM12.Entities
     {
         bool[] pressedKeys;
         String currentString;
+		SpriteFont font;
+		Rectangle bounds;
 
-        public TextBox()
+        public TextBox(SpriteFont spriteFont, Rectangle boxBounds)
         {
+			font = spriteFont;
             currentString = "";
             pressedKeys = new bool[256];
+			bounds = boxBounds;
         }
 
         public String GetAndClear()
@@ -49,15 +54,21 @@ namespace TOJAM12.Entities
                             currentString += key.ToString();
                         else if (key >= Keys.D0 && key <= Keys.D9)
                             currentString += (key - (Keys.D0)).ToString();
-                    }
+
+						if (font.MeasureString(currentString).X > bounds.Width)
+						{
+							currentString = currentString.Substring(0, currentString.Count() - 1);
+						}
+					}
                     curPressedKeys[(int)key] = true;
                 }
             }
             pressedKeys = curPressedKeys;
         }
-        public void Draw(TojamGame game, GameTime gameTime)
+
+		public void Draw(TojamGame game, GameTime gameTime)
         {
-            game.spriteBatch.DrawString(game.GameFont, currentString, new Vector2(0, 0), Color.White);
+            game.spriteBatch.DrawString(font, currentString, new Vector2(bounds.X, bounds.Y), Color.White);
         }
     }
 }

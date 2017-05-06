@@ -103,14 +103,12 @@ namespace TOJAM12
 	{
 		ChatLogStyle style;
 		List<Message> messages = new List<Message>();
-		int maxBuffer;
 		RenderTarget2D renderTarget;
 		bool dirty = false;
 
-		public ChatLog(ChatLogStyle style, int maxBuffer = 100)
+		public ChatLog(ChatLogStyle style)
 		{
 			this.style = style;
-			this.maxBuffer = maxBuffer;
 							
 		}
 
@@ -179,9 +177,7 @@ namespace TOJAM12
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
 			// start a new batch to draw the buffer to the screen
-			game.spriteBatch.Begin(SpriteSortMode.Immediate);
 			game.spriteBatch.Draw(renderTarget, style.GetExternalBounds(), Color.White);
-			game.spriteBatch.End();
 		}
 	}
 }

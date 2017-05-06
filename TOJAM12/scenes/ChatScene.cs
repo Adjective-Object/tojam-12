@@ -3,36 +3,51 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using TOJAM12.Entities;
 
 namespace TOJAM12
 {
 	public class ChatScene : Scene
 	{
-		SpriteFont renderFont;
 		ChatLog chatLog;
+		TextBox textBox;
 
 		public void LoadContent(TojamGame game)
 		{
 			Debug.WriteLine("Chat : Load Content");
-			renderFont = game.Content.Load<SpriteFont>("fonts/Cutive_Mono");
 		}
 
 		public void Initialize(TojamGame game)
 		{
-			Debug.WriteLine("Chat : Initialize");
+			Rectangle screenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
 
 			ChatLogStyle style = new ChatLogStyle();
-			style.font = renderFont;
-			style.internalBounds = new Rectangle(100, 10, 200, 300);
+			int messageBufferWidth = 200;
+			style.font = game.GameFont;
 			style.messagePadding = 20;
 			style.externalPadding = 20;
+			style.internalBounds = new Rectangle(
+				screenBounds.Width - messageBufferWidth + style.externalPadding * 2,
+				style.externalPadding,
+				messageBufferWidth - style.externalPadding * 2,
+				screenBounds.Height - style.externalPadding
+			);
+			style.backgroundColor = Color.Black;
 
 			chatLog = new ChatLog(style);
 			chatLog.Initialize(game);
 
-			chatLog.AppendMessage("hello, I would like some sausage");
-			chatLog.AppendMessage("gimme that good sausage, fam");
-			chatLog.AppendMessage("Is this enough text to force a line wrap? Find out next time on an exciting new episode of dragonball Z");
+			chatLog.AppendMessage("Welcome to Roadtrip Simulator 2018!");
+
+			textBox = new TextBox(
+				game.GameFont,
+				new Rectangle(
+					0,
+					screenBounds.Height - game.GameFont.LineSpacing,
+					screenBounds.Width - messageBufferWidth,
+					game.GameFont.LineSpacing
+				));
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -44,12 +59,29 @@ namespace TOJAM12
 		{
 			// TODO process messages from the server
 			chatLog.Update(game, gameTime);
+			textBox.Update(game, gameTime);
+
+			if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+			{
+				String textString = textBox.GetAndClear();
+				if (textString != "")
+				{
+					chatLog.AppendMessage(textString);
+					// TODO broadcast message to peers
+					// game.network.broadcastMessage(textString);
+				}
+			}
 		}
 
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
 			game.graphics.GraphicsDevice.Clear(Color.Bisque);
+			game.spriteBatch.Begin(SpriteSortMode.Immediate);
+
 			chatLog.Draw(game, gameTime);
+			textBox.Draw(game, gameTime);
+
+			game.spriteBatch.End();
 		}
 	}
 }

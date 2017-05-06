@@ -69,8 +69,6 @@ namespace TOJAM12
         NetServer server;
         NetPeer peer;
 
-        TextBox textbox;
-
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -115,7 +113,6 @@ namespace TOJAM12
 			this.SwitchScene(GameScenes.Chat);
 
             GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono"); 
-            textbox = new TextBox();
 		}
 
 		/// <summary>
@@ -139,21 +136,6 @@ namespace TOJAM12
 
 
 			activeScene.Update(this, gameTime);
-
-
-            textbox.Update(this, gameTime);
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
-                String textString = textbox.GetAndClear();
-                if (textString != "")
-                {
-                    foreach (NetConnection connection in peer.Connections)
-                    {
-                        NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
-                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
-                    }
-                }
-            }
 
             NetIncomingMessage message;
             while ((message = peer.ReadMessage()) != null)
@@ -198,10 +180,6 @@ namespace TOJAM12
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			activeScene.Draw(this, gameTime);
-
-            spriteBatch.Begin();
-            textbox.Draw(this, gameTime);
-            spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
