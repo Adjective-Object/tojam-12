@@ -126,6 +126,7 @@ namespace TOJAM12
                         {
                             if (message.SenderConnection.Status == NetConnectionStatus.Connected)
                             {
+                                bool addedConnection = false;
                                 for (int i = 0; i < 3; i++)
                                 {
                                     if (connections[i]  == null)
@@ -133,20 +134,26 @@ namespace TOJAM12
                                         connections[i] = message.SenderConnection;
                                         Console.WriteLine("Added connection as played id " + i);
                                         SendCommand(new Command(Command.CommandType.Text, "Player " + message.SenderConnection.RemoteEndPoint.Address.ToString() + " joined", 0));
+                                        addedConnection = true;
                                         break;
                                     }
+                                }
+                                if (!addedConnection)
+                                {
+                                    Console.WriteLine("Max players reached, disconnecting");
+                                    message.SenderConnection.Deny();
                                 }
                             }
                         }
                         break;
 
                     case NetIncomingMessageType.DebugMessage:
-                        // handle debug messages
-                        // (only received when compiled in DEBUG mode)
                         Console.WriteLine(message.ReadString());
                         break;
 
-                    /* .. */
+                    case NetIncomingMessageType.WarningMessage:
+                        Console.WriteLine("Warning: " + message.ReadString());
+                        break;
                     default:
                         Console.WriteLine("unhandled message with type: " + message.MessageType);
                         break;
