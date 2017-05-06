@@ -105,22 +105,35 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\backgrounds\BackLeftPerson.png" />
+    <Content Include="Content\backgrounds\BackRightPerson.png" />
     <Content Include="Content\backgrounds\BugSplat.png" />
     <Content Include="Content\backgrounds\Drink_01-001.png" />
     <Content Include="Content\backgrounds\Drink_01.png" />
     <Content Include="Content\backgrounds\Drink_02.png" />
     <Content Include="Content\backgrounds\Drink_03.png" />
+    <Content Include="Content\backgrounds\Drink_04.png" />
+    <Content Include="Content\backgrounds\Driver.png" />
     <Content Include="Content\backgrounds\GloveBox-Door.png" />
+    <Content Include="Content\backgrounds\InsideWalmart.png" />
     <Content Include="Content\backgrounds\Layer-1.png" />
     <Content Include="Content\backgrounds\Layer-4.png" />
+    <Content Include="Content\backgrounds\Layer-5.png" />
     <Content Include="Content\backgrounds\Lightning_01.png" />
     <Content Include="Content\backgrounds\Loghtning_02.png" />
+    <Content Include="Content\backgrounds\map.png" />
+    <Content Include="Content\backgrounds\RoadAlgonquin_01.png" />
     <Content Include="Content\backgrounds\RoadBasic.png" />
+    <Content Include="Content\backgrounds\RoadDistantFruit.png" />
+    <Content Include="Content\backgrounds\RoadDistantGas.png" />
+    <Content Include="Content\backgrounds\RoadFruit.png" />
+    <Content Include="Content\backgrounds\RoadGas-copy.png" />
     <Content Include="Content\backgrounds\RoadGas.png" />
     <Content Include="Content\backgrounds\RoadMountains.png" />
     <Content Include="Content\backgrounds\RoadPines.png" />
     <Content Include="Content\backgrounds\RoadTorona.png" />
     <Content Include="Content\backgrounds\RoadWalmart.png" />
+    <Content Include="Content\backgrounds\Shotgun.png" />
     <Content Include="Content\backgrounds\SkyClear.png" />
     <Content Include="Content\backgrounds\SkyEvening.png" />
     <Content Include="Content\backgrounds\SkyMorning.png" />
