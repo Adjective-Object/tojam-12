@@ -175,7 +175,13 @@ namespace TOJAM12
                 case "ENTER":
                     ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
-				case "GIVEME!":
+                case "LEAVE":
+                    ParseExitCommand(command.Data, command.PlayerId, tokens);
+                    break;
+                case "EXIT":
+                    ParseExitCommand(command.Data, command.PlayerId, tokens);
+                    break;
+                case "GIVEME!":
 					if (tokens.Length != 2)
 					{
 						network.SendCommand(new Command(Command.CommandType.Text, "takes 2 args", command.PlayerId));
@@ -232,7 +238,19 @@ namespace TOJAM12
 			}
 		}
 
-		private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
+        private void ParseExitCommand(String data, int PlayerId, String[] tokens)
+        {
+            if (players[PlayerId].carLocation != Player.CarLocation.NotInCar)
+            {
+                SetPlayerCarLocation(PlayerId, Player.CarLocation.NotInCar);
+            }
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "Nothing to exit...", PlayerId));
+            }
+        }
+
+        private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
         {
             if (tokens.Length > 1)
             {
@@ -283,7 +301,11 @@ namespace TOJAM12
         private void SetPlayerCarLocation(int playerId, Player.CarLocation location)
         {
             players[playerId].carLocation = location;
-            network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL));
+
+            if (location == Player.CarLocation.NotInCar)
+                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " left the car", Network.SEND_ALL));
+            else
+                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL));
 
             // Dont send to server player, since already updated.
             if (playerId != 0)
