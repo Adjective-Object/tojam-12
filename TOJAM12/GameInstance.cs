@@ -85,12 +85,12 @@ namespace TOJAM12
 					chatScene.AddMessage("joining " + ip);
 					network = new Network();
 					network.Start(false, ip);
-
 					break;
 				case "host":
 					network = new Network();
 					network.Start(true, null);
-					chatScene.AddMessage("started hosting ");
+                    string lip = GetLocalIPAddress();
+					chatScene.AddMessage("started hosting on: " + lip);
 					break;
 				default:
 					chatScene.AddMessage("you must 'join <ip>' a game or 'host' a game ");
@@ -98,6 +98,19 @@ namespace TOJAM12
 			}
 
 		}
+
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("Local IP Address Not Found!");
+        }
 
         private void ParseCommand(Command command)
         {
