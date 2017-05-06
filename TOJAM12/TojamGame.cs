@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Lidgren.Network;
 
 namespace TOJAM12
 {
@@ -61,14 +62,37 @@ namespace TOJAM12
 			}
 		}
 
+        NetServer server;
+        NetPeer peer;
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
 		/// </summary>
 		protected override void LoadContent()
 		{
-			// Create a new SpriteBatch, which can be used to draw textures.
-			spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+            if (Console.ReadKey().Key == ConsoleKey.S)
+            {
+                Console.WriteLine("Server");
+                var config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };
+                server = new NetServer(config);
+                server.Start();
+                peer = server;
+            }
+            else
+            {
+                var config = new NetPeerConfiguration("TOJAM12");
+                NetClient client = new NetClient(config);
+                client.Start();
+                client.Connect(host: "127.0.0.1", port: 12345);
+                peer = client;
+            }
+
+            
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			PlayerCostume.LoadContent(this);
 
@@ -102,12 +126,50 @@ namespace TOJAM12
 			foreach (Input i in Input.getAllInstances())
 			{
 				i.Update();
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    foreach (NetConnection connection in peer.Connections)
+                    {
+                        NetOutgoingMessage sendMsg = peer.CreateMessage("Pressed A");
+                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
+                    }
+                }
 			}
 
 
 			activeScene.Update(this, gameTime);
 
-			base.Update(gameTime);
+
+            NetIncomingMessage message;
+            while ((message = peer.ReadMessage()) != null)
+            {
+                switch (message.MessageType)
+                {
+                    case NetIncomingMessageType.Data:
+                        // handle custom messages
+                        Console.WriteLine("Message: " + message.ReadString());
+                        break;
+
+                    case NetIncomingMessageType.StatusChanged:
+                        // handle connection status messages
+                        Console.WriteLine(message.SenderConnection.RemoteEndPoint.Address.ToString() + ": Status Changed " + message.SenderConnection.Status.ToString());
+                        break;
+
+                    case NetIncomingMessageType.DebugMessage:
+                        // handle debug messages
+                        // (only received when compiled in DEBUG mode)
+                        Console.WriteLine(message.ReadString());
+                        break;
+
+                    /* .. */
+                    default:
+                        Console.WriteLine("unhandled message with type: "
+                            + message.MessageType);
+                        break;
+                }
+            }
+
+            base.Update(gameTime);
 		}
 
 		/// <summary>

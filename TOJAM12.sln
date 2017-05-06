@@ -1,17 +1,24 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOJAM12", "TOJAM12\TOJAM12.csproj", "{260112C4-44FA-430A-9B12-EF3A6D700839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
+		DebugServer|x86 = DebugServer|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Debug|x86.ActiveCfg = Debug|x86
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Debug|x86.Build.0 = Debug|x86
+		{260112C4-44FA-430A-9B12-EF3A6D700839}.DebugServer|x86.ActiveCfg = DebugServer|x86
+		{260112C4-44FA-430A-9B12-EF3A6D700839}.DebugServer|x86.Build.0 = DebugServer|x86
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Release|x86.ActiveCfg = Release|x86
 		{260112C4-44FA-430A-9B12-EF3A6D700839}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
