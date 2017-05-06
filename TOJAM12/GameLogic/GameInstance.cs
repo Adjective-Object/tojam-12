@@ -95,7 +95,7 @@ namespace TOJAM12
 					chatScene.AddMessage("started hosting on: " + lip);
 					break;
 				default:
-					chatScene.AddMessage("you must 'join <ip>' a game or 'host' a game ");
+					chatScene.AddMessage("you must 'join <ip>' or 'host' a game ");
 					break;
 			}
 
@@ -170,8 +170,12 @@ namespace TOJAM12
 					if (tokens.Length != 2)
 						network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
 					else
-						players[command.PlayerId].name = tokens[1];
-					break;
+                    {
+                        string oldname = players[command.PlayerId].name;
+                        players[command.PlayerId].name = tokens[1];
+                        network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, command.PlayerId));
+                    }
+                    break;
                 case "ENTER":
                     ParseEnterCommand(command.Data, command.PlayerId, tokens);
                     break;
