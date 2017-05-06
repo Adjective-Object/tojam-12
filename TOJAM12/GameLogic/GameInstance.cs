@@ -262,9 +262,9 @@ namespace TOJAM12
                 command.Data = "ENTER CAR";
                 tokens = new string[] { "enter", "CAR" };
             }
-            if (words.Contains("get") && words.Contains("out") && words.Contains("car"))
+            if ((words.Contains("get") || words.Contains("jump")) && words.Contains("out") && (words.Contains("car") || words.Contains("window")))
             {
-                tokens = new string[] { "exit", "CAR" };
+                tokens = new string[] { "exit", "CAR", "window" };
             }
             if ((words.Contains("current") || words.Contains("what")) && (words.Contains("time")))
             {
@@ -272,6 +272,15 @@ namespace TOJAM12
                 string thetime = dt.Hour.ToString() + ":" + dt.Minute.ToString();
                 network.SendCommand(new Command(Command.CommandType.Text, "the current time is " + thetime, command.PlayerId));
                 didsomething = true;
+            }
+            if ((words.Contains("switch") || words.Contains("change")) && (words.Contains("seat") || words.Contains("seats") || words.Contains("spots") || words.Contains("spot")))
+            {
+                int loc = (int)players[command.PlayerId].carLocation;
+                if(loc != 0)
+                {
+                    command.Data = "ENTER CAR";
+                    tokens = new string[] { "enter", "CAR" };
+                }
             }
 
             if (!didsomething)
@@ -291,7 +300,7 @@ namespace TOJAM12
                         if (tokens.Length == 1)
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled nothing", Network.SEND_ALL, command.PlayerId));
                         else
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(4).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(5).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
                         break;
 
                     case "SETNAME":
