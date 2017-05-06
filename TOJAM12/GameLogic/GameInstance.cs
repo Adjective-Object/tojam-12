@@ -241,7 +241,13 @@ namespace TOJAM12
             {
                 tokens = new string[] { "exit", "CAR" };
             }
-
+            if ((words.Contains("current") || words.Contains("what")) && (words.Contains("time")))
+            {
+                DateTime dt = DateTime.Now;
+                string thetime = dt.Hour.ToString() + ":" + dt.Minute.ToString();
+                network.SendCommand(new Command(Command.CommandType.Text, "the current time is " + thetime, command.PlayerId));
+                didsomething = true;
+            }
 
             if (!didsomething)
             {
@@ -255,6 +261,14 @@ namespace TOJAM12
                         else
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
                         break;
+
+                    case "YELL":
+                        if (tokens.Length == 1)
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled nothing", Network.SEND_ALL, command.PlayerId));
+                        else
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(4).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
+                        break;
+
                     case "SETNAME":
                         if (tokens.Length != 2)
                             network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
