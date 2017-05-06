@@ -31,6 +31,11 @@ namespace TOJAM12
 			Game = 2,
 		};
 
+        public Scene GetScene(GameScenes scene)
+        {
+            return scenes[(int)scene];
+        }
+
 		GameScenes activeSceneType = GameScenes.PlayerSelect;
 		Scene activeScene = null;
         public GameInstance gameInstance;
@@ -65,7 +70,7 @@ namespace TOJAM12
 			{
 				s.Initialize(this);
 			}
-            gameInstance = new GameInstance();
+            gameInstance = new GameInstance(this);
 		}
 
         /// <summary>
