@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
+using TOJAM12.Entities;
 
 namespace TOJAM12
 {
@@ -15,6 +16,7 @@ namespace TOJAM12
 	{
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
+        public SpriteFont GameFont;
 
 		// declaration of scenes in the game
 		Scene[] scenes = {
@@ -67,15 +69,17 @@ namespace TOJAM12
         NetServer server;
         NetPeer peer;
 
-		/// <summary>
-		/// LoadContent will be called once per game and is the place to load
-		/// all of your content.
-		/// </summary>
-		protected override void LoadContent()
+        TextBox textbox;
+
+        /// <summary>
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// </summary>
+        protected override void LoadContent()
 		{
 
 
-            if (Console.ReadKey().Key == ConsoleKey.S)
+            if (true)//Console.ReadKey().Key == ConsoleKey.S)
             {
                 Console.WriteLine("Server");
                 var config = new NetPeerConfiguration("TOJAM12") { Port = 12345 };
@@ -110,6 +114,8 @@ namespace TOJAM12
 			//this.SwitchScene(GameScenes.Game, parameters);
 			this.SwitchScene(GameScenes.Chat);
 
+            GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono"); 
+            textbox = new TextBox();
 		}
 
 		/// <summary>
@@ -129,19 +135,25 @@ namespace TOJAM12
 			foreach (Input i in Input.getAllInstances())
 			{
 				i.Update();
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
-                {
-                    foreach (NetConnection connection in peer.Connections)
-                    {
-                        NetOutgoingMessage sendMsg = peer.CreateMessage("Pressed A");
-                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
-                    }
-                }
 			}
 
 
 			activeScene.Update(this, gameTime);
 
+
+            textbox.Update(this, gameTime);
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                String textString = textbox.GetAndClear();
+                if (textString != "")
+                {
+                    foreach (NetConnection connection in peer.Connections)
+                    {
+                        NetOutgoingMessage sendMsg = peer.CreateMessage(textString);
+                        peer.SendMessage(sendMsg, connection, NetDeliveryMethod.ReliableOrdered);
+                    }
+                }
+            }
 
             NetIncomingMessage message;
             while ((message = peer.ReadMessage()) != null)
@@ -172,9 +184,11 @@ namespace TOJAM12
                 }
             }
 
+            
             base.Update(gameTime);
 		}
 
+        
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
@@ -184,6 +198,10 @@ namespace TOJAM12
 			graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
 			activeScene.Draw(this, gameTime);
+
+            spriteBatch.Begin();
+            textbox.Draw(this, gameTime);
+            spriteBatch.End();
 
 			base.Draw(gameTime);
 		}

@@ -77,6 +77,7 @@
     <Compile Include="lib\Easing.cs" />
     <Compile Include="Entities\ChatLog.cs" />
     <Compile Include="scenes\ChatScene.cs" />
+    <Compile Include="Entities\TextBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />
