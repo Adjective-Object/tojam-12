@@ -58,7 +58,7 @@ namespace TOJAM12
 			// initialize displayable scene
 			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing - 5));
 			carPicture.Initialize(game);
-			carPicture.SetBackground(CarPicture.Background.Barrie_SpiritCatcher);
+			carPicture.SetBackground(CarPicture.Background.Walmart);
 			carPicture.SetMidground(CarPicture.Midground.Store_Car);
 		}
 

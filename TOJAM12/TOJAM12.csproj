@@ -54,6 +54,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lidgren.Network, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -102,6 +103,31 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\backgrounds\BugSplat.png" />
+    <Content Include="Content\backgrounds\Drink_01-001.png" />
+    <Content Include="Content\backgrounds\Drink_01.png" />
+    <Content Include="Content\backgrounds\Drink_02.png" />
+    <Content Include="Content\backgrounds\Drink_03.png" />
+    <Content Include="Content\backgrounds\GloveBox-Door.png" />
+    <Content Include="Content\backgrounds\Layer-1.png" />
+    <Content Include="Content\backgrounds\Layer-4.png" />
+    <Content Include="Content\backgrounds\Lightning_01.png" />
+    <Content Include="Content\backgrounds\Loghtning_02.png" />
+    <Content Include="Content\backgrounds\RoadBasic.png" />
+    <Content Include="Content\backgrounds\RoadGas.png" />
+    <Content Include="Content\backgrounds\RoadMountains.png" />
+    <Content Include="Content\backgrounds\RoadPines.png" />
+    <Content Include="Content\backgrounds\RoadTorona.png" />
+    <Content Include="Content\backgrounds\RoadWalmart.png" />
+    <Content Include="Content\backgrounds\SkyClear.png" />
+    <Content Include="Content\backgrounds\SkyEvening.png" />
+    <Content Include="Content\backgrounds\SkyMorning.png" />
+    <Content Include="Content\backgrounds\SkyNight.png" />
+    <Content Include="Content\backgrounds\SkyStorm.png" />
+    <Content Include="Content\backgrounds\SteeringWheel.png" />
+    <Content Include="Content\backgrounds\YellowLine_01.png" />
+    <Content Include="Content\backgrounds\YellowLine_02.png" />
+    <Content Include="Content\backgrounds\YellowLine_03.png" />
     <Content Include="x64\libopenal.so.1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -148,16 +174,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.MacOS.csproj">
-      <Project>{5C3DC4FF-FE5A-4B94-B4A6-6F79E63F3130}</Project>
-      <Name>Lidgren.Network.MacOS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="GameLogic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
 </Project>

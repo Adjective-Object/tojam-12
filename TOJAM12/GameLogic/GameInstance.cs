@@ -16,12 +16,14 @@ namespace TOJAM12
         Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
         bool carIsDriving;
+        int carLocation;
 
         public GameInstance(TojamGame game)
         {
 			this.game = game;
             myPlayerId = 0;
             carIsDriving = false;
+            carLocation = (int)Player.WorldLocation.Walmart_ParkingLot;
         }
 
 		public void Update()
