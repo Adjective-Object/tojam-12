@@ -43,6 +43,8 @@ namespace TOJAM12
 		public TojamGame()
 		{
 			graphics = new GraphicsDeviceManager(this);
+			graphics.PreferredBackBufferHeight = 430;
+			graphics.PreferredBackBufferWidth = 800;
 			Content.RootDirectory = "Content";
 			activeScene = scenes[(int) activeSceneType];
 		}
