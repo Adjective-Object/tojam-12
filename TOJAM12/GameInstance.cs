@@ -10,8 +10,10 @@ namespace TOJAM12
     {
         Network network;
         bool isServer;
-        public GameInstance()
+        TojamGame game;
+        public GameInstance(TojamGame game)
         {
+            this.game = game;
             isServer = true;
             network = new Network();
             network.Start(isServer);
@@ -40,6 +42,9 @@ namespace TOJAM12
         private void ParseCommand(String command)
         {
             //Decide what to do with command
+            Console.WriteLine("Parsing command '" + command + "'");
+
+            ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command);
 
             if (isServer)
                 network.SendCommand(command);

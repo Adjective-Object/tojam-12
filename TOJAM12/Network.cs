@@ -59,8 +59,9 @@ namespace TOJAM12
                 {
                     case NetIncomingMessageType.Data:
                         // handle custom messages
-                        Console.WriteLine("Message: " + message.ReadString());
-                        commands.Add(message.ReadString());
+                        String messageString = message.ReadString();
+                        Console.WriteLine("Message: " + messageString);
+                        commands.Add(messageString);
                         break;
 
                     case NetIncomingMessageType.StatusChanged:
