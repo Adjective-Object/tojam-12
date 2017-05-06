@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -16,9 +17,12 @@ namespace TOJAM12
         public World world;
         Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
+
+        int driveTime = 0;
         bool carIsDriving;
         int carLocation;
         int lastLocation = 0;
+        
 
         public GameInstance(TojamGame game)
         {
@@ -39,11 +43,33 @@ namespace TOJAM12
             return false;
         }
 
-		public void Update()
+		public void Update(GameTime gameTime)
         {
 			if (network != null)
 			{
-				if (network.IsServer())
+
+                if (carIsDriving)
+                {
+                    driveTime += gameTime.ElapsedGameTime.Milliseconds;
+
+                    if (driveTime >= world.GetLocation(carLocation).DriveLength)
+                    {
+                        Console.WriteLine("Finished drive");
+                        int newLocation = world.GetLocation(carLocation).DriveLocation.Id;
+                        carLocation = newLocation;
+                        foreach (Player p in players.Values)
+                        {
+                            if (p.carLocation != Player.CarLocation.NotInCar)
+                                p.worldLocation = carLocation;
+                        }
+                        driveTime = 0;
+                        carIsDriving = false;
+                        network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
+                        SendAllPlayerInfoCommand();
+                    }
+                }
+
+                if (network.IsServer())
 				{
 					// Parse server generated messages
 					foreach (Command command in network.GetLocalCommands())
@@ -51,7 +77,7 @@ namespace TOJAM12
 						ParseCommand(command);
 					}
 				}
-
+                
 				network.Update();
 				foreach (Command command in network.GetCommands())
 				{
@@ -75,7 +101,6 @@ namespace TOJAM12
 			}
 			else {
 				ParseClientCommand(command);
-
 			}
         }
 
@@ -337,6 +362,12 @@ namespace TOJAM12
                 else
                 {
                     carIsDriving = true;
+                    
+                    if (!world.GetLocation(carLocation).IsDriveLocation)
+                    {
+                        carLocation = world.GetLocation(carLocation).DriveLocation.Id;
+                    }
+
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
                     lastLocation = players[command.PlayerId].worldLocation;
 
@@ -348,6 +379,7 @@ namespace TOJAM12
                         else
                         {
                             p.worldLocation = world.GetLocation(lastLocation).DriveLocation.Id;
+                            driveTime = 0;
                         }
 					}
 					if (abandonedPlayers.Count != 0)
