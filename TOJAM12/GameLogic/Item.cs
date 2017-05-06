@@ -7,7 +7,7 @@ namespace TOJAM12
 
 	public class Item
 	{
-		public struct ItemParams
+		public class ItemParams
 		{
 			public Player p;
 			public Item i;
@@ -15,7 +15,7 @@ namespace TOJAM12
 			public GameInstance g; 
 		}
 
-		public struct ItemAction
+		public class ItemAction
 		{
 			public HashSet<String> actions;
 			public Action<ItemParams> use;
@@ -30,24 +30,27 @@ namespace TOJAM12
 			}
 		}
 
+		static ItemAction pour = new ItemAction(new String[] { "pour" }, (args) =>
+					{
+						args.p.inventory.Remove(args.i);
+						args.g.sendToPlayer(args.p, "you pour the " + args.c[1] + " out on the ground");
+						args.p.inventory.Add(Item.Get("bottle"));
+					});
+
 		private static Item[] AllItems = new Item[] {
 			// water
 			new Item(
-				new String[] { "water", "bottle", "water bottle", "flask" },
+				new String[] { "water", "water bottle", "flask" },
 				new ItemAction[] {
 					new ItemAction(new String[] {"drink", "quaff"}, (args) => {
 						args.p.inventory.Remove(args.i);
 						args.p.HealThirst(10);
 						args.p.inventory.Add(Item.Get("bottle"));
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
+						Debug.WriteLine("inventory is currently: " + String.Join(", ", args.p.inventory));
 					}),
-
-					new ItemAction(new String[] {"pour"}, (args) => {
-						args.p.inventory.Remove(args.i);
-						args.g.sendToPlayer(args.p, "you pour the " + args.c[1] + " out on the ground");
-					}),
-
-			}),
+					pour
+				}),
 
 			// soda
 			new Item(
@@ -60,7 +63,8 @@ namespace TOJAM12
 						args.p.inventory.Add(Item.Get("bottle"));
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 					}),
-			}),
+					pour
+				}),
 
 			new Item(
 				new String[]{ "bottle", "empty", "empty bottle", "glass bottle" },
@@ -71,7 +75,6 @@ namespace TOJAM12
 
 		public static Item Get(String name)
 		{
-			Debug.WriteLine("Get " + name);
 			foreach (Item item in AllItems)
 			{
 				if (item.Matches(name))
@@ -122,6 +125,17 @@ namespace TOJAM12
 		public String GetPrimaryName()
 		{
 			return this.primaryName;
+		}
+
+		override public String ToString()
+		{
+			return "Item(" + GetPrimaryName() + ")";
+		}
+
+		public override bool Equals(object obj)
+		{
+			Debug.WriteLine(this + " = " + obj + "? [" + this.GetHashCode() + ", " + obj.GetHashCode() + "]");
+			return Object.ReferenceEquals(this, obj);
 		}
 	
 	}

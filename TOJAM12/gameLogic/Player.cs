@@ -106,11 +106,12 @@ namespace TOJAM12
 			args.c = command;
 			args.g = g;
 			args.p = this;
-			foreach (Item i in this.inventory)
+			for (int i = this.inventory.Count - 1; i >= 0; i--) 
 			{
-				if (!i.Matches(command[1])) continue;
-				args.i = i;
-				if (i.Verb(args)) return true;
+				Item item = this.inventory[i];
+				if (!item.Matches(command[1])) continue;
+				args.i = item;
+				if (item.Verb(args)) return true;
 			}
 			return false;
 		}
