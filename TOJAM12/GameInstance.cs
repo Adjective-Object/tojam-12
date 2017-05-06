@@ -14,7 +14,7 @@ namespace TOJAM12
         public GameInstance(TojamGame game)
         {
             this.game = game;
-            isServer = true;
+            isServer = false;
             network = new Network();
             network.Start(isServer);
         }
