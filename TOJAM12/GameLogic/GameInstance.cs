@@ -409,7 +409,7 @@ namespace TOJAM12
         }
 
 		public Player GetMyPlayer() {
-			return this.players[myPlayerId];
+			return players.ContainsKey(myPlayerId) ? this.players[myPlayerId] : null;
 		}
 
 	}

@@ -14,6 +14,7 @@ namespace TOJAM12
 		ChatLog chatLog;
 		TextBox textBox;
 		CarPicture carPicture;
+		PlayerStatusIndicator playerStatusIndicator;
 
 		public void LoadContent(TojamGame game)
 		{
@@ -56,10 +57,12 @@ namespace TOJAM12
 				));
 
 			// initialize displayable scene
-			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing - 5));
+			carPicture = new CarPicture(new Rectangle(0, 0, screenBounds.Width - messageBufferWidth, screenBounds.Height - game.GameFont.LineSpacing * 2- 5));
 			carPicture.Initialize(game);
 			carPicture.SetBackground(CarPicture.Background.Walmart);
 			carPicture.SetMidground(CarPicture.Midground.Store_Car);
+
+			playerStatusIndicator = new PlayerStatusIndicator(game.GameFont, new Vector2(0, screenBounds.Height - game.GameFont.LineSpacing * 2));
 		}
 
 		public void onTransition(Dictionary<string, object> parameters)
@@ -96,6 +99,7 @@ namespace TOJAM12
 			}
 
 			carPicture.Update(game, gameTime);
+			playerStatusIndicator.UpdateToPlayer(game, game.gameInstance.GetMyPlayer());
 		}
 
 		public void Draw(TojamGame game, GameTime gameTime)
@@ -106,6 +110,7 @@ namespace TOJAM12
 			carPicture.Draw(game, gameTime);
 			chatLog.Draw(game, gameTime);
 			textBox.Draw(game, gameTime);
+			playerStatusIndicator.Draw(game, gameTime);
 
 			game.spriteBatch.End();
 		}
