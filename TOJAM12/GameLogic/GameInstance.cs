@@ -14,10 +14,12 @@ namespace TOJAM12
         TojamGame game;
 
 		Dictionary<int, Player> players = new Dictionary<int, Player>();
-        
+        int myPlayerId;
+
         public GameInstance(TojamGame game)
         {
 			this.game = game;
+            myPlayerId = 0;
         }
 
 		public void Update()
@@ -123,12 +125,17 @@ namespace TOJAM12
             {
 				ParsePlayerCommand(command);
             }
-			if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
-			{
-				int id = int.Parse(command.Data);
-				players[id] = new Player("player_" + id);
-				Debug.WriteLine("added Player with name " + players[id].name);
-			}
+            if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
+            {
+                int id = int.Parse(command.Data);
+                players[id] = new Player("player_" + id);
+                Debug.WriteLine("added Player with name " + players[id].name);
+            }
+            else if (command.Type == Command.CommandType.PlayerJoined)
+            {
+                myPlayerId = int.Parse(command.Data);
+                Console.WriteLine("My player id: " + myPlayerId);
+            }
             else if (command.Type == Command.CommandType.Text)
             {
                 ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data);
