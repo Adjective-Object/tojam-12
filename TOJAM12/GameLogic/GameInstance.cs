@@ -425,6 +425,11 @@ namespace TOJAM12
                     network.SendCommand(new Command(Command.CommandType.Text, "The car is already moving!!!", command.PlayerId));
                 else
                 {
+                    if (world.GetLocation(carLocation).DriveLocation == null)
+                    {
+                        network.SendCommand(new Command(Command.CommandType.Text, "You are at your destination!", command.PlayerId));
+                        return;
+                    }
                     carIsDriving = true;
                     
                     if (!world.GetLocation(carLocation).IsDriveLocation)

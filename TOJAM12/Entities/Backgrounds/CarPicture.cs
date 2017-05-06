@@ -29,8 +29,9 @@ namespace TOJAM12
 			Walmart,
             Walmart_Inside,
             GasStation,
-            FruitStand
-		};
+            FruitStand,
+            Algonquin
+        };
 		static Dictionary<Background, PicturePart> knownBackgrounds = new Dictionary<Background, PicturePart>();
 
 		public enum Midground
@@ -78,6 +79,7 @@ namespace TOJAM12
             knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
             knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGas"));
             knownBackgrounds[Background.FruitStand] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFruit"));
+            knownBackgrounds[Background.Algonquin] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadAlgonquin_01"));
 
             knownMidgrounds[Midground.None] = null;
 			knownMidgrounds[Midground.Car] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/Layer-1"));
