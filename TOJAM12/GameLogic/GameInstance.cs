@@ -281,6 +281,18 @@ namespace TOJAM12
                     command.Data = "ENTER CAR";
                     tokens = new string[] { "enter", "CAR" };
                 }
+                else
+                {
+                    network.SendCommand(new Command(Command.CommandType.Text, "you are not in the car", command.PlayerId));
+                    didsomething = true;
+                }
+            }
+            if ((words.Contains("current") && words.Contains("location")) || (words.Contains("where")))
+            {
+                string loca = players[command.PlayerId].GetWordLocationName((Player.WorldLocation)players[command.PlayerId].worldLocation);
+
+                network.SendCommand(new Command(Command.CommandType.Text, "you are currently " + loca, command.PlayerId));
+                didsomething = true;
             }
 
             if (!didsomething)
