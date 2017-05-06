@@ -13,7 +13,7 @@ namespace TOJAM12
         Network network;
         TojamGame game;
 
-		Dictionary<int, Player> players = new Dictionary<int, Player>();
+        Dictionary<int, Player> players = new Dictionary<int, Player>();
         int myPlayerId;
 
         public GameInstance(TojamGame game)
@@ -153,9 +153,9 @@ namespace TOJAM12
 			{
 				case "SAY":
 					if (tokens.Length == 1)
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", -1));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL));
 					else
-						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", -1));
+						network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL));
 					break;
 				case "SETNAME":
 					if (tokens.Length != 2)
@@ -163,8 +163,20 @@ namespace TOJAM12
 					else
 						players[command.PlayerId].name = tokens[1];
 					break;
+                case "ENTER":
+                    if (tokens.Length > 1)
+                    {
+                        string destination = command.Data.Substring(6).ToUpper();
+                        if (destination == "CAR")
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the car", Network.SEND_ALL));
+                        else if(destination.StartsWith("DRIVER"))
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " got in the driver's seat", Network.SEND_ALL));
+                    }
+                    else
+                        network.SendCommand(new Command(Command.CommandType.Text, "Not sure what you're trying to enter...", command.PlayerId));
+                    break;
 				default:
-					network.SendCommand(new Command(Command.CommandType.Text, "Unknown Command '" + command.Data + "'", command.PlayerId));
+					network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
 					break;
 			}
 		}

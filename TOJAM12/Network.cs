@@ -9,6 +9,9 @@ namespace TOJAM12
 {
     public class Network
     {
+
+        public const int SEND_ALL = -1;
+
         bool isServer;
         public bool IsServer()
         {
