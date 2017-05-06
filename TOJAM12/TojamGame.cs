@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lidgren.Network;
+using TOJAM12.Entities;
 
 namespace TOJAM12
 {
@@ -15,6 +16,7 @@ namespace TOJAM12
 	{
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
+        public SpriteFont GameFont;
 
 		// declaration of scenes in the game
 		Scene[] scenes = {
@@ -65,11 +67,13 @@ namespace TOJAM12
         NetServer server;
         NetPeer peer;
 
-		/// <summary>
-		/// LoadContent will be called once per game and is the place to load
-		/// all of your content.
-		/// </summary>
-		protected override void LoadContent()
+        TextBox textbox;
+
+        /// <summary>
+        /// LoadContent will be called once per game and is the place to load
+        /// all of your content.
+        /// </summary>
+        protected override void LoadContent()
 		{
 
 
@@ -101,11 +105,10 @@ namespace TOJAM12
 				s.LoadContent(this);
 			}
 
-			// for debug purposes, jump immediately into a 2p game
-			//Dictionary<string, object> parameters = new Dictionary<string, object>();
-			//parameters["player1"] = new Input(Input.Type.Keyboard);
-			//parameters["player2"] = new Input(Input.Type.JoypadOne);
-			//this.SwitchScene(GameScenes.Game, parameters);
+
+            GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono"); 
+
+            textbox = new TextBox();
 
 		}
 
@@ -169,9 +172,11 @@ namespace TOJAM12
                 }
             }
 
+            textbox.Update(this, gameTime);
             base.Update(gameTime);
 		}
 
+        
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
@@ -182,6 +187,10 @@ namespace TOJAM12
 
 			//TODO: Add your drawing code here
 			activeScene.Draw(this, gameTime);
+
+            spriteBatch.Begin();
+            textbox.Draw(this, gameTime);
+            spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
