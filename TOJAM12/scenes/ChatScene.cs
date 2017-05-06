@@ -30,8 +30,9 @@ namespace TOJAM12
 			// build chatlog
 			ChatLogStyle style = new ChatLogStyle();
 			style.font = game.GameFont;
-			style.messagePadding = 20;
-			style.externalPadding = 20;
+			style.linePadding = 1;
+			style.messagePadding = 5;
+			style.externalPadding = 10;
 			style.internalBounds = new Rectangle(
 				screenBounds.Width - messageBufferWidth + style.externalPadding,
 				style.externalPadding,

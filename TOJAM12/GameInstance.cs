@@ -90,6 +90,7 @@ namespace TOJAM12
 				case "host":
 					network = new Network();
 					network.Start(true, null);
+					chatScene.AddMessage("started hosting ");
 					break;
 				default:
 					chatScene.AddMessage("you must 'join <ip>' a game or 'host' a game ");
