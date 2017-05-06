@@ -58,14 +58,14 @@ namespace TOJAM12
             if (!connected)
                 return;
 
-            if (isServer && (command.PlayerId == 1 || command.PlayerId == 0))
+            if (isServer && (command.PlayerId == 0 || command.PlayerId == -1))
                 localCommands.Add(command);
             
-            if (command.PlayerId != 1)
+            if (command.PlayerId != 0)
             {
                 foreach (NetConnection connection in peer.Connections)
                 {
-                    if (command.PlayerId == 0 || (command.PlayerId > 1 && connection == connections[command.PlayerId - 2]))
+                    if (command.PlayerId == -1 || (command.PlayerId > 0 && connection == connections[command.PlayerId - 1]))
                     {
                         NetOutgoingMessage sendMsg = peer.CreateMessage();
                         sendMsg.Write((Int32)command.Type);
@@ -103,14 +103,14 @@ namespace TOJAM12
                         int messageType = message.ReadInt32();
                         String messageData = message.ReadString();
 
-                        int playerId = 0;
+                        int playerId = -1;
                         if (isServer)
                         {
                             for (int i = 0; i < 3; i++)
                             {
                                 if (connections[i] != null && connections[i] == message.SenderConnection)
                                 {
-                                    playerId = i + 2;
+                                    playerId = i+1;
                                     break;
                                 }
                             }

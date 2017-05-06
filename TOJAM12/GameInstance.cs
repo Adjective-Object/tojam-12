@@ -47,11 +47,11 @@ namespace TOJAM12
 			{
 				if (network.IsServer())
 				{
-					ParseCommand(new Command(Command.CommandType.Player, command, 1));
+					ParseCommand(new Command(Command.CommandType.Player, command, 0));
 				}
 				else
 				{
-					network.SendCommand(new Command(Command.CommandType.Player, command, 0));
+					network.SendCommand(new Command(Command.CommandType.Player, command, -1));
 				}
 			}
 			else {
@@ -115,9 +115,9 @@ namespace TOJAM12
                     if (tokens[0].ToUpper() == "SAY")
                     {
                         if (tokens.Length == 1)
-                            network.SendCommand(new Command(Command.CommandType.Text, command.PlayerId + " said nothing", 0));
+                            network.SendCommand(new Command(Command.CommandType.Text, command.PlayerId + " said nothing", -1));
                         else
-                            network.SendCommand(new Command(Command.CommandType.Text, command.PlayerId + " said '" + command.Data.Substring(4) + "'", 0));
+                            network.SendCommand(new Command(Command.CommandType.Text, command.PlayerId + " said '" + command.Data.Substring(4) + "'", -1));
                     }
                     else
                     {
