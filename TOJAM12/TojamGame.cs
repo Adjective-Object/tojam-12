@@ -42,6 +42,7 @@ namespace TOJAM12
         public GameInstance gameInstance;
 
         public static Song song;
+        public static bool resetKey = false;
 
 		public TojamGame()
 		{
@@ -107,41 +108,46 @@ namespace TOJAM12
 
 		}
 
-		/// <summary>
-		/// Allows the game to run logic such as updating the world,
-		/// checking for collisions, gathering input, and playing audio.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
-		protected override void Update(GameTime gameTime)
-		{
-			// For Mobile devices, this logic will close the Game when the Back button is pressed
-			// Exit() is obsolete on iOS
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            // For Mobile devices, this logic will close the Game when the Back button is pressed
+            // Exit() is obsolete on iOS
 #if !__IOS__ && !__TVOS__
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-				Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 #endif
 
-            foreach (Keys key in Keyboard.GetState().GetPressedKeys())
+            if (!resetKey && Keyboard.GetState().IsKeyDown(Keys.LeftShift))
             {
-                if (key == Keys.Tab)
+                foreach (Keys key in Keyboard.GetState().GetPressedKeys())
                 {
-                    if (graphics.IsFullScreen) graphics.IsFullScreen = false;
-                    else graphics.IsFullScreen = true;
-
-                    graphics.ApplyChanges();
+                    if (key == Keys.Tab)
+                    {
+                        if (graphics.IsFullScreen) graphics.IsFullScreen = false;
+                        else graphics.IsFullScreen = true;
+                        resetKey = true;
+                        graphics.ApplyChanges();
+                    }
                 }
             }
 
-                foreach (Input i in Input.getAllInstances())
-			{
-				i.Update();
-			}
-            
-			activeScene.Update(this, gameTime);
-			gameInstance.Update(gameTime);
+            if (resetKey) { if (Keyboard.GetState().IsKeyUp(Keys.Tab)) resetKey = false; }
+
+            foreach (Input i in Input.getAllInstances())
+            {
+                i.Update();
+            }
+
+            activeScene.Update(this, gameTime);
+            gameInstance.Update(gameTime);
 
             base.Update(gameTime);
-		}
+        }
 
         
 		/// <summary>
