@@ -22,7 +22,8 @@ namespace TOJAM12
         bool carIsDriving;
         int carLocation;
         int lastLocation = 0;
-        
+
+        int statsUpdate = 0;
 
         public GameInstance(TojamGame game)
         {
@@ -67,6 +68,19 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
                         SendAllPlayerInfoCommand();
                     }
+                }
+
+                statsUpdate += gameTime.ElapsedGameTime.Milliseconds;
+                if (statsUpdate > 2000)
+                {
+                    statsUpdate = 0;
+                    foreach (Player p in players.Values)
+                    {
+                        p.hunger--;
+                        p.thirst--;
+                        p.tired--;
+                    }
+                    SendAllPlayerInfoCommand();
                 }
 
                 if (network.IsServer())
