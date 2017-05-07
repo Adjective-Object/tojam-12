@@ -262,7 +262,7 @@ namespace TOJAM12
         }
 
 		static string helpText =
-			"Commands: say, setname, enter, inventory, help";
+			"Commands: say, setname, enter, inventory, browse, help";
 
 		private void ParsePlayerCommand(Command command)
 		{
@@ -395,6 +395,7 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
                         break;
 
+                    case "OPTIONS":
                     case "MENU":
                     case "HELP":
                         network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
