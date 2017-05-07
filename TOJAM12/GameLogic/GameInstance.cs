@@ -748,9 +748,12 @@ namespace TOJAM12
 							Player p = players[command.PlayerId];
 							if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
 
-							// perform actions on player's location items
-							Location playerLocation = world.GetLocation(p.worldLocation);
-							if (tokens.Length >= 2 && p.ItemVerb(this, tokens, playerLocation.LocationItems)) break;
+                            // perform actions on player's location items
+                            if (p.carLocation == Player.CarLocation.NotInCar)
+                            {
+                                Location playerLocation = world.GetLocation(p.worldLocation);
+                                if (tokens.Length >= 2 && p.ItemVerb(this, tokens, playerLocation.LocationItems)) break;
+                            }
 
 							// otherwise, don't do anything
 							network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
