@@ -125,6 +125,7 @@ namespace TOJAM12
             DriveAntique.DriveLocation = AntiqueStore;
 			FruitStand.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
+            AntiqueStore.LocationItems.Add(Item.Get("pig"));
             Add(AntiqueStore);
             AntiqueStore.LocationItems.Add(Item.Get("tractor"));
 

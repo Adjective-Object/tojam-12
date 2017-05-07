@@ -216,6 +216,21 @@ namespace TOJAM12
 			),
 
             new Item(
+                new String[]{ "pig" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"pet"}, (args) => {
+                        if (!args.p.HasFlag("pet-pig")) {
+                            args.p.SetFlag("pet-pig");
+                            args.g.sendToPlayer(args.p, "The pig so cute. You feel happier.");
+                            args.p.HealHappyness(random.Next(3,7));
+                        }
+                    }),
+                    noHittingAnimals,
+                },
+                15
+            ),
+
+            new Item(
                 new String[]{ "tractor" },
                 new ItemAction[] {
                     new ItemAction(new String[] {"sit in"}, (args) => {
