@@ -39,7 +39,7 @@ namespace TOJAM12
 
 		static Random random = new Random();
 
-		private static Item[] AllItems = new Item[] {
+		private static List<Item> AllItems = new List<Item> {
 			// water
 			new Item(
 				new String[] { "water", "water bottle", "flask" },
@@ -105,9 +105,12 @@ namespace TOJAM12
         };
 
 
-		public static Item Get(String name)
+		public static Item Get(String name, List<Item> items = null)
 		{
-			foreach (Item item in AllItems)
+            if (items == null)
+                items = AllItems;
+
+			foreach (Item item in items)
 			{
 				if (item.Matches(name))
 				{

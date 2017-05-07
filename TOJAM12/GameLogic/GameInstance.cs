@@ -105,7 +105,7 @@ namespace TOJAM12
                                         if (p.carLocation == Player.CarLocation.NotInCar ||
                                             (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
                                         {
-                                            if (p.tired > 0) { p.tired -= rand.Next(0, 2); if (p.tired == 0) { p.alive = false; } }
+                                            if (p.tired > 0) { p.tired -= rand.Next(0, 3); if (p.tired == 0) { p.alive = false; } }
                                         }
                                         else p.tired += rand.Next(0, 2);
 
@@ -484,9 +484,16 @@ namespace TOJAM12
 		void ParseBrowseCommand(Command command)
 		{
 			Player p = players[command.PlayerId];
-			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+
+            if (p.carLocation != Player.CarLocation.NotInCar)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", command.PlayerId));
+                return;
+            }
+
+            if (this.world.GetLocation(p.worldLocation).PurchaseableItems.Count > 0)
 			{
-				foreach (Item i in Item.GetPurchaseableItems())
+				foreach (Item i in world.GetLocation(p.worldLocation).PurchaseableItems)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, i.GetPrimaryName() + ": " + i.GetPrice() + "$", command.PlayerId));
 				}
@@ -501,14 +508,26 @@ namespace TOJAM12
 		{
 			String[] tokens = command.Data.Split(' ');
 			Player p = players[command.PlayerId];
-			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+
+            if (p.carLocation != Player.CarLocation.NotInCar)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", command.PlayerId));
+                return;
+            }
+
+            if (world.GetLocation(p.worldLocation).PurchaseableItems.Count > 0)
 			{
 				if (tokens.Length < 2)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, "what do you want to buy?", command.PlayerId));
 					return;
 				}
-				Item g = Item.Get(tokens[1]);
+				Item g = Item.Get(tokens[1], world.GetLocation(p.worldLocation).PurchaseableItems);
+                if (g == null)
+                {
+                    network.SendCommand(new Command(Command.CommandType.Text, tokens[1] + " is not sold here...", command.PlayerId));
+                    return;
+                }
 				if (g.GetPrice() > p.money)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, "You're too poor to afford " + g.GetPrimaryName(), command.PlayerId));

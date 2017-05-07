@@ -17,6 +17,8 @@ namespace TOJAM12
 
         public Location DriveLocation;
         public Location WalkLocation;
+
+        public List<Item> PurchaseableItems;
         public Location(String name,CarPicture.Background bg, bool isDrive, int length = 0)
         {
             Id = 0;
@@ -24,6 +26,8 @@ namespace TOJAM12
             Background = bg;
             IsDriveLocation = isDrive;
             DriveLength = length;
+
+            PurchaseableItems = new List<Item>();
         }
     }
 
@@ -36,6 +40,7 @@ namespace TOJAM12
 
             Location Walmart = new Location("Walmart Parking Lot", CarPicture.Background.Walmart, false);
             Location InsideWalmart = new Location("Walmart", CarPicture.Background.Walmart_Inside, false);
+            Walmart.PurchaseableItems.AddRange(Item.GetPurchaseableItems());
             Walmart.WalkLocation = InsideWalmart;
             InsideWalmart.WalkLocation = Walmart;
             Add(Walmart);
@@ -48,6 +53,7 @@ namespace TOJAM12
 
             Location BigApple = new Location("Big Apple", CarPicture.Background.BigApple, false);
             DriveApple.DriveLocation = BigApple;
+            BigApple.PurchaseableItems.Add(Item.Get("water"));
             Add(BigApple);
 
             Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
