@@ -754,6 +754,16 @@ namespace TOJAM12
 
         private void ParseExitCommand(String data, int PlayerId, String[] tokens)
         {
+
+            if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
+                world.GetLocation(players[PlayerId].worldLocation).IsExitable)
+            {
+                players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
+                SendPlayerInfoCommand(PlayerId, PlayerId);
+                return;
+            }
+
+
             if (carIsDriving)
             {
                 network.SendCommand(new Command(Command.CommandType.Text, "The car is moving... you might die...", PlayerId));
@@ -777,6 +787,15 @@ namespace TOJAM12
             if (tokens.Length > 1)
             {
                 string destination = data.Substring(6).ToUpper();
+
+                if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
+                    destination.Contains(world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Name.ToUpper()))
+                {
+                    players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
+                    SendPlayerInfoCommand(PlayerId, PlayerId);
+                    return;
+                }
+
                 if (destination == "CAR")
                 {
                     // Find a free seat
