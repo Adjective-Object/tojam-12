@@ -78,7 +78,19 @@ namespace TOJAM12
                     {
                         p.hunger--;
                         p.thirst--;
-                        p.tired--;
+
+                        if (p.carLocation == Player.CarLocation.NotInCar ||
+                            p.carLocation == Player.CarLocation.DriversSeat)
+                            p.tired--;
+                        else
+                            p.tired += 1;
+                        if (p.tired > 100)
+                            p.tired = 100;
+
+                        if (p.tired <= 0 || p.hunger <= 0 || p.thirst <= 0)
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                        }
                     }
                     SendAllPlayerInfoCommand();
                 }
