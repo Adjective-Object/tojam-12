@@ -124,6 +124,7 @@
     <Content Include="Content\backgrounds\Drink_03.png" />
     <Content Include="Content\backgrounds\Drink_04.png" />
     <Content Include="Content\backgrounds\Driver.png" />
+    <Content Include="Content\backgrounds\gameover.png" />
     <Content Include="Content\backgrounds\GloveBox-Door.png" />
     <Content Include="Content\backgrounds\InsideBigApple.png" />
     <Content Include="Content\backgrounds\InsideWalmart.png" />
