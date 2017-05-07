@@ -11,16 +11,17 @@ namespace TOJAM12
 		Texture2D[] textures;
 		int frameRate;
 		bool animating = true;
+		String animName;
 
-		public LoopingImage(Texture2D[] textures, int frameRate) : base(textures[0])
+		public LoopingImage(Texture2D[] textures, int frameRate, String animName = "") : base(textures[0])
 		{
 			this.textures = textures;
 			this.frameRate = frameRate;
+			this.animName = animName;
 		}
 
 		public override void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
 		{
-            animating = game.gameInstance.carIsDriving;
 			if (animating)
 			{
 				this.texture = textures[((int)gameTime.TotalGameTime.TotalMilliseconds / frameRate) % this.textures.Length];
@@ -31,12 +32,13 @@ namespace TOJAM12
 
 		public override void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
 		{
-			if (eventName == "stop")
+			if (eventName == animName + "-stop")
 			{
+				Debug.Write("pausing animation because of stop");
 				this.animating = false;
 			}
 
-			if (eventName == "start")
+			if (eventName == animName + "-start")
 			{
 				this.animating = true;
 			}

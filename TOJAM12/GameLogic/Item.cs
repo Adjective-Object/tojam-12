@@ -79,7 +79,6 @@ namespace TOJAM12
 						args.p.inventory.Remove(args.i);
 						int damage = random.Next(2, 5);
 					    args.p.HealHealth(-damage);
-						args.p.inventory.Add(Item.Get("bottle"));
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
 						args.g.sendToPlayer(args.p, "You take " + damage + " damage");

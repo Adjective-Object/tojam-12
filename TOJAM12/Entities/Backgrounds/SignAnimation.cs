@@ -11,14 +11,17 @@ namespace TOJAM12
 		int animationStartTime = 0;
 		int time = 0;
 		bool animating = false;
+		bool paused = false;
 
-		float signScale = 4;
-		int animationLength= 8000;
-		Vector2 startPoint = new Vector2(440, 140);
-		Vector2 endPoint = new Vector2(1320, 300);
+		public static int effectiveAnimationLength = 2000;
+
+		static float signScale = 4;
+		static int animationLength= 3000;
+		static Vector2 startPoint = new Vector2(440, 140);
+		static Vector2 endPoint = new Vector2(880, 220);
+		static float startScale = 0.1f;
+		static float endScale = 10;
 		Vector2 textCenter;
-		float startScale = 0.1f;
-		float endScale = 10;
 
 		RenderTarget2D target;
 
@@ -47,8 +50,11 @@ namespace TOJAM12
 			if (millis > animationLength)
 			{
 				animating = false;
+				paused = false;
 				return;
 			}
+
+			if (!this.animating && !this.paused) return;
 
 			float frac = 1.0f * millis / animationLength;
 			Vector2 interpolatedPosition = startPoint * (1 - frac) + endPoint * frac;
@@ -77,16 +83,24 @@ namespace TOJAM12
 		{
 			if (eventName == "town")
 			{
+				Debug.Write("start sign animation!");
 				String townName = (String)eventParameters["townName"];
 				this.UpdateTexture(townName);
 				animating = true;
+				paused = false;
 				animationStartTime = time;
 			}
 
-			if (eventName == "stop")
+			if (eventName == "driving-stop")
 			{
+				paused = true;
 				animating = false;
 			}
+			if (eventName == "driving-start" && paused)
+			{
+				animating = true;
+			}
+
 
 		}
 
