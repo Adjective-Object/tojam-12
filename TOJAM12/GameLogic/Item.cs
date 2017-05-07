@@ -77,11 +77,11 @@ namespace TOJAM12
 				new ItemAction[] {
 					new ItemAction(new String[] {"smash", "break"}, (args) => {
 						args.p.inventory.Remove(args.i);
-						int damage = random.Next(2, 5);
-					    args.p.HealHealth(-damage);
+						int damage = random.Next(7, 15);
+					    args.p.HealHappyness(damage);
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
-						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
-						args.g.sendToPlayer(args.p, "You take " + damage + " damage");
+						args.g.sendToPlayer(args.p, "Shards of broken glass fly everywhere");
+						args.g.sendToPlayer(args.p, "You feel joy.");
 					}),
 				},
                 1
@@ -124,7 +124,7 @@ namespace TOJAM12
                     new ItemAction(new String[] {"drink", "quaff"}, (args) => {
                         args.p.inventory.Remove(args.i);
                         Random rand = new Random();
-                        args.p.health = rand.Next(5, 100);
+                        args.p.happyness = rand.Next(5, 100);
                         args.p.thirst = rand.Next(5, 100);
                         args.p.tired = rand.Next(5, 100);
                         args.p.inventory.Add(Item.Get("bottle"));
