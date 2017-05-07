@@ -90,7 +90,7 @@ namespace TOJAM12
                                     p.thirst = 100;
                                     p.tired = 100;
                                 }
-                                else
+                                else if (!p.invincible)
                                 {
                                     //bool die = false;
                                     //bool alreadyDead = false;
@@ -379,6 +379,11 @@ namespace TOJAM12
                 didsomething = true;
             }
 
+            if (words.Contains("invincible"))
+            {
+                players[command.PlayerId].invincible = true;
+                didsomething = true;
+            }
 
             if (!didsomething)
             {

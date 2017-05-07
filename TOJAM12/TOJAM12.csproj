@@ -131,9 +131,11 @@
     <Content Include="Content\backgrounds\RoadBasic.png" />
     <Content Include="Content\backgrounds\RoadDistantFruit.png" />
     <Content Include="Content\backgrounds\RoadDistantGas.png" />
+    <Content Include="Content\backgrounds\RoadFarm.png" />
     <Content Include="Content\backgrounds\RoadFruit.png" />
     <Content Include="Content\backgrounds\RoadGas-copy.png" />
     <Content Include="Content\backgrounds\RoadGas.png" />
+    <Content Include="Content\backgrounds\RoadGoatFarm.png" />
     <Content Include="Content\backgrounds\RoadMountains.png" />
     <Content Include="Content\backgrounds\RoadPines.png" />
     <Content Include="Content\backgrounds\roadTheBigApple.png" />
