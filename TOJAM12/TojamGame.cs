@@ -121,7 +121,18 @@ namespace TOJAM12
 				Exit();
 #endif
 
-			foreach (Input i in Input.getAllInstances())
+            foreach (Keys key in Keyboard.GetState().GetPressedKeys())
+            {
+                if (key == Keys.Tab)
+                {
+                    if (graphics.IsFullScreen) graphics.IsFullScreen = false;
+                    else graphics.IsFullScreen = true;
+
+                    graphics.ApplyChanges();
+                }
+            }
+
+                foreach (Input i in Input.getAllInstances())
 			{
 				i.Update();
 			}
