@@ -20,6 +20,7 @@ namespace TOJAM12
 
 		public override void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
 		{
+            animating = game.gameInstance.carIsDriving;
 			if (animating)
 			{
 				this.texture = textures[((int)gameTime.TotalGameTime.TotalMilliseconds / frameRate) % this.textures.Length];

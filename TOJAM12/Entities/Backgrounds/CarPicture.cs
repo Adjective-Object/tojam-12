@@ -167,6 +167,7 @@ namespace TOJAM12
 			if (foreground != null)
 				foreground.Draw(this.bounds, game, gameTime);
 
+            
 			game.spriteBatch.End();
 
 			game.graphics.GraphicsDevice.SetRenderTarget(null);

@@ -19,7 +19,7 @@ namespace TOJAM12
         int myPlayerId;
 
         int driveTime = 0;
-        bool carIsDriving;
+        public bool carIsDriving;
         int carLocation;
         int lastLocation = 0;
 
@@ -173,8 +173,9 @@ namespace TOJAM12
    			values.Add(p.thirst.ToString());
 			values.Add(p.tired.ToString());
 			values.Add(p.money.ToString());
+            values.Add(carIsDriving.ToString());
 
-			network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
+            network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
         }
 
 		private void ParsePlayerInfoCommand(Player player, String data)
@@ -187,6 +188,7 @@ namespace TOJAM12
 			player.thirst = Int32.Parse(values[4]);
 			player.tired = Int32.Parse(values[5]);
 			player.money = Int32.Parse(values[6]);
+            carIsDriving = Boolean.Parse(values[7]);
 
 			Debug.Write("Player got updated info " + player);
 		}
