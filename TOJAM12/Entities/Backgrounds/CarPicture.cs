@@ -30,6 +30,7 @@ namespace TOJAM12
 		public enum Background
 		{
 			None,
+            Title,
             Driving,
             Driving2,
             Driving3,
@@ -156,6 +157,7 @@ namespace TOJAM12
                 )
             );
 
+            knownBackgrounds[Background.Title] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/titlescreen"));
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
             knownBackgrounds[Background.Farm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGoatFarm"));
             knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/InsideWalmart"));

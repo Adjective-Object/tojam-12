@@ -7,7 +7,7 @@
     <ProjectGuid>{260112C4-44FA-430A-9B12-EF3A6D700839}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>TOJAM12</RootNamespace>
-    <AssemblyName>TOJAM12Server</AssemblyName>
+    <AssemblyName>TOJAM12</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <PublishUrl>publish\</PublishUrl>
@@ -55,6 +55,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lidgren.Network, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL" />

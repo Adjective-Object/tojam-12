@@ -101,11 +101,24 @@ namespace TOJAM12
 						args.p.HealHunger(10);
 						args.p.HealTired(5);
 						args.g.sendToPlayer(args.p, "You ate the burger");
-					}),
-					pour
+					})
 				},
 				10
 			),
+
+                        // burger
+			new Item(
+                new String[]{ "peach"},
+                new ItemAction[] {
+                    new ItemAction(new String[] {"eat"}, (args) => {
+                        args.p.inventory.Remove(args.i);
+                        args.p.HealHunger(3);
+                        args.p.HealTired(1);
+                        args.g.sendToPlayer(args.p, "You ate the peach");
+                    })
+                },
+                2
+            ),
 
             // apple pie
 			new Item(
@@ -116,8 +129,7 @@ namespace TOJAM12
 						args.p.HealHunger(25);
 						args.p.HealTired(25);
 						args.g.sendToPlayer(args.p, "You ate the apple pie");
-					}),
-					pour
+					})
 				},
 				20
 			),
