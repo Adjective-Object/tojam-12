@@ -498,7 +498,7 @@ namespace TOJAM12
                 else
                 {
                     carIsDriving = false;
-                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL, command.PlayerId));
                     /*
                     foreach (Player p in players.Values)
                     {
@@ -537,7 +537,7 @@ namespace TOJAM12
                         carLocation = world.GetLocation(carLocation).DriveLocation.Id;
                     }
 
-                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL, command.PlayerId));
 
                     if (!world.GetLocation(carLocation).IsDriveLocation)
                     {
@@ -647,7 +647,7 @@ namespace TOJAM12
                 int seatPlayer = GetSeatPlayer(location);
                 if (seatPlayer != -1)
                 {
-                    network.SendCommand(new Command(Command.CommandType.Text, players[seatPlayer].name + " is already in the " + Player.GetCarLocationName(location), playerId));
+                    network.SendCommand(new Command(Command.CommandType.Text, players[seatPlayer].name + " is already in the " + Player.GetCarLocationName(location), playerId, playerId));
                     return;
                 }
             }
@@ -655,9 +655,9 @@ namespace TOJAM12
             players[playerId].carLocation = location;
 
             if (location == Player.CarLocation.NotInCar)
-                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " left the car", Network.SEND_ALL));
+                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " left the car", Network.SEND_ALL, playerId));
             else
-                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL));
+                network.SendCommand(new Command(Command.CommandType.Text, players[playerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL, playerId));
 
             // Dont send to server player, since already updated.
             if (playerId != 0)
