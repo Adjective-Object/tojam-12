@@ -165,6 +165,11 @@ namespace TOJAM12
                                         if (!p.alive)
                                         {
                                             network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+											foreach (Player player in this.players.Values)
+											{
+												player.worldLocation = world.GameOverId;
+												player.carLocation = Player.CarLocation.NotInCar;
+											}
                                         }
                                     }
                                 }

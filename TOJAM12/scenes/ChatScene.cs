@@ -16,6 +16,9 @@ namespace TOJAM12
 		CarPicture carPicture;
 		PlayerStatusIndicator playerStatusIndicator;
 
+		Rectangle chatSceneDimensions = new Rectangle(0,0, 800, 430);
+		RenderTarget2D renderTarget;
+
 		public void LoadContent(TojamGame game)
 		{
 			Debug.WriteLine("Chat : Load Content");
@@ -25,7 +28,8 @@ namespace TOJAM12
 		public void Initialize(TojamGame game)
 		{
 			// get dimensions to size thingsa round
-			Rectangle screenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
+			renderTarget = new RenderTarget2D(game.GraphicsDevice, chatSceneDimensions.Width, chatSceneDimensions.Height);
+			Rectangle screenBounds = chatSceneDimensions;
 			int messageBufferWidth = 200;
 
 			// build chatlog
@@ -127,6 +131,7 @@ namespace TOJAM12
 
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
+			game.graphics.GraphicsDevice.SetRenderTarget(this.renderTarget);
 			game.graphics.GraphicsDevice.Clear(Color.Black);
 			game.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp);
 
@@ -136,6 +141,29 @@ namespace TOJAM12
 			playerStatusIndicator.Draw(game, gameTime);
 
 			game.spriteBatch.End();
+			game.graphics.GraphicsDevice.SetRenderTarget(null);
+
+			game.graphics.GraphicsDevice.Clear(Color.Black);
+			game.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp);
+
+			// deferred rendering
+
+			Rectangle realScreenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
+			Rectangle renderTargetBounds = this.renderTarget.Bounds;
+			float ratio = Math.Max((float)renderTarget.Width / realScreenBounds.Width, (float)renderTarget.Height / realScreenBounds.Height);
+			Rectangle scaledRenderTarget = new Rectangle(
+				0,
+				0,
+				(int) (this.renderTarget.Width * ratio),
+				(int) (this.renderTarget.Height * ratio)
+			);
+
+			scaledRenderTarget.X = (realScreenBounds.Width - scaledRenderTarget.Width) / 2;
+			scaledRenderTarget.Y = (realScreenBounds.Height - scaledRenderTarget.Height) / 2;
+
+			game.spriteBatch.Draw(renderTarget, scaledRenderTarget, renderTargetBounds, Color.White);
+			game.spriteBatch.End();
+
 		}
 	}
 }

@@ -41,11 +41,13 @@ namespace TOJAM12
 			return this.Description != null;
 		}
 
-}
+	}
 
     public class World
     {
-        public List<Location> Locations;
+		public int GameOverId;
+
+		public List<Location> Locations;
         public World()
         {
             Locations = new List<Location>();
@@ -139,7 +141,11 @@ namespace TOJAM12
 			Algonquin.IsDestination = true;
             Drive3.DriveLocation = Algonquin;
             Add(Algonquin);
-        }
+
+            Location Gameover = new Location("Gameover", CarPicture.Background.GameOver, true);
+			Add(Gameover);
+			this.GameOverId = Gameover.Id;
+		}
 
         public void Add(Location location)
         {

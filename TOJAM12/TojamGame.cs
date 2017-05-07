@@ -50,7 +50,7 @@ namespace TOJAM12
 		{
 			graphics = new GraphicsDeviceManager(this);
 			graphics.PreferredBackBufferHeight = 430;
-			graphics.PreferredBackBufferWidth = 800;
+			graphics.PreferredBackBufferWidth = 1300;
 			Content.RootDirectory = "Content";
 			activeScene = scenes[(int) activeSceneType];
 
