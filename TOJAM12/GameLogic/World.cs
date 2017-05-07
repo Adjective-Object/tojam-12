@@ -13,6 +13,7 @@ namespace TOJAM12
         public CarPicture.Background Background;
         public int Id;
         public bool IsDriveLocation;
+		public bool IsDestination = false;
 
         public int DriveLength;
         public bool IsExitable;
@@ -123,7 +124,7 @@ namespace TOJAM12
             
             Location AntiqueStore = new Location("Antique Store", CarPicture.Background.AntiqueStore, false);
             DriveAntique.DriveLocation = AntiqueStore;
-			FruitStand.Description = "You decide to stop at a dusty old antique store.";
+			AntiqueStore.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
             Add(AntiqueStore);
             AntiqueStore.LocationItems.Add(Item.Get("tractor"));
@@ -132,7 +133,8 @@ namespace TOJAM12
             Add(Drive3);
             AntiqueStore.DriveLocation = Drive3;
 			Location Algonquin = new Location("Algonquin", CarPicture.Background.Algonquin, false);
-			FruitStand.Description = "At last, you attive at algonquin! Just at that lake.";
+			Algonquin.Description = "At last, you arrive at algonquin! Just look at that lake.";
+			Algonquin.IsDestination = true;
             Drive3.DriveLocation = Algonquin;
             Add(Algonquin);
         }

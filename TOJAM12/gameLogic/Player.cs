@@ -48,6 +48,7 @@ namespace TOJAM12
 		public int happyness = 0;
 		public int money = 50;
 
+		public bool isNamed = false;
         public bool alive = true;
         public bool invincible = false;
         public bool hasPeed = false;
@@ -58,6 +59,12 @@ namespace TOJAM12
             carLocation = CarLocation.NotInCar;
             worldLocation = 0;
             LocationsPictured = new List<int>();
+		}
+
+		public void SetName(string name)
+		{
+			this.name = name;
+			isNamed = true;
 		}
 
 		public Item getItem(string itemName)

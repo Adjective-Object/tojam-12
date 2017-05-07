@@ -87,6 +87,11 @@ namespace TOJAM12
 									{
 										network.SendCommand(new Command(Command.CommandType.Text, NewLocation.Description, pId));
 									}
+									if (NewLocation.IsDestination)
+									{
+										// TODO win game
+										SendGameSummary();
+									}
 								}
                             }
                             driveTime = 0;
@@ -168,6 +173,7 @@ namespace TOJAM12
 
         public void SendPlayerCommand(String command)
         {
+			String[] tokens = command.ToLower().Split(' ');
 			if (network != null && GameStarted())
 			{
 				if (network.IsServer())
@@ -206,6 +212,54 @@ namespace TOJAM12
             network.SendCommand(c);
         }
 
+		private void SendGameSummary()
+		{
+			int totalHappiness = 0;
+			foreach (Player p in players.Values)
+			{
+				totalHappiness += p.happyness;
+				String happinessMessage;
+				if (p.happyness > 50)
+				{
+					happinessMessage = "You had a great time!";
+				}
+				else if (p.happyness > 30)
+				{
+					happinessMessage = "You had an okay time!";
+				}
+				else if (p.happyness > 15)
+				{
+					happinessMessage = "You had a time!";
+				}
+				else if (p.happyness != 0)
+				{
+					happinessMessage = "You had an okay time";
+				}
+				else {
+					happinessMessage = "You had a terrible time";
+				}
+				network.SendCommand(new Command(Command.CommandType.Text, happinessMessage, Network.SEND_ALL));
+
+				String picturesMessage;
+				if (p.LocationsPictured.Count() != 0)
+				{
+					List<String> names = new List<String>();
+					foreach (int LocationId in p.LocationsPictured)
+					{
+						names.Add(world.GetLocation(LocationId).Name);
+					}
+					picturesMessage = "You took pictures at " + String.Join(", ", names);
+				}
+				else {
+					picturesMessage = "You didn't take any pictures!";
+				}
+				network.SendCommand(new Command(Command.CommandType.Text, picturesMessage, Network.SEND_ALL));
+ 			}
+
+			String totalHappinessMessage = "Together you all scored " + totalHappiness + " happiness";
+			network.SendCommand(new Command(Command.CommandType.Text, totalHappinessMessage, Network.SEND_ALL));
+
+		}
 
 		private void ParseClientCommand(string command)
 		{
@@ -238,20 +292,54 @@ namespace TOJAM12
                     string lip = GetLocalIPAddress();
 					chatScene.AddMessage("Started hosting on: " + lip);
 					break;
-                case "start":
-                    if (network.IsServer())
+
+				case "setname":
+				case "say":
+					if (network != null)
+					{
+						if (!network.IsServer())
+						{
+							// forward lobby commands
+							network.SendCommand(new Command(Command.CommandType.Player, command, myPlayerId));
+						}
+						else {
+							ParsePlayerLobbyCommand(new Command(Command.CommandType.Player, command, myPlayerId));
+						}
+					}
+					break;
+
+				case "start":
+                    if (network != null && network.IsServer())
                     {
-                        gameStarted = true;
-                        network.SendCommand(new Command(Command.CommandType.Text, "The game has started!", Network.SEND_ALL));
+						bool allNamed = true;
+						foreach (Player p in players.Values)
+						{
+							allNamed = allNamed && p.isNamed;
+						}
+
+						if (allNamed)
+						{
+							gameStarted = true;
+							network.SendCommand(new Command(Command.CommandType.Text, "The game has started!", Network.SEND_ALL));
+						}
+						else {
+							network.SendCommand(
+								new Command(Command.CommandType.Text,
+								            "The game cannot start until all players have set their names",
+								            Network.SEND_ALL));
+						}
                     }
                     break;
 				default:
                     if (network != null)
                     {
-                        if (network.IsServer())
-                            chatScene.AddMessage("Type 'start' when everyone has joined.");
-                        else
-                            chatScene.AddMessage("Wait for the host to start the game.");
+						if (network.IsServer())
+						{
+							chatScene.AddMessage("Type 'start' when everyone has joined.");
+						}
+						else {
+							chatScene.AddMessage("Wait for the host to start the game.");
+						}
                         break;
                     }
                     else
@@ -274,6 +362,20 @@ namespace TOJAM12
             throw new Exception("Local IP Address Not Found!");
         }
 
+		private void ParsePlayerLobbyCommand(Command command)
+		{
+			String[] tokens = command.Data.ToLower().Split(' ');
+			switch (tokens[0])
+			{
+				case "say":
+					ParseSayCommand(command);
+					break;
+				case "setname":
+					ParseSetNameCommand(command);
+					break;
+			}
+		}
+
         private void ParseCommand(Command command)
         {
             //Decide what to do with command
@@ -285,6 +387,11 @@ namespace TOJAM12
             {
 				ParsePlayerCommand(command);
             }
+			if (network.IsServer() && !GameStarted() && command.Type == Command.CommandType.Player)
+			{
+				ParsePlayerLobbyCommand(command);
+				// setting player names in the lobby
+			}
 			if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
 			{
 				int id = int.Parse(command.Data);
@@ -315,7 +422,7 @@ namespace TOJAM12
         }
 
 		static string helpText =
-			"Commands: say, setname, enter, inventory, browse, help";
+			"Commands: say, setname, enter, inventory, browse, help, look";
 
 		private void ParsePlayerCommand(Command command)
 		{
@@ -469,12 +576,10 @@ namespace TOJAM12
                             SendAllPlayerInfoCommand();
                         }
                         break;
-                    case "SAY":
-                        if (tokens.Length == 1)
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
-                        else
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
-                        break;
+
+					case "SAY":
+						ParseSayCommand(command);
+						break;
 
                     case "YELL":
                         if (tokens.Length == 1)
@@ -483,16 +588,6 @@ namespace TOJAM12
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(5).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
                         break;
 
-                    case "SETNAME":
-                        if (tokens.Length != 2)
-                            network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
-                        else
-                        {
-                            string oldname = players[command.PlayerId].name;
-                            players[command.PlayerId].name = tokens[1];
-                            network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL, command.PlayerId));
-                        }
-                        break;
                     case "DRIVE":
                         ParseDriveCommand(command);
                         break;
@@ -644,6 +739,28 @@ namespace TOJAM12
 			foreach (int playerId in players.Keys)
 			{
 				SendPlayerInfoCommand(playerId, playerId);
+			}
+		}
+
+		public void ParseSayCommand(Command command)
+		{
+			String[] tokens = command.Data.Split(' ');
+            if (tokens.Length == 1)
+				network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
+			else
+				network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said '" + command.Data.Substring(4) + "'", Network.SEND_ALL, command.PlayerId));
+		}
+
+		public void ParseSetNameCommand(Command command)
+		{
+			String[] tokens = command.Data.Split(' ');
+			if (tokens.Length != 2)
+				network.SendCommand(new Command(Command.CommandType.Text, "give yourself a name", command.PlayerId));
+			else
+			{
+				string oldname = players[command.PlayerId].name;
+				players[command.PlayerId].SetName(command.Data.Substring(8).Trim());
+				network.SendCommand(new Command(Command.CommandType.Text, oldname + " changed their name to " + players[command.PlayerId].name, Network.SEND_ALL, command.PlayerId));
 			}
 		}
 
