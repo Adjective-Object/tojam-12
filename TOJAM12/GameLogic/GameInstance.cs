@@ -532,11 +532,7 @@ namespace TOJAM12
 
         private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
         {
-            if (carIsDriving)
-            {
-                network.SendCommand(new Command(Command.CommandType.Text, "The car is moving...", PlayerId));
-                return;
-            }
+
 
             if (tokens.Length > 1)
             {
@@ -555,17 +551,8 @@ namespace TOJAM12
                 }
                 else if (destination.StartsWith("DRIVER"))
                 {
-                    int seatPlayer = GetSeatPlayer(Player.CarLocation.DriversSeat);
-                    if (seatPlayer == -1)
-                    {
-                        SetPlayerCarLocation(PlayerId, Player.CarLocation.DriversSeat);
-                        return;
-                    }else
-                    {
-                        network.SendCommand(new Command(Command.CommandType.Text, players[seatPlayer].name + " is already in the driver's seat", PlayerId));
-                        return;
-                    }
-
+                    SetPlayerCarLocation(PlayerId, Player.CarLocation.DriversSeat);
+                    return;
                 }
             }
             
@@ -586,6 +573,28 @@ namespace TOJAM12
 
         private void SetPlayerCarLocation(int playerId, Player.CarLocation location)
         {
+            if (players[playerId].worldLocation != carLocation)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "The car isnt here...", playerId));
+                return;
+            }
+
+            if (carIsDriving)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "The car is moving...", playerId));
+                return;
+            }
+
+            if (location != Player.CarLocation.NotInCar)
+            {
+                int seatPlayer = GetSeatPlayer(location);
+                if (seatPlayer != -1)
+                {
+                    network.SendCommand(new Command(Command.CommandType.Text, players[seatPlayer].name + " is already in the " + Player.GetCarLocationName(location), playerId));
+                    return;
+                }
+            }
+
             players[playerId].carLocation = location;
 
             if (location == Player.CarLocation.NotInCar)
