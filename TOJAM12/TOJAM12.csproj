@@ -152,6 +152,7 @@
     <Content Include="Content\backgrounds\SkyNight.png" />
     <Content Include="Content\backgrounds\SkyStorm.png" />
     <Content Include="Content\backgrounds\SteeringWheel.png" />
+    <Content Include="Content\backgrounds\titlescreen.png" />
     <Content Include="Content\backgrounds\YellowLine_01.png" />
     <Content Include="Content\backgrounds\YellowLine_02.png" />
     <Content Include="Content\backgrounds\YellowLine_03.png" />
