@@ -285,7 +285,12 @@ namespace TOJAM12
             {
 				ParsePlayerCommand(command);
             }
-			if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
+            else if (network.IsServer() && !GameStarted() && command.Type == Command.CommandType.Player)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "Wait for the host to start the game.", command.PlayerId));
+                return;
+            }
+            else if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
 			{
 				int id = int.Parse(command.Data);
 				players[id] = new Player("player_" + id);
