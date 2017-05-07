@@ -51,7 +51,8 @@ namespace TOJAM12
 			chatLog.AppendMessage("Welcome to Algonquin Park Roadtrip Simulator 2018!", Color.White);
 			chatLog.AppendMessage("Your goal is to reach Algonquin Park and have happy camping trip", Color.Gray);
 			chatLog.AppendMessage("Type `help` to see commands", Color.Gray);
-			chatLog.AppendMessage("Type 'join <ip>' to join a game, or 'host' to start a new one", Color.Gray);
+//			chatLog.AppendMessage("Type 'join <ip>' to join a game, or 'host' to start a new one", Color.Gray);
+			chatLog.AppendMessage("Type 'setname <name>' set your name before starting a game", Color.Gray);
 
 			// build textbox
 			textBox = new TextBox(
