@@ -51,6 +51,7 @@ namespace TOJAM12
         public bool alive = true;
         public bool invincible = false;
         public bool hasPeed = false;
+        public bool haveSickWarned = false;
 
 		public Player(string name)
 		{

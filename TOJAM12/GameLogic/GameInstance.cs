@@ -132,8 +132,9 @@ namespace TOJAM12
 
                                         if (p.tired > 100) p.tired = 100;
 
-                                        if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                        if (!p.haveSickWarned && (p.tired == 40 || p.hunger == 40 || p.thirst == 40))
                                         {
+                                            p.haveSickWarned = true;
                                             network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
                                         }
 
