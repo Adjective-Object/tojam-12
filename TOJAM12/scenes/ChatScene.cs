@@ -61,6 +61,7 @@ namespace TOJAM12
 			carPicture.Initialize(game);
 			carPicture.SetSky(CarPicture.Sky.Day);
 			carPicture.SetBackground(CarPicture.Background.Walmart);
+			// carPicture.TriggerEvent("town", new Dictionary<String, Object> { { "townName", "Barrie" } });
 
 			playerStatusIndicator = new PlayerStatusIndicator(game.GameFont, new Vector2(0, screenBounds.Height - game.GameFont.LineSpacing * 2));
 		}
@@ -124,7 +125,7 @@ namespace TOJAM12
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
 			game.graphics.GraphicsDevice.Clear(Color.Black);
-			game.spriteBatch.Begin(SpriteSortMode.Immediate);
+			game.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp);
 
 			carPicture.Draw(game, gameTime);
 			chatLog.Draw(game, gameTime);

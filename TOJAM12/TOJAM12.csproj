@@ -90,6 +90,7 @@
     <Compile Include="Entities\PlayerStatusIndicator.cs" />
     <Compile Include="Entities\Backgrounds\LoopingImage.cs" />
     <Compile Include="Entities\Backgrounds\CompoundPicturePart.cs" />
+    <Compile Include="Entities\Backgrounds\SignAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

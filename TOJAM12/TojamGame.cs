@@ -84,6 +84,7 @@ namespace TOJAM12
             
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+			GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono");
 
 			foreach (Scene s in scenes)
 			{
@@ -97,7 +98,6 @@ namespace TOJAM12
 			//this.SwitchScene(GameScenes.Game, parameters);
 			this.SwitchScene(GameScenes.Chat);
 
-            GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono"); 
 		}
 
 		/// <summary>
