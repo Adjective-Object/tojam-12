@@ -40,13 +40,28 @@ namespace TOJAM12
             InsideWalmart.WalkLocation = Walmart;
             Add(Walmart);
             Add(InsideWalmart);
-            Location Drive1 = new Location("Drive1", CarPicture.Background.Driving, true, 5000);
+            Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
             Add(Drive1);
             Walmart.DriveLocation = Drive1;
 
             Location GasStation = new Location("Gas Station", CarPicture.Background.GasStation, false);
             Drive1.DriveLocation = GasStation;
             Add(GasStation);
+
+            Location Drive2 = new Location("Road To Fruit Station", CarPicture.Background.Driving2, true, 5000);
+            Add(Drive2);
+            GasStation.DriveLocation = Drive2;
+
+            Location FruitStand = new Location("Fruit Stand", CarPicture.Background.FruitStand, false);
+            Drive2.DriveLocation = FruitStand;
+            Add(FruitStand);
+
+            Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving2, true, 5000);
+            Add(Drive3);
+            FruitStand.DriveLocation = Drive3;
+            Location Algonquin = new Location("Algonquin", CarPicture.Background.Algonquin, false);
+            Drive3.DriveLocation = Algonquin;
+            Add(Algonquin);
         }
 
         public void Add(Location location)

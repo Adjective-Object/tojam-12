@@ -262,15 +262,36 @@ namespace TOJAM12
                 command.Data = "ENTER CAR";
                 tokens = new string[] { "enter", "CAR" };
             }
-            if (words.Contains("get") && words.Contains("out") && words.Contains("car"))
+            if ((words.Contains("get") || words.Contains("jump")) && words.Contains("out") && (words.Contains("car") || words.Contains("window")))
             {
-                tokens = new string[] { "exit", "CAR" };
+                tokens = new string[] { "exit", "CAR", "window" };
             }
             if ((words.Contains("current") || words.Contains("what")) && (words.Contains("time")))
             {
                 DateTime dt = DateTime.Now;
                 string thetime = dt.Hour.ToString() + ":" + dt.Minute.ToString();
                 network.SendCommand(new Command(Command.CommandType.Text, "the current time is " + thetime, command.PlayerId));
+                didsomething = true;
+            }
+            if ((words.Contains("switch") || words.Contains("change")) && (words.Contains("seat") || words.Contains("seats") || words.Contains("spots") || words.Contains("spot")))
+            {
+                int loc = (int)players[command.PlayerId].carLocation;
+                if(loc != 0)
+                {
+                    command.Data = "ENTER CAR";
+                    tokens = new string[] { "enter", "CAR" };
+                }
+                else
+                {
+                    network.SendCommand(new Command(Command.CommandType.Text, "you are not in the car", command.PlayerId));
+                    didsomething = true;
+                }
+            }
+            if ((words.Contains("current") && words.Contains("location")) || (words.Contains("where")))
+            {
+                string loca = world.GetLocation(players[command.PlayerId].worldLocation).Name;
+                
+                network.SendCommand(new Command(Command.CommandType.Text, "you are currently " + loca, command.PlayerId));
                 didsomething = true;
             }
 
@@ -291,7 +312,7 @@ namespace TOJAM12
                         if (tokens.Length == 1)
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled nothing", Network.SEND_ALL, command.PlayerId));
                         else
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(4).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " yelled '" + command.Data.Substring(5).ToUpper() + "!'", Network.SEND_ALL, command.PlayerId));
                         break;
 
                     case "SETNAME":
@@ -390,7 +411,8 @@ namespace TOJAM12
                 {
                     carIsDriving = false;
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL));
-                    foreach(Player p in players.Values)
+                    /*
+                    foreach (Player p in players.Values)
                     {
                         carLocation = world.GetLocation(lastLocation).DriveLocation.Id;
                         if (p.carLocation != Player.CarLocation.NotInCar)
@@ -398,6 +420,7 @@ namespace TOJAM12
                             p.worldLocation = carLocation;
                         }
                     }
+                    */
                     SendAllPlayerInfoCommand();
                 }
             }
@@ -414,6 +437,11 @@ namespace TOJAM12
                     network.SendCommand(new Command(Command.CommandType.Text, "The car is already moving!!!", command.PlayerId));
                 else
                 {
+                    if (world.GetLocation(carLocation).DriveLocation == null)
+                    {
+                        network.SendCommand(new Command(Command.CommandType.Text, "You are at your destination!", command.PlayerId));
+                        return;
+                    }
                     carIsDriving = true;
                     
                     if (!world.GetLocation(carLocation).IsDriveLocation)
@@ -422,7 +450,12 @@ namespace TOJAM12
                     }
 
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " started the car and began to drive.", Network.SEND_ALL));
-                    lastLocation = players[command.PlayerId].worldLocation;
+
+                    if (!world.GetLocation(carLocation).IsDriveLocation)
+                    {
+                        driveTime = 0;
+                        lastLocation = players[command.PlayerId].worldLocation;
+                    }
 
 					List<String> abandonedPlayers = new List<String>();
 					foreach (Player p in this.players.Values)
@@ -431,8 +464,7 @@ namespace TOJAM12
                             abandonedPlayers.Add(p.name);
                         else
                         {
-                            p.worldLocation = world.GetLocation(lastLocation).DriveLocation.Id;
-                            driveTime = 0;
+                            p.worldLocation = carLocation;
                         }
 					}
 					if (abandonedPlayers.Count != 0)

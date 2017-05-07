@@ -45,8 +45,8 @@ namespace TOJAM12
             Walmart_Inside = 1,
             Driving = 2 // Generic driving location
         }
-
-		public string name;
+        
+        public string name;
 		public List<Item> inventory = new List<Item>();
 		public int hunger = 100;
 		public int tired = 100;
