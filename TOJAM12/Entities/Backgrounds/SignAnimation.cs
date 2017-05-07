@@ -12,10 +12,10 @@ namespace TOJAM12
 		int time = 0;
 		bool animating = false;
 
-		float signScale = 2;
+		float signScale = 4;
 		int animationLength= 8000;
-		Vector2 startPoint = new Vector2(360, 100);
-		Vector2 endPoint = new Vector2(1020, 300);
+		Vector2 startPoint = new Vector2(440, 140);
+		Vector2 endPoint = new Vector2(1320, 300);
 		Vector2 textCenter;
 		float startScale = 0.1f;
 		float endScale = 10;
@@ -33,7 +33,7 @@ namespace TOJAM12
 			this.font = font;
 
 			target = new RenderTarget2D(game.GraphicsDevice, (int) (sign.Width * signScale), (int)(sign.Height * signScale));
-			textCenter = new Vector2(target.Width / 2, 15);
+			textCenter = new Vector2(target.Width / 2, 25);
 		}
 
 		public void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
@@ -52,7 +52,7 @@ namespace TOJAM12
 
 			float frac = 1.0f * millis / animationLength;
 			Vector2 interpolatedPosition = startPoint * (1 - frac) + endPoint * frac;
-			interpolatedPosition -= new Vector2(target.Width / 2, target.Height);
+			interpolatedPosition -= new Vector2(target.Width, target.Height);
 			float scale = startScale * (1 - frac) + endScale * frac;
 			game.spriteBatch.Draw(
 				target, 
