@@ -408,12 +408,53 @@ namespace TOJAM12
                 didsomething = true;
             }
 
+            if (upper.Contains("take picture") || upper.Contains("selfie"))
+            {
+                if (!players[command.PlayerId].LocationsPictured.Contains(players[command.PlayerId].worldLocation))
+                {
+                    players[command.PlayerId].LocationsPictured.Add(players[command.PlayerId].worldLocation);
+                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " takes a picture", Network.SEND_ALL, command.PlayerId));
+                    if (players[command.PlayerId].carLocation == Player.CarLocation.NotInCar)
+                        players[command.PlayerId].HealHappyness(5);
+                    else
+                        players[command.PlayerId].HealHappyness(2);
+
+                    SendPlayerInfoCommand(command.PlayerId, command.PlayerId);
+                }
+                else
+                    network.SendCommand(new Command(Command.CommandType.Text, "You already took a picture here", command.PlayerId));
+                return;
+            }
+
             if (!didsomething)
             {
 
 
                 switch (tokens[0].ToUpper())
                 {
+                    case "PEE":
+                        if (players[command.PlayerId].hasPeed)
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, "You peed recently...", command.PlayerId));
+                            return;
+                        }
+                        players[command.PlayerId].hasPeed = true;
+                        if (players[command.PlayerId].carLocation == Player.CarLocation.NotInCar)
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " pees and feels a bit relieved", Network.SEND_ALL, command.PlayerId));
+                            players[command.PlayerId].HealHappyness(5);
+                            SendPlayerInfoCommand(command.PlayerId, command.PlayerId);
+                        }
+                        else
+                        {
+                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " pees in the car... everyone is angry", Network.SEND_ALL, command.PlayerId));
+                            foreach (Player player in players.Values)
+                            {
+                                players[command.PlayerId].HealHappyness(-5);
+                            }
+                            SendAllPlayerInfoCommand();
+                        }
+                        break;
                     case "SAY":
                         if (tokens.Length == 1)
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
@@ -767,6 +808,7 @@ namespace TOJAM12
             if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
                 world.GetLocation(players[PlayerId].worldLocation).IsExitable)
             {
+                network.SendCommand(new Command(Command.CommandType.Text, "You leave " + world.GetLocation(players[PlayerId].worldLocation).Name, PlayerId));
                 players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
                 SendPlayerInfoCommand(PlayerId, PlayerId);
                 return;
@@ -791,8 +833,7 @@ namespace TOJAM12
 
         private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
         {
-
-
+            
             if (tokens.Length > 1)
             {
                 string destination = data.Substring(6).ToUpper();
@@ -800,8 +841,16 @@ namespace TOJAM12
                 if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
                     destination.Contains(world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Name.ToUpper()))
                 {
-                    players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
-                    SendPlayerInfoCommand(PlayerId, PlayerId);
+                    if (players[PlayerId].carLocation == Player.CarLocation.NotInCar)
+                    {
+                        players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
+                        SendPlayerInfoCommand(PlayerId, PlayerId);
+                        network.SendCommand(new Command(Command.CommandType.Text, "You enter " + world.GetLocation(players[PlayerId].worldLocation).Name, PlayerId));
+                    }
+                    else
+                    {
+                        network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", PlayerId));
+                    }
                     return;
                 }
 

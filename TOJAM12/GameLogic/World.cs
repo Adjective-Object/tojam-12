@@ -113,12 +113,13 @@ namespace TOJAM12
             Location DriveAntique = new Location("Road To Antique Store", CarPicture.Background.Driving2, true, 5000);
             Add(DriveAntique);
             FruitStand.DriveLocation = DriveAntique;
-
+            
             Location AntiqueStore = new Location("Antique Store", CarPicture.Background.AntiqueStore, false);
             DriveAntique.DriveLocation = AntiqueStore;
 			FruitStand.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
             Add(AntiqueStore);
+            AntiqueStore.LocationItems.Add(Item.Get("tractor"));
 
             Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving3, true, 5000);
             Add(Drive3);
