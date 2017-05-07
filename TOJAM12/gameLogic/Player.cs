@@ -48,6 +48,7 @@ namespace TOJAM12
 		public int money = 50;
 
         public bool alive = true;
+        public bool invincible = false;
 
 		public Player(string name)
 		{

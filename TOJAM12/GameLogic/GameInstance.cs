@@ -26,6 +26,7 @@ namespace TOJAM12
         int lastLocation = 0;
 
         int statsUpdate = 0;
+        Random rand;
 
         public GameInstance(TojamGame game)
         {
@@ -34,6 +35,7 @@ namespace TOJAM12
             carIsDriving = false;
             carLocation = 0;
             world = new World();
+            rand = new Random();
         }
 
         public bool GameStarted()
@@ -86,40 +88,49 @@ namespace TOJAM12
                     }
 
                     statsUpdate += gameTime.ElapsedGameTime.Milliseconds;
-                    if (statsUpdate > 2000)
+                    if (statsUpdate > 1500)
                     {
                         statsUpdate = 0;
                         foreach (Player p in players.Values)
                         {
                             if (p.alive)
                             {
-                                //bool die = false;
-                                //bool alreadyDead = false;
-
-                                //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
-
-                                //if (!alreadyDead)
+                                if (this.world.GetLocation(p.worldLocation).Name.ToLower() == "algonquin")
                                 {
-                                    if (p.hunger > 0) { p.hunger--; if (p.hunger == 0) { p.alive = false; } }
-                                    if (p.thirst > 0) { p.thirst--; if (p.thirst == 0) { p.alive = false; } }
+                                    p.hunger = 100;
+                                    p.thirst = 100;
+                                    p.tired = 100;
+                                }
+                                else if (!p.invincible)
+                                {
+                                    //bool die = false;
+                                    //bool alreadyDead = false;
 
-                                    if (p.carLocation == Player.CarLocation.NotInCar ||
-                                        (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                    //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
+
+                                    //if (!alreadyDead)
                                     {
-                                        if (p.tired > 0) { p.tired--; if (p.tired == 0) { p.alive = false; } }
-                                    }
-                                    else p.tired += 1;
+                                        if (p.hunger > 0) { p.hunger -= rand.Next(0, 2); if (p.hunger == 0) { p.alive = false; } }
+                                        if (p.thirst > 0) { p.thirst -= rand.Next(0, 2); if (p.thirst == 0) { p.alive = false; } }
 
-                                    if (p.tired > 100) p.tired = 100;
+                                        if (p.carLocation == Player.CarLocation.NotInCar ||
+                                            (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                        {
+                                            if (p.tired > 0) { p.tired -= rand.Next(0, 3); if (p.tired == 0) { p.alive = false; } }
+                                        }
+                                        else p.tired += rand.Next(0, 2);
 
-                                    if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
-                                    {
-                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
-                                    }
+                                        if (p.tired > 100) p.tired = 100;
 
-                                    if (!p.alive)
-                                    {
-                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                        if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                        {
+                                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
+                                        }
+
+                                        if (!p.alive)
+                                        {
+                                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                        }
                                     }
                                 }
                             }
@@ -347,6 +358,28 @@ namespace TOJAM12
                 tokens = new string[] { "DRIVE", "CAR" };
             }
 
+            if (words.Contains("force") && words.Contains("enter") && words.Contains("car"))
+            {
+                //for (int i = 1; i < 5; i++)
+                //{
+                //    if (GetSeatPlayer((Player.CarLocation)i) == -1)
+                //    {
+                //        SetPlayerCarLocation(command.PlayerId, (Player.CarLocation)i);
+                //        return;
+                //    }
+                //}
+                Player.CarLocation location = Player.CarLocation.BackLeft;
+                players[command.PlayerId].carLocation = location;
+                network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL, command.PlayerId));
+                didsomething = true;
+            }
+
+            if (words.Contains("invincible"))
+            {
+                players[command.PlayerId].invincible = true;
+                didsomething = true;
+            }
+
             if (!didsomething)
             {
 
@@ -468,27 +501,50 @@ namespace TOJAM12
 		void ParseBrowseCommand(Command command)
 		{
 			Player p = players[command.PlayerId];
-			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+
+            if (p.carLocation != Player.CarLocation.NotInCar)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", command.PlayerId));
+                return;
+            }
+
+            if (this.world.GetLocation(p.worldLocation).PurchaseableItems.Count > 0)
 			{
-				foreach (Item i in Item.GetPurchaseableItems())
+				foreach (Item i in world.GetLocation(p.worldLocation).PurchaseableItems)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, i.GetPrimaryName() + ": " + i.GetPrice() + "$", command.PlayerId));
 				}
 			}
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You look around and see nothing of interest...", command.PlayerId));
+            }
 		}
 
 		void ParseBuyCommand(Command command)
 		{
 			String[] tokens = command.Data.Split(' ');
 			Player p = players[command.PlayerId];
-			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+
+            if (p.carLocation != Player.CarLocation.NotInCar)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", command.PlayerId));
+                return;
+            }
+
+            if (world.GetLocation(p.worldLocation).PurchaseableItems.Count > 0)
 			{
 				if (tokens.Length < 2)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, "what do you want to buy?", command.PlayerId));
 					return;
 				}
-				Item g = Item.Get(tokens[1]);
+				Item g = Item.Get(tokens[1], world.GetLocation(p.worldLocation).PurchaseableItems);
+                if (g == null)
+                {
+                    network.SendCommand(new Command(Command.CommandType.Text, tokens[1] + " is not sold here...", command.PlayerId));
+                    return;
+                }
 				if (g.GetPrice() > p.money)
 				{
 					network.SendCommand(new Command(Command.CommandType.Text, "You're too poor to afford " + g.GetPrimaryName(), command.PlayerId));
@@ -498,8 +554,11 @@ namespace TOJAM12
 				p.inventory.Add(g);
 				p.money -= g.GetPrice();
 				network.SendCommand(new Command(Command.CommandType.Text, "you bought a " + g.GetPrimaryName() + " (" + g.GetPrice() + ")", command.PlayerId));
-
 			}
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "There is nothing to buy here?", command.PlayerId));
+            }
 		}
 
         private void ParseStopCommand(Command command)
