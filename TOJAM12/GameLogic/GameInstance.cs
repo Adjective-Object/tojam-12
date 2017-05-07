@@ -24,6 +24,7 @@ namespace TOJAM12
         int lastLocation = 0;
 
         int statsUpdate = 0;
+        Random rand;
 
         public GameInstance(TojamGame game)
         {
@@ -32,6 +33,7 @@ namespace TOJAM12
             carIsDriving = false;
             carLocation = 0;
             world = new World();
+            rand = new Random();
         }
 
         public bool GameStarted()
@@ -75,7 +77,7 @@ namespace TOJAM12
                     }
 
                     statsUpdate += gameTime.ElapsedGameTime.Milliseconds;
-                    if (statsUpdate > 2000)
+                    if (statsUpdate > 1500)
                     {
                         statsUpdate = 0;
                         foreach (Player p in players.Values)
@@ -89,15 +91,15 @@ namespace TOJAM12
 
                                 //if (!alreadyDead)
                                 {
-                                    if (p.hunger > 0) { p.hunger--; if (p.hunger == 0) { p.alive = false; } }
-                                    if (p.thirst > 0) { p.thirst--; if (p.thirst == 0) { p.alive = false; } }
+                                    if (p.hunger > 0) { p.hunger -= rand.Next(0, 2); if (p.hunger == 0) { p.alive = false; } }
+                                    if (p.thirst > 0) { p.thirst-= rand.Next(0, 2); if (p.thirst == 0) { p.alive = false; } }
 
                                     if (p.carLocation == Player.CarLocation.NotInCar ||
                                         (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
                                     {
-                                        if (p.tired > 0) { p.tired--; if (p.tired == 0) { p.alive = false; } }
+                                        if (p.tired > 0) { p.tired-= rand.Next(0, 2); if (p.tired == 0) { p.alive = false; } }
                                     }
-                                    else p.tired += 1;
+                                    else p.tired += rand.Next(0, 2);
 
                                     if (p.tired > 100) p.tired = 100;
 
