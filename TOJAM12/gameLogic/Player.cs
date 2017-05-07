@@ -123,15 +123,16 @@ namespace TOJAM12
 			}
 		}
 
-		public bool ItemVerb(GameInstance g, string[] command)
+		public bool ItemVerb(GameInstance g, string[] command, List<Item> items = null)
 		{
 			Item.ItemParams args = new Item.ItemParams();
 			args.c = command;
 			args.g = g;
 			args.p = this;
-			for (int i = this.inventory.Count - 1; i >= 0; i--) 
+			if (items == null) items = this.inventory;
+			for (int i = items.Count - 1; i >= 0; i--) 
 			{
-				Item item = this.inventory[i];
+				Item item = items[i];
 				if (!item.Matches(command[1])) continue;
 				args.i = item;
 				if (item.Verb(args)) return true;
@@ -143,5 +144,18 @@ namespace TOJAM12
 		{
 			return string.Format("[Player hunger=" + hunger + " tired=" + tired + " thirst=" + thirst + " health=" + health + "]");
 		}
+
+		System.Collections.Generic.HashSet<String> flags = new HashSet<string>();
+
+		internal bool HasFlag(string v)
+		{
+			return flags.Contains(v);
+		}
+
+		internal void SetFlag(string v)
+		{
+			flags.Add(v);
+		}
+
 	}
 }

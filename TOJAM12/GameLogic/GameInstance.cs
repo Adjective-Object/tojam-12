@@ -72,16 +72,24 @@ namespace TOJAM12
                         {
                             Console.WriteLine("Finished drive");
                             int newLocation = world.GetLocation(carLocation).DriveLocation.Id;
+							Location NewLocation = world.GetLocation(newLocation);
                             carLocation = newLocation;
-                            foreach (Player p in players.Values)
+							foreach (int pId in players.Keys)
                             {
-                                if (p.carLocation != Player.CarLocation.NotInCar)
-                                    p.worldLocation = carLocation;
+								Player p = players[pId];
+								if (p.carLocation != Player.CarLocation.NotInCar)
+								{
+									p.worldLocation = carLocation;
+									network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + NewLocation.Name, pId));
+									if (NewLocation.HasDescription())
+									{
+										network.SendCommand(new Command(Command.CommandType.Text, NewLocation.Description, Network.SEND_ALL));
+									}
+								}
                             }
                             driveTime = 0;
 							signAnimationTriggered = false;
                             carIsDriving = false;
-                            network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
 
                             SendAllPlayerInfoCommand();
                         }
@@ -518,7 +526,11 @@ namespace TOJAM12
                         Player p = players[command.PlayerId];
                         if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
 
-                        // otherwise, don't
+						// perform actions on player's location items
+						Location playerLocation = world.GetLocation(p.worldLocation);
+						if (tokens.Length >= 2 && p.ItemVerb(this, tokens, playerLocation.LocationItems)) break;
+
+						// otherwise, don't do anything
                         network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
                         break;
                 }

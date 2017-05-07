@@ -9,6 +9,7 @@ namespace TOJAM12
     public class Location
     {
         public String Name;
+		public String Description = null;
         public CarPicture.Background Background;
         public int Id;
         public bool IsDriveLocation;
@@ -19,6 +20,7 @@ namespace TOJAM12
         public Location WalkLocation;
 
         public List<Item> PurchaseableItems;
+		public List<Item> LocationItems;
         public Location(String name,CarPicture.Background bg, bool isDrive, int length = 0)
         {
             Id = 0;
@@ -28,8 +30,15 @@ namespace TOJAM12
             DriveLength = length;
 
             PurchaseableItems = new List<Item>();
+			LocationItems = new List<Item>();
         }
-    }
+
+		public bool HasDescription()
+		{
+			return this.Description != null;
+		}
+
+}
 
     public class World
     {
@@ -44,6 +53,7 @@ namespace TOJAM12
             Walmart.PurchaseableItems.Add(Item.Get("soda"));
             Walmart.PurchaseableItems.Add(Item.Get("burger"));
             Walmart.PurchaseableItems.Add(Item.Get("bottle"));
+			Walmart.Description = "The parking lot of a Walmart. You're here to stock up on food before your trip.";
             Walmart.WalkLocation = InsideWalmart;
             InsideWalmart.WalkLocation = Walmart;
             Add(Walmart);
@@ -55,6 +65,8 @@ namespace TOJAM12
 
 
             Location Farm = new Location("Farm", CarPicture.Background.Farm, false);
+			Farm.LocationItems.Add(Item.Get("goat"));
+			Farm.Description = "You stop at a goat farm. There are goats grazing all around you!";
             DriveFarm.DriveLocation = Farm;
             Add(Farm);
 
@@ -66,6 +78,7 @@ namespace TOJAM12
             DriveApple.DriveLocation = BigApple;
             BigApple.PurchaseableItems.Add(Item.Get("water"));
             BigApple.PurchaseableItems.Add(Item.Get("apple pie"));
+			BigApple.Description = "Welcome to the Big Apple! It's not New York, It's the literal big apple. In Canada!";
             Add(BigApple);
 
             Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
@@ -75,6 +88,7 @@ namespace TOJAM12
             Location GasStation = new Location("Gas Station", CarPicture.Background.GasStation, false);
             GasStation.PurchaseableItems.Add(Item.Get("soda"));
             GasStation.PurchaseableItems.Add(Item.Get("water"));
+			GasStation.Description = "You arrive at a gas station. Anyone need to use the bathroom? JK that's not implemented";
             Drive1.DriveLocation = GasStation;
             Add(GasStation);
 
@@ -83,6 +97,7 @@ namespace TOJAM12
             GasStation.DriveLocation = Drive2;
 
             Location FruitStand = new Location("Fruit Stand", CarPicture.Background.FruitStand, false);
+			FruitStand.Description = "Hey look, a fruit stand. MM, tasty artisain fruits.";
             Drive2.DriveLocation = FruitStand;
             Add(FruitStand);
 
@@ -92,13 +107,15 @@ namespace TOJAM12
 
             Location AntiqueStore = new Location("Antique Store", CarPicture.Background.AntiqueStore, false);
             DriveAntique.DriveLocation = AntiqueStore;
+			FruitStand.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
             Add(AntiqueStore);
 
             Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving3, true, 5000);
             Add(Drive3);
             AntiqueStore.DriveLocation = Drive3;
-            Location Algonquin = new Location("Algonquin", CarPicture.Background.Algonquin, false);
+			Location Algonquin = new Location("Algonquin", CarPicture.Background.Algonquin, false);
+			FruitStand.Description = "At last, you attive at algonquin! Just at that lake.";
             Drive3.DriveLocation = Algonquin;
             Add(Algonquin);
         }

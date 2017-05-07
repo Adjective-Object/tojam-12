@@ -134,7 +134,26 @@ namespace TOJAM12
                 },
                 15
             ),
-        };
+
+		            // potion
+			new Item(
+				new String[]{ "goat", "billy", "animal" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"pet"}, (args) => {
+					if (!args.p.HasFlag("pet-billy")) {
+						int happyInc = random.Next(3,6);
+						args.g.sendToPlayer(args.p, "you pet the goat. Happiness +" + happyInc);
+						args.p.SetFlag("pet-billy");
+					} else {
+						args.g.sendToPlayer(args.p, "yep, still a goat");
+					}
+					}),
+					pour
+				},
+				15
+			),
+
+		};
 
 
 		public static Item Get(String name, List<Item> items = null)
