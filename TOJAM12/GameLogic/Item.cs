@@ -39,8 +39,9 @@ namespace TOJAM12
 
 		static ItemAction noHittingAnimals = new ItemAction(new String[] { "kick", "punch", "hit", "attack", "hurt" }, (args) =>
 		{
-			args.g.sendToPlayer(args.p, "Why would you do that?");
-		});
+			args.g.sendToPlayer(args.p, "Why would you do that? Your violent tendency makes you unhappy.");
+            args.p.HealHappyness(-5);
+        });
 
 
 		static Random random = new Random();
@@ -54,7 +55,7 @@ namespace TOJAM12
 						args.p.inventory.Remove(args.i);
 						args.p.HealThirst(10);
 						args.p.inventory.Add(Item.Get("bottle"));
-						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
+						args.g.sendToPlayer(args.p, "You " + args.c[0] + " the " + args.c[1]);
 						Debug.WriteLine("inventory is currently: " + String.Join(", ", args.p.inventory));
 					}),
 					pour
@@ -68,10 +69,10 @@ namespace TOJAM12
 				new ItemAction[] {
 					new ItemAction(new String[] {"drink", "quaff"}, (args) => {
 						args.p.inventory.Remove(args.i);
-						args.p.HealThirst(5);
-						args.p.HealTired(2);
+						args.p.HealThirst(10);
+						args.p.HealTired(6);
 						args.p.inventory.Add(Item.Get("bottle"));
-						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
+						args.g.sendToPlayer(args.p, "You " + args.c[0] + " the " + args.c[1]);
 					}),
 					pour
 				},
@@ -83,11 +84,9 @@ namespace TOJAM12
 				new ItemAction[] {
 					new ItemAction(new String[] {"smash", "break"}, (args) => {
 						args.p.inventory.Remove(args.i);
-						int damage = random.Next(2, 5);
-						args.p.HealHappyness(-damage);
-						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
-						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
-						args.g.sendToPlayer(args.p, "You take " + damage + " damage");
+						args.p.HealHappyness(random.Next(2, 5));
+						args.g.sendToPlayer(args.p, "You " + args.c[0] + " the " + args.c[1]);
+						args.g.sendToPlayer(args.p, "Shards of broken glass fly everywhere, you feel amused.");
 					}),
 				},
 				1
@@ -101,7 +100,7 @@ namespace TOJAM12
 						args.p.inventory.Remove(args.i);
 						args.p.HealHunger(10);
 						args.p.HealTired(5);
-						args.g.sendToPlayer(args.p, "you ate the burger");
+						args.g.sendToPlayer(args.p, "You ate the burger");
 					}),
 					pour
 				},
@@ -116,7 +115,7 @@ namespace TOJAM12
 						args.p.inventory.Remove(args.i);
 						args.p.HealHunger(25);
 						args.p.HealTired(25);
-						args.g.sendToPlayer(args.p, "you ate the apple pie");
+						args.g.sendToPlayer(args.p, "You ate the apple pie");
 					}),
 					pour
 				},
@@ -134,7 +133,7 @@ namespace TOJAM12
 						args.p.thirst = rand.Next(5, 100);
 						args.p.tired = rand.Next(5, 100);
 						args.p.inventory.Add(Item.Get("bottle"));
-						args.g.sendToPlayer(args.p, "you feel weird...");
+						args.g.sendToPlayer(args.p, "You feel weird...");
 					}),
 					pour
 				},
@@ -148,11 +147,11 @@ namespace TOJAM12
 					new ItemAction(new String[] {"pet"}, (args) => {
 					if (!args.p.HasFlag("pet-billy")) {
 						int happyInc = random.Next(3,6);
-						args.g.sendToPlayer(args.p, "you pet the goat. Happiness +" + happyInc);
+						args.g.sendToPlayer(args.p, "You pet the goat. Happiness +" + happyInc);
 						args.p.SetFlag("pet-billy");
 						args.p.HealHappyness(happyInc);
 					} else {
-						args.g.sendToPlayer(args.p, "yep, still a goat");
+						args.g.sendToPlayer(args.p, "Yep, still a goat");
 					}
 					}),
 					new ItemAction(new String[] {"look"}, (args) => {
@@ -187,7 +186,7 @@ namespace TOJAM12
 				new String[]{ "puddle", "gas" },
 				new ItemAction[] {
 					new ItemAction(new String[] {"look"}, (args) => {
-						args.g.sendToPlayer(args.p, "you contemplate the state of the environment.. deep.");
+						args.g.sendToPlayer(args.p, "You contemplate the state of the environment.. deep.");
 					})
 				},
 				15
@@ -199,21 +198,36 @@ namespace TOJAM12
 					new ItemAction(new String[] {"pet"}, (args) => {
                         if (!args.p.HasFlag("pet-sheep")) {
                             args.p.SetFlag("pet-sheep");
-                            args.g.sendToPlayer(args.p, "you try to pet the sheep but it's too fluffy. You feel happier.");
+                            args.g.sendToPlayer(args.p, "You try to pet the sheep but it's too fluffy. You feel happier.");
                             args.p.HealHappyness(random.Next(1,3));
                         }
                     }),
 					new ItemAction(new String[] {"look"}, (args) => {
-						args.g.sendToPlayer(args.p, "gosh dang, that's a big 'ol fluffer");
+						args.g.sendToPlayer(args.p, "Gosh dang, that's a big 'ol fluffer");
 					}),
 					new ItemAction(new String[] {"lick"}, (args) => {
-						args.g.sendToPlayer(args.p, "you get a hair stuck in your mouth. You feel unhappy.");
+						args.g.sendToPlayer(args.p, "You get a hair stuck in your mouth. You feel unhappy.");
                         args.p.HealHappyness(-random.Next(1,3));
                     }),
 					noHittingAnimals,
 				},
 				15
 			),
+
+            new Item(
+                new String[]{ "pig" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"pet"}, (args) => {
+                        if (!args.p.HasFlag("pet-pig")) {
+                            args.p.SetFlag("pet-pig");
+                            args.g.sendToPlayer(args.p, "The pig so cute. You feel happier.");
+                            args.p.HealHappyness(random.Next(3,7));
+                        }
+                    }),
+                    noHittingAnimals,
+                },
+                15
+            ),
 
             new Item(
                 new String[]{ "tractor" },
@@ -237,7 +251,7 @@ namespace TOJAM12
 					if (!args.p.HasFlag("pet-goose")) {
 						if (random.Next(0, 10) < 8) {
 							int happyInc = random.Next(1, 2);
-							args.g.sendToPlayer(args.p, "you pet the goose. Happiness +" + happyInc);
+							args.g.sendToPlayer(args.p, "You pet the goose. Happiness +" + happyInc);
 							args.p.HealHappyness(happyInc);
 						} else {
 							int happyInc = random.Next(1, 5);

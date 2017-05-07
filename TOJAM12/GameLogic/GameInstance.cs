@@ -137,8 +137,9 @@ namespace TOJAM12
 
                                         if (p.tired > 100) p.tired = 100;
 
-                                        if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                        if (!p.haveSickWarned && (p.tired == 40 || p.hunger == 40 || p.thirst == 40))
                                         {
+                                            p.haveSickWarned = true;
                                             network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
                                         }
 
@@ -307,8 +308,7 @@ namespace TOJAM12
 						}
 					}
 					break;
-
-				case "start":
+                case "start":
                     if (network != null && network.IsServer())
                     {
 						bool allNamed = true;
@@ -387,12 +387,16 @@ namespace TOJAM12
             {
 				ParsePlayerCommand(command);
             }
-			if (network.IsServer() && !GameStarted() && command.Type == Command.CommandType.Player)
+			else if (network.IsServer() && !GameStarted() && command.Type == Command.CommandType.Player)
 			{
 				ParsePlayerLobbyCommand(command);
-				// setting player names in the lobby
 			}
-			if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
+            else if (network.IsServer() && !GameStarted() && command.Type == Command.CommandType.Player)
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "Wait for the host to start the game.", command.PlayerId));
+                return;
+            }
+            else if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
 			{
 				int id = int.Parse(command.Data);
 				players[id] = new Player("player_" + id);

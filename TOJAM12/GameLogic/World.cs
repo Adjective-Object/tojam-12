@@ -64,7 +64,7 @@ namespace TOJAM12
             Add(Walmart);
             Add(InsideWalmart);
 
-            Location DriveFarm = new Location("Road to Farm", CarPicture.Background.DrivingFarm, true, 5000);
+            Location DriveFarm = new Location("Road to Farm", CarPicture.Background.DrivingFarm, true, 10000);
             Add(DriveFarm);
             Walmart.DriveLocation = DriveFarm;
 
@@ -77,7 +77,7 @@ namespace TOJAM12
             DriveFarm.DriveLocation = Farm;
             Add(Farm);
 
-            Location DriveApple = new Location("Road to Big Apple", CarPicture.Background.Driving, true, 5000);
+            Location DriveApple = new Location("Road to Big Apple", CarPicture.Background.DrivingApple, true, 10000);
             Add(DriveApple);
             Farm.DriveLocation = DriveApple;
 
@@ -97,7 +97,7 @@ namespace TOJAM12
             BigApple.WalkLocation = InsideBigApple;
             InsideBigApple.WalkLocation = BigApple;
 
-            Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
+            Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 10000);
             Add(Drive1);
             BigApple.DriveLocation = Drive1;
 
@@ -109,7 +109,7 @@ namespace TOJAM12
             Drive1.DriveLocation = GasStation;
             Add(GasStation);
 
-            Location Drive2 = new Location("Road To Fruit Station", CarPicture.Background.Driving2, true, 5000);
+            Location Drive2 = new Location("Road To Fruit Station", CarPicture.Background.Driving2, true, 10000);
             Add(Drive2);
             GasStation.DriveLocation = Drive2;
 
@@ -118,7 +118,7 @@ namespace TOJAM12
             Drive2.DriveLocation = FruitStand;
             Add(FruitStand);
 
-            Location DriveAntique = new Location("Road To Antique Store", CarPicture.Background.Driving2, true, 5000);
+            Location DriveAntique = new Location("Road To Antique Store", CarPicture.Background.Driving2, true, 10000);
             Add(DriveAntique);
             FruitStand.DriveLocation = DriveAntique;
             
@@ -126,10 +126,11 @@ namespace TOJAM12
             DriveAntique.DriveLocation = AntiqueStore;
 			AntiqueStore.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
+            AntiqueStore.LocationItems.Add(Item.Get("pig"));
             Add(AntiqueStore);
             AntiqueStore.LocationItems.Add(Item.Get("tractor"));
 
-            Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving3, true, 5000);
+            Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving3, true, 11000);
             Add(Drive3);
             AntiqueStore.DriveLocation = Drive3;
 			Location Algonquin = new Location("Algonquin", CarPicture.Background.Algonquin, false);
