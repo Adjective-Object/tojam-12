@@ -363,6 +363,23 @@ namespace TOJAM12
                 tokens = new string[] { "DRIVE", "CAR" };
             }
 
+            if (words.Contains("force") && words.Contains("enter") && words.Contains("car"))
+            {
+                //for (int i = 1; i < 5; i++)
+                //{
+                //    if (GetSeatPlayer((Player.CarLocation)i) == -1)
+                //    {
+                //        SetPlayerCarLocation(command.PlayerId, (Player.CarLocation)i);
+                //        return;
+                //    }
+                //}
+                Player.CarLocation location = Player.CarLocation.BackLeft;
+                players[command.PlayerId].carLocation = location;
+                network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " sat in the " + Player.GetCarLocationName(location), Network.SEND_ALL, command.PlayerId));
+                didsomething = true;
+            }
+
+
             if (!didsomething)
             {
 
