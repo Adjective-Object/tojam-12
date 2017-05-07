@@ -326,6 +326,11 @@ namespace TOJAM12
                 didsomething = true;
             }
 
+            if ((words.Contains("start") || words.Contains("begin")) && words.Contains("driving"))
+            {
+                tokens = new string[] { "DRIVE", "CAR" };
+            }
+
             if (!didsomething)
             {
 
@@ -386,6 +391,7 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, "I magically gave you a " + foundItem.GetPrimaryName(), command.PlayerId));
                         break;
 
+                    case "MENU":
                     case "HELP":
                         network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
                         break;
