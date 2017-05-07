@@ -40,7 +40,10 @@ namespace TOJAM12
 
             Location Walmart = new Location("Walmart Parking Lot", CarPicture.Background.Walmart, false);
             Location InsideWalmart = new Location("Walmart", CarPicture.Background.Walmart_Inside, false);
-            Walmart.PurchaseableItems.AddRange(Item.GetPurchaseableItems());
+            Walmart.PurchaseableItems.Add(Item.Get("water"));
+            Walmart.PurchaseableItems.Add(Item.Get("soda"));
+            Walmart.PurchaseableItems.Add(Item.Get("burger"));
+            Walmart.PurchaseableItems.Add(Item.Get("bottle"));
             Walmart.WalkLocation = InsideWalmart;
             InsideWalmart.WalkLocation = Walmart;
             Add(Walmart);
@@ -54,6 +57,7 @@ namespace TOJAM12
             Location BigApple = new Location("Big Apple", CarPicture.Background.BigApple, false);
             DriveApple.DriveLocation = BigApple;
             BigApple.PurchaseableItems.Add(Item.Get("water"));
+            BigApple.PurchaseableItems.Add(Item.Get("apple pie"));
             Add(BigApple);
 
             Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
@@ -61,6 +65,8 @@ namespace TOJAM12
             BigApple.DriveLocation = Drive1;
 
             Location GasStation = new Location("Gas Station", CarPicture.Background.GasStation, false);
+            GasStation.PurchaseableItems.Add(Item.Get("soda"));
+            GasStation.PurchaseableItems.Add(Item.Get("water"));
             Drive1.DriveLocation = GasStation;
             Add(GasStation);
 
@@ -78,6 +84,7 @@ namespace TOJAM12
 
             Location AntiqueStore = new Location("Antique Store", CarPicture.Background.AntiqueStore, false);
             DriveAntique.DriveLocation = AntiqueStore;
+            AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
             Add(AntiqueStore);
 
             Location Drive3 = new Location("Road To Algonquin", CarPicture.Background.Driving3, true, 5000);

@@ -102,6 +102,39 @@ namespace TOJAM12
                 },
                 10
             ),
+
+            // apple pie
+			new Item(
+                new String[]{ "applepie", "apple pie" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"eat"}, (args) => {
+                        args.p.inventory.Remove(args.i);
+                        args.p.HealHunger(25);
+                        args.p.HealTired(25);
+                        args.g.sendToPlayer(args.p, "you ate the apple pie");
+                    }),
+                    pour
+                },
+                20
+            ),
+
+            // potion
+			new Item(
+                new String[]{ "potion" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"drink", "quaff"}, (args) => {
+                        args.p.inventory.Remove(args.i);
+                        Random rand = new Random();
+                        args.p.health = rand.Next(5, 100);
+                        args.p.thirst = rand.Next(5, 100);
+                        args.p.tired = rand.Next(5, 100);
+                        args.p.inventory.Add(Item.Get("bottle"));
+                        args.g.sendToPlayer(args.p, "you feel weird...");
+                    }),
+                    pour
+                },
+                15
+            ),
         };
 
 
