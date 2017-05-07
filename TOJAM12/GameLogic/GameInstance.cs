@@ -349,7 +349,7 @@ namespace TOJAM12
 						else {
 							network.SendCommand(
 								new Command(Command.CommandType.Text,
-								            "The game cannot start until all players have set their names",
+								            "The game cannot start until all players have set their names. use setname <name> to set name",
 								            Network.SEND_ALL));
 						}
                     }
