@@ -40,7 +40,6 @@
 #begin fonts/Cutive_Mono.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Color
 /build:fonts/Cutive_Mono.spritefont
 

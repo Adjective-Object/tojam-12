@@ -89,7 +89,7 @@ namespace TOJAM12
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono");
 
-            song = Content.Load<Song>("sounds/ontheroad");
+            // song = Content.Load<Song>("sounds/ontheroad");
 
             //MediaPlayer.Play(song);
 

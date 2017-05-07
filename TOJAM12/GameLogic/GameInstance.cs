@@ -540,18 +540,49 @@ namespace TOJAM12
                             network.SendCommand(new Command(Command.CommandType.Text, "You have: " + String.Join(", ", builder), command.PlayerId));
                         break;
 
+					case "LOOK":
+						if (tokens.Length == 1)
+						{
+							Player p = players[command.PlayerId];
+							Location playerLocation = world.GetLocation(p.worldLocation);
+							List<String> things = new List<String>();
+							foreach (Item i in playerLocation.LocationItems)
+							{
+								things.Add(i.GetPrimaryName());	
+							}
+							bool any = false;
+							if (playerLocation.Description != null)
+							{
+								network.SendCommand(new Command(Command.CommandType.Text, playerLocation.Description, command.PlayerId));
+								any = true;
+							}
+							if (things.Count() > 1)
+							{
+								String message = "You see: " + String.Join(", ", things);
+								network.SendCommand(new Command(Command.CommandType.Text, message, command.PlayerId));
+								any = true;
+							}
+							if (!any)
+							{
+								network.SendCommand(new Command(Command.CommandType.Text, "you don't see much", command.PlayerId));
+							}
+							break;
+						}
+						goto default;
                     default:
-                        // perform action on player's inventory
-                        Player p = players[command.PlayerId];
-                        if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
+						{
+							// perform action on player's inventory
+							Player p = players[command.PlayerId];
+							if (tokens.Length >= 2 && p.ItemVerb(this, tokens)) break;
 
-						// perform actions on player's location items
-						Location playerLocation = world.GetLocation(p.worldLocation);
-						if (tokens.Length >= 2 && p.ItemVerb(this, tokens, playerLocation.LocationItems)) break;
+							// perform actions on player's location items
+							Location playerLocation = world.GetLocation(p.worldLocation);
+							if (tokens.Length >= 2 && p.ItemVerb(this, tokens, playerLocation.LocationItems)) break;
 
-						// otherwise, don't do anything
-                        network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
-                        break;
+							// otherwise, don't do anything
+							network.SendCommand(new Command(Command.CommandType.Text, "Don't know what '" + command.Data + "' means...", command.PlayerId));
+							break;
+						}
                 }
             }
 
