@@ -38,13 +38,6 @@ namespace TOJAM12
 
         public CarLocation carLocation;
         public int worldLocation;
-
-        public enum WorldLocation
-        {
-            Walmart_ParkingLot = 0,
-            Walmart_Inside = 1,
-            Driving = 2 // Generic driving location
-        }
         
         public string name;
 		public List<Item> inventory = new List<Item>();
@@ -58,7 +51,7 @@ namespace TOJAM12
 		{
 			this.name = name;
             carLocation = CarLocation.NotInCar;
-            worldLocation = (int)WorldLocation.Walmart_ParkingLot;
+            worldLocation = 0;
 		}
 
 		public Item getItem(string itemName)
