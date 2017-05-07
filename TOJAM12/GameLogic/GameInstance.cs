@@ -19,6 +19,8 @@ namespace TOJAM12
         int myPlayerId;
 
         int driveTime = 0;
+		bool signAnimationTriggered = false;
+
         public bool carIsDriving;
         int carLocation;
         int lastLocation = 0;
@@ -56,6 +58,14 @@ namespace TOJAM12
                     {
                         driveTime += gameTime.ElapsedGameTime.Milliseconds;
 
+						if (driveTime >= world.GetLocation(carLocation).DriveLength - SignAnimation.effectiveAnimationLength && !signAnimationTriggered)
+						{
+							signAnimationTriggered = true;
+							String nextLocationName = world.GetLocation(carLocation).DriveLocation.Name;
+							Command animationCommand = Command.PreparePictureEventCommand("town", new Dictionary<string, object> { { "townName", nextLocationName } }, Network.SEND_ALL);
+							network.SendCommand(animationCommand);
+						}
+
                         if (driveTime >= world.GetLocation(carLocation).DriveLength)
                         {
                             Console.WriteLine("Finished drive");
@@ -67,6 +77,7 @@ namespace TOJAM12
                                     p.worldLocation = carLocation;
                             }
                             driveTime = 0;
+							signAnimationTriggered = false;
                             carIsDriving = false;
                             network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
 
@@ -170,32 +181,10 @@ namespace TOJAM12
 			// location, health, hunger, thirst, tired
 			Player p = players[player];
 
-			values.Add(((int)p.carLocation).ToString());
-            values.Add(((int)p.worldLocation).ToString());
-            values.Add(p.health.ToString());
-			values.Add(p.hunger.ToString());
-   			values.Add(p.thirst.ToString());
-			values.Add(p.tired.ToString());
-			values.Add(p.money.ToString());
-            values.Add(carIsDriving.ToString());
-
-            network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
+			Command c = Command.PreparePlayerInfoCommand(p, toPlayer);
+            network.SendCommand(c);
         }
 
-		private void ParsePlayerInfoCommand(Player player, String data)
-		{
-			String[] values = data.Split(',');
-			player.carLocation = (Player.CarLocation) (Int32.Parse(values[0]));
-            player.worldLocation = (Int32.Parse(values[1]));
-            player.health = Int32.Parse(values[2]);
-			player.hunger = Int32.Parse(values[3]);
-			player.thirst = Int32.Parse(values[4]);
-			player.tired = Int32.Parse(values[5]);
-			player.money = Int32.Parse(values[6]);
-            carIsDriving = Boolean.Parse(values[7]);
-
-			Debug.Write("Player got updated info " + player);
-		}
 
 		private void ParseClientCommand(string command)
 		{
@@ -255,26 +244,32 @@ namespace TOJAM12
             {
 				ParsePlayerCommand(command);
             }
-            if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
-            {
-                int id = int.Parse(command.Data);
-                players[id] = new Player("player_" + id);
-                Debug.WriteLine("added Player with name " + players[id].name);
-            }
-            else if (command.Type == Command.CommandType.PlayerJoined)
-            {
-                myPlayerId = int.Parse(command.Data);
-                Console.WriteLine("My player id: " + myPlayerId);
-                players[myPlayerId] = new Player("SELF");
-            }
-            else if (command.Type == Command.CommandType.Text)
-            {
-                ((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data, command.SourcePlayerId);
+			if (network.IsServer() && command.Type == Command.CommandType.PlayerJoined)
+			{
+				int id = int.Parse(command.Data);
+				players[id] = new Player("player_" + id);
+				Debug.WriteLine("added Player with name " + players[id].name);
 			}
-            else if (command.Type == Command.CommandType.PlayerInfo)
-            {
-				ParsePlayerInfoCommand(players[myPlayerId], command.Data);
-            }
+			else if (command.Type == Command.CommandType.PlayerJoined)
+			{
+				myPlayerId = int.Parse(command.Data);
+				Console.WriteLine("My player id: " + myPlayerId);
+				players[myPlayerId] = new Player("SELF");
+			}
+			else if (command.Type == Command.CommandType.Text)
+			{
+				((ChatScene)game.GetScene(TojamGame.GameScenes.Chat)).AddMessage(command.Data, command.SourcePlayerId);
+			}
+			else if (command.Type == Command.CommandType.PlayerInfo)
+			{
+				Command.ParsePlayerInfoCommand(players[myPlayerId], command.Data);
+			}
+			else if (command.Type == Command.CommandType.PictureEvent)
+			{
+				CarPicture.PictureEvent evt = Command.ParsePictureEventCommand(command.Data);
+				ChatScene chatScene = (ChatScene) this.game.GetScene(TojamGame.GameScenes.Chat);
+				chatScene.GetCarPicture().TriggerEvent(evt);
+			}
 
         }
 
@@ -517,7 +512,9 @@ namespace TOJAM12
                 {
                     carIsDriving = false;
                     network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " stopped the car", Network.SEND_ALL, command.PlayerId));
-                    /*
+					network.SendCommand(Command.PreparePictureEventCommand("driving-stop", null, Network.SEND_ALL));
+					network.SendCommand(Command.PreparePictureEventCommand("sign-stop", null, Network.SEND_ALL));
+					/*
                     foreach (Player p in players.Values)
                     {
                         carLocation = world.GetLocation(lastLocation).DriveLocation.Id;
@@ -549,6 +546,7 @@ namespace TOJAM12
                         return;
                     }
                     carIsDriving = true;
+					network.SendCommand(Command.PreparePictureEventCommand("driving-start", null, Network.SEND_ALL));
                     
                     if (!world.GetLocation(carLocation).IsDriveLocation)
                     {

@@ -10,6 +10,12 @@ namespace TOJAM12
 
 		// static global behavior
 
+		public class PictureEvent
+		{
+			public String name;
+			public Dictionary<String, Object> arguments;
+		}
+
 		public enum Sky
 		{
 			None,
@@ -65,7 +71,7 @@ namespace TOJAM12
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-				}, 300),
+				}, 300, "driving"),
 
 				// special animation of a sign on the side of a road
 				// uses the "name" parameter of the passed in dict
@@ -81,7 +87,15 @@ namespace TOJAM12
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-                }, 300)
+                }, 300, "driving"),
+
+				// special animation of a sign on the side of a road
+				// uses the "name" parameter of the passed in dict
+				new SignAnimation(
+					game.GameFont,
+					game.Content.Load<Texture2D>("backgrounds/Sign"),
+					game
+				)
             );
 
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
@@ -190,6 +204,11 @@ namespace TOJAM12
 			if (midground != null) midground.TriggerEvent(eventName, eventParameters);
 			if (foreground != null) foreground.TriggerEvent(eventName, eventParameters);
 
+		}
+
+		public void TriggerEvent(PictureEvent evt)
+		{
+			TriggerEvent(evt.name, evt.arguments);
 		}
 
 	}
