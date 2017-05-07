@@ -41,6 +41,7 @@ namespace TOJAM12
             FruitStand,
             AntiqueStore,
             BigApple,
+            InsideBigApple,
             Algonquin
         };
 		static Dictionary<Background, PicturePart> knownBackgrounds = new Dictionary<Background, PicturePart>();
@@ -128,6 +129,7 @@ namespace TOJAM12
             knownBackgrounds[Background.FruitStand] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFruit"));
             knownBackgrounds[Background.AntiqueStore] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadAntique"));
             knownBackgrounds[Background.BigApple] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/roadTheBigApple"));
+            knownBackgrounds[Background.InsideBigApple] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/InsideBigApple"));
             knownBackgrounds[Background.Algonquin] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadAlgonquin_01"));
             
 

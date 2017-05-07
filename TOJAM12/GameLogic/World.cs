@@ -84,10 +84,17 @@ namespace TOJAM12
             DriveApple.DriveLocation = BigApple;
 			BigApple.LocationItems.Add(Item.Get("goose"));
 			BigApple.LocationItems.Add(Item.Get("factory"));
-            BigApple.PurchaseableItems.Add(Item.Get("water"));
-            BigApple.PurchaseableItems.Add(Item.Get("apple pie"));
+
 			BigApple.Description = "Welcome to the Big Apple! It's not New York, It's the literal big apple. In Canada!";
             Add(BigApple);
+
+            Location InsideBigApple = new Location("Big Apple", CarPicture.Background.InsideBigApple, false);
+            Add(InsideBigApple);
+            InsideBigApple.IsExitable = true;
+            InsideBigApple.PurchaseableItems.Add(Item.Get("water"));
+            InsideBigApple.PurchaseableItems.Add(Item.Get("apple pie"));
+            BigApple.WalkLocation = InsideBigApple;
+            InsideBigApple.WalkLocation = BigApple;
 
             Location Drive1 = new Location("Road to Gas Station", CarPicture.Background.Driving, true, 5000);
             Add(Drive1);
