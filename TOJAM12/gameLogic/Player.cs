@@ -18,6 +18,7 @@ namespace TOJAM12
             BackRight = 4
         }
 
+        public List<int> LocationsPictured;
         public static String GetCarLocationName(CarLocation location)
         {
             switch (location){
@@ -44,17 +45,19 @@ namespace TOJAM12
 		public int hunger = 100;
 		public int tired = 100;
 		public int thirst = 100;
-		public int health = 100;
+		public int happyness = 0;
 		public int money = 50;
 
         public bool alive = true;
         public bool invincible = false;
+        public bool hasPeed = false;
 
 		public Player(string name)
 		{
 			this.name = name;
             carLocation = CarLocation.NotInCar;
             worldLocation = 0;
+            LocationsPictured = new List<int>();
 		}
 
 		public Item getItem(string itemName)
@@ -109,17 +112,17 @@ namespace TOJAM12
 		}
 
 
-		internal void HealHealth(int health)
+		internal void HealHappyness(int health)
 		{
-			this.health += health;
-			if (this.health > 100)
+			this.happyness += health;
+			if (this.happyness > 100)
 			{
-				this.health = 100;
+				this.happyness = 100;
 			}
 
-			if (this.health < 0)
+			if (this.happyness < 0)
 			{
-				this.health = 0;
+				this.happyness = 0;
 			}
 		}
 
@@ -141,7 +144,7 @@ namespace TOJAM12
 
 		public override string ToString()
 		{
-			return string.Format("[Player hunger=" + hunger + " tired=" + tired + " thirst=" + thirst + " health=" + health + "]");
+			return string.Format("[Player hunger=" + hunger + " tired=" + tired + " thirst=" + thirst + " happyness=" + happyness + "]");
 		}
 	}
 }

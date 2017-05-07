@@ -37,7 +37,7 @@ namespace TOJAM12
 
 			values.Add(((int)p.carLocation).ToString());
 			values.Add(((int)p.worldLocation).ToString());
-			values.Add(p.health.ToString());
+			values.Add(p.happyness.ToString());
 			values.Add(p.hunger.ToString());
 			values.Add(p.thirst.ToString());
 			values.Add(p.tired.ToString());
@@ -51,7 +51,7 @@ namespace TOJAM12
 			String[] values = data.Split(',');
 			player.carLocation = (Player.CarLocation)(Int32.Parse(values[0]));
 			player.worldLocation = (Int32.Parse(values[1]));
-			player.health = Int32.Parse(values[2]);
+			player.happyness = Int32.Parse(values[2]);
 			player.hunger = Int32.Parse(values[3]);
 			player.thirst = Int32.Parse(values[4]);
 			player.tired = Int32.Parse(values[5]);
