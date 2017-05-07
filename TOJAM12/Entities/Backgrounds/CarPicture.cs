@@ -123,7 +123,7 @@ namespace TOJAM12
 
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
             knownBackgrounds[Background.Farm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGoatFarm"));
-            knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
+            knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/InsideWalmart"));
             knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGas"));
             knownBackgrounds[Background.FruitStand] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFruit"));
             knownBackgrounds[Background.AntiqueStore] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadAntique"));

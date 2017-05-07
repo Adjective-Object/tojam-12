@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
 using TOJAM12.Entities;
 
@@ -39,6 +40,8 @@ namespace TOJAM12
 		GameScenes activeSceneType = GameScenes.PlayerSelect;
 		Scene activeScene = null;
         public GameInstance gameInstance;
+
+        public static Song song;
 
 		public TojamGame()
 		{
@@ -85,6 +88,10 @@ namespace TOJAM12
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			GameFont = Content.Load<SpriteFont>("fonts/Cutive_Mono");
+
+            song = Content.Load<Song>("sounds/ontheroad");
+
+            //MediaPlayer.Play(song);
 
 			foreach (Scene s in scenes)
 			{
@@ -138,5 +145,14 @@ namespace TOJAM12
 
 			base.Draw(gameTime);
 		}
-	}
+
+        internal static void StartMusic()
+        {
+            if(MediaPlayer.State != MediaState.Playing) MediaPlayer.Play(song);
+        }
+        internal static void StopMusic()
+        {
+            if (MediaPlayer.State == MediaState.Playing) MediaPlayer.Stop();
+        }
+    }
 }

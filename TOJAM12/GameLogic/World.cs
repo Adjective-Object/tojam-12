@@ -15,6 +15,7 @@ namespace TOJAM12
         public bool IsDriveLocation;
 
         public int DriveLength;
+        public bool IsExitable;
 
         public Location DriveLocation;
         public Location WalkLocation;
@@ -31,6 +32,7 @@ namespace TOJAM12
 
             PurchaseableItems = new List<Item>();
 			LocationItems = new List<Item>();
+            IsExitable = false;
         }
 
 		public bool HasDescription()
@@ -49,10 +51,12 @@ namespace TOJAM12
 
             Location Walmart = new Location("Walmart Parking Lot", CarPicture.Background.Walmart, false);
             Location InsideWalmart = new Location("Walmart", CarPicture.Background.Walmart_Inside, false);
-            Walmart.PurchaseableItems.Add(Item.Get("water"));
-            Walmart.PurchaseableItems.Add(Item.Get("soda"));
-            Walmart.PurchaseableItems.Add(Item.Get("burger"));
-            Walmart.PurchaseableItems.Add(Item.Get("bottle"));
+            InsideWalmart.PurchaseableItems.Add(Item.Get("water"));
+            InsideWalmart.PurchaseableItems.Add(Item.Get("soda"));
+            InsideWalmart.PurchaseableItems.Add(Item.Get("burger"));
+            InsideWalmart.PurchaseableItems.Add(Item.Get("bottle"));
+            InsideWalmart.Description = "Shopping at Walmart eh?";
+            InsideWalmart.IsExitable = true;
 			Walmart.Description = "The parking lot of a Walmart. You're here to stock up on food before your trip.";
             Walmart.WalkLocation = InsideWalmart;
             InsideWalmart.WalkLocation = Walmart;

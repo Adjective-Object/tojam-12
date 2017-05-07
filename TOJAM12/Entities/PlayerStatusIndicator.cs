@@ -33,7 +33,7 @@ namespace TOJAM12
 				this.text = "";
 				return;
 			}
-			this.text = String.Format("HAPPYNESS = {0}     HUNGER = {1}     THIRST = {2}     TIRED = {3}    MONEY = {4}",
+			this.text = String.Format("HAPPINESS = {0}     HUNGER = {1}     THIRST = {2}     TIRED = {3}    MONEY = {4}",
 									  p.happyness, p.hunger, p.thirst, p.tired, p.money
 			                         );
 		}
