@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
 using TOJAM12.Entities;
+using System.IO;
 
 namespace TOJAM12
 {
@@ -18,6 +19,7 @@ namespace TOJAM12
 		public GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
         public SpriteFont GameFont;
+		public Config config;
 
 		// declaration of scenes in the game
 		Scene[] scenes = {
@@ -51,6 +53,10 @@ namespace TOJAM12
 			graphics.PreferredBackBufferWidth = 800;
 			Content.RootDirectory = "Content";
 			activeScene = scenes[(int) activeSceneType];
+
+			// read config file from working directory
+			Console.WriteLine(Directory.GetCurrentDirectory());
+			config = Config.ReadFromFile("config.txt");
 		}
 
 		public void SwitchScene(GameScenes newSceneType, Dictionary<string, object> sceneParameters = null)

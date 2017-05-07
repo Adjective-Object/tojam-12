@@ -52,6 +52,25 @@ namespace TOJAM12
 
 		public void Update(GameTime gameTime)
         {
+			// automatically connect on initialization off of config
+			if (network == null && (game.config.isHost || game.config.ipAddress != null))
+			{
+				ChatScene chatScene = (ChatScene) game.GetScene(TojamGame.GameScenes.Chat);
+				if (game.config.isHost)
+				{
+					network = new Network();
+					network.Start(true, null);
+					string lip = GetLocalIPAddress();
+					chatScene.AddMessage("Started hosting on: " + lip);
+				}
+				else {
+					chatScene.AddMessage("joining " + game.config.ipAddress);
+					network = new Network();
+					network.Start(false, game.config.ipAddress);
+				}
+
+			}
+
 			if (network != null)
 			{
 

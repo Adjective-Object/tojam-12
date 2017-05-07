@@ -87,11 +87,11 @@ namespace TOJAM12
 				lines.Add(builder.ToString());
 			}
 
-			Debug.WriteLine("generated list with lines.. ");
-			foreach (string line in lines)
-			{
-				Debug.WriteLine("    " + line);
-			}
+			//Debug.WriteLine("generated list with lines.. ");
+			//foreach (string line in lines)
+			//{
+			//	Debug.WriteLine("    " + line);
+			//}
 
 			// concatenate lines
 			return lines;
