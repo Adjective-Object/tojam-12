@@ -362,7 +362,7 @@ namespace TOJAM12
 							chatScene.AddMessage("Type 'start' when everyone has joined.");
 						}
 						else {
-							chatScene.AddMessage("Wait for the host to start the game.");
+							chatScene.AddMessage("Wait for the host to start the game. 'setname <name> to set your name");
 						}
                         break;
                     }

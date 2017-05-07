@@ -58,7 +58,7 @@ namespace TOJAM12
 				game.GameFont,
 				new Rectangle(
 					0,
-					screenBounds.Height - game.GameFont.LineSpacing + 2,
+					screenBounds.Height - game.GameFont.LineSpacing,
 					screenBounds.Width - messageBufferWidth,
 					game.GameFont.LineSpacing
 				));
