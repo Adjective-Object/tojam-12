@@ -80,10 +80,11 @@ namespace TOJAM12
                         p.thirst--;
 
                         if (p.carLocation == Player.CarLocation.NotInCar ||
-                            p.carLocation == Player.CarLocation.DriversSeat)
+                            (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
                             p.tired--;
                         else
                             p.tired += 1;
+
                         if (p.tired > 100)
                             p.tired = 100;
 
