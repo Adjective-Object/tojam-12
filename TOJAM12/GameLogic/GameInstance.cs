@@ -366,6 +366,25 @@ namespace TOJAM12
                 tokens = new string[] { "DRIVE", "CAR" };
             }
 
+
+            if ((words.Contains("turn") && words.Contains("on")) && (words.Contains("music") || words.Contains("radio")))
+            {
+                if (players[command.PlayerId].carLocation != 0)
+                {
+                    TojamGame.StartMusic();
+                }
+                didsomething = true;
+            }
+
+            if ((words.Contains("turn") && words.Contains("off")) && (words.Contains("music") || words.Contains("radio")))
+            {
+                if (players[command.PlayerId].carLocation != 0)
+                {
+                    TojamGame.StopMusic();
+                }
+                didsomething = true;
+            }
+
             if (words.Contains("force") && words.Contains("enter") && words.Contains("car"))
             {
                 //for (int i = 1; i < 5; i++)

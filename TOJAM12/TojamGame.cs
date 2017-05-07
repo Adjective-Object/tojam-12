@@ -91,7 +91,7 @@ namespace TOJAM12
 
             song = Content.Load<Song>("sounds/ontheroad");
 
-            MediaPlayer.Play(song);
+            //MediaPlayer.Play(song);
 
 			foreach (Scene s in scenes)
 			{
@@ -145,5 +145,14 @@ namespace TOJAM12
 
 			base.Draw(gameTime);
 		}
-	}
+
+        internal static void StartMusic()
+        {
+            if(MediaPlayer.State != MediaState.Playing) MediaPlayer.Play(song);
+        }
+        internal static void StopMusic()
+        {
+            if (MediaPlayer.State == MediaState.Playing) MediaPlayer.Stop();
+        }
+    }
 }
