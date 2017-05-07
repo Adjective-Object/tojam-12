@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +10,7 @@ namespace TOJAM12
 	{
 		Texture2D[] textures;
 		int frameRate;
+		bool animating = true;
 
 		public LoopingImage(Texture2D[] textures, int frameRate) : base(textures[0])
 		{
@@ -18,8 +20,26 @@ namespace TOJAM12
 
 		public override void Draw(Rectangle bounds, TojamGame game, GameTime gameTime)
 		{
-			this.texture = textures[((int) gameTime.TotalGameTime.TotalMilliseconds / frameRate) % this.textures.Length];
+			if (animating)
+			{
+				this.texture = textures[((int)gameTime.TotalGameTime.TotalMilliseconds / frameRate) % this.textures.Length];
+			}
+
 			base.Draw(bounds, game, gameTime);
 		}
+
+		public override void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
+		{
+			if (eventName == "stop")
+			{
+				this.animating = false;
+			}
+
+			if (eventName == "start")
+			{
+				this.animating = true;
+			}
+		}
+
 	}
 }

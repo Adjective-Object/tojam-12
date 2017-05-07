@@ -52,7 +52,9 @@ namespace TOJAM12
 						Debug.WriteLine("inventory is currently: " + String.Join(", ", args.p.inventory));
 					}),
 					pour
-				}),
+				},
+				5
+			),
 
 			// soda
 			new Item(
@@ -66,7 +68,9 @@ namespace TOJAM12
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 					}),
 					pour
-				}),
+				},
+				10
+			),
 
 			new Item(
 				new String[]{ "bottle", "empty", "empty bottle", "glass bottle" },
@@ -74,7 +78,7 @@ namespace TOJAM12
 					new ItemAction(new String[] {"smash", "break"}, (args) => {
 						args.p.inventory.Remove(args.i);
 						int damage = random.Next(2, 5);
-						args.p.HealHealth(-damage);
+					args.p.HealHealth(-damage);
 						args.p.inventory.Add(Item.Get("bottle"));
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
@@ -97,6 +101,11 @@ namespace TOJAM12
 			return null;
 		}
 
+		internal static IEnumerable<Item> GetPurchaseableItems()
+		{
+			return AllItems;
+		}
+
 		//////////////////
 		//////////////////
 		//////////////////
@@ -104,8 +113,9 @@ namespace TOJAM12
 		private HashSet<String> itemNames = new HashSet<String>();
 		private String primaryName;
 		private ItemAction[] actions;
+		private int price ;
 
-		public Item(string[] names, ItemAction[] actions)
+		public Item(string[] names, ItemAction[] actions, int price = 0)
 		{
 			primaryName = names[0];
 			foreach (string name in names)
@@ -113,6 +123,7 @@ namespace TOJAM12
 				itemNames.Add(name);
 			}
 			this.actions = actions;
+			this.price = price;
 		}
 
 		public bool Matches(string name)
@@ -139,6 +150,11 @@ namespace TOJAM12
 			return this.primaryName;
 		}
 
+		public int GetPrice()
+		{
+			return this.price;
+		}
+
 		override public String ToString()
 		{
 			return "Item(" + GetPrimaryName() + ")";
@@ -149,6 +165,6 @@ namespace TOJAM12
 			Debug.WriteLine(this + " = " + obj + "? [" + this.GetHashCode() + ", " + obj.GetHashCode() + "]");
 			return Object.ReferenceEquals(this, obj);
 		}
-	
-	}
+
+}
 }

@@ -33,8 +33,8 @@ namespace TOJAM12
 				this.text = "";
 				return;
 			}
-			this.text = String.Format("HEALTH = {0}     HUNGER = {1}     THIRST = {2}     TIRED = {3}",
-									  p.health, p.hunger, p.thirst, p.tired
+			this.text = String.Format("HEALTH = {0}     HUNGER = {1}     THIRST = {2}     TIRED = {3}    MONEY = {4}",
+									  p.health, p.hunger, p.thirst, p.tired, p.money
 			                         );
 		}
 
