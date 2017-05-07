@@ -54,6 +54,8 @@ namespace TOJAM12
 				return;
 			}
 
+			if (!this.animating && !this.paused) return;
+
 			float frac = 1.0f * millis / animationLength;
 			Vector2 interpolatedPosition = startPoint * (1 - frac) + endPoint * frac;
 			interpolatedPosition -= new Vector2(target.Width, target.Height);

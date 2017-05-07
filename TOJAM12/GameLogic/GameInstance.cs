@@ -456,6 +456,42 @@ namespace TOJAM12
 						ParseBuyCommand(command);
 						break;
 
+					case "GIVE":
+						if (tokens.Length != 4 || tokens[2] != "to")
+						{
+							network.SendCommand(new Command(Command.CommandType.Text, "give <item> to <player>", command.PlayerId));
+							break;
+						}
+						Item toGive = Item.Get(tokens[1]);
+						Player recipient = FindPlayerByName(tokens[3]);
+						Player giver = players[command.PlayerId];
+						if (toGive == null)
+						{
+							network.SendCommand(new Command(Command.CommandType.Text, "i don't know what a " + tokens[1] + " is", command.PlayerId));
+							break;
+						}
+						if (recipient == null)
+						{
+							network.SendCommand(new Command(Command.CommandType.Text, "who is " + tokens[3] +"?", command.PlayerId));
+							break;
+						}
+						if (! giver.inventory.Contains(toGive))
+						{
+							network.SendCommand(new Command(Command.CommandType.Text, "you can't give someone an item you don't own!", command.PlayerId));
+							break;
+						}
+						if (giver == recipient)
+						{
+							network.SendCommand(new Command(Command.CommandType.Text, "stop trying to give yourself things", command.PlayerId));
+							break;
+						}
+
+						recipient.inventory.Add(toGive);
+						giver.inventory.Remove(toGive);
+						network.SendCommand(new Command(Command.CommandType.Text, String.Format("{0} gave {1} a {2}", giver.name, recipient.name, toGive.GetPrimaryName()), Network.SEND_ALL, command.PlayerId));
+
+						break;
+
 					case "INV":
                     case "INVENTORY":
                         List<String> builder = new List<String>();
@@ -484,6 +520,17 @@ namespace TOJAM12
 			{
 				SendPlayerInfoCommand(playerId, playerId);
 			}
+		}
+
+		public Player FindPlayerByName(String name)
+		{
+			foreach (Player p in this.players.Values)
+			{
+				if (p.name.ToLower() == name.ToLower()) {
+					return p;
+				}
+			}
+			return null;
 		}
 
 		public void sendToPlayer(Player p, string message)
