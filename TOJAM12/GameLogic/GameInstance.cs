@@ -66,6 +66,7 @@ namespace TOJAM12
                         driveTime = 0;
                         carIsDriving = false;
                         network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
+
                         SendAllPlayerInfoCommand();
                     }
                 }
@@ -160,6 +161,7 @@ namespace TOJAM12
 			values.Add(p.hunger.ToString());
    			values.Add(p.thirst.ToString());
 			values.Add(p.tired.ToString());
+			values.Add(p.money.ToString());
 
 			network.SendCommand(new Command(Command.CommandType.PlayerInfo, String.Join(",", values), toPlayer));
         }
@@ -173,6 +175,7 @@ namespace TOJAM12
 			player.hunger = Int32.Parse(values[3]);
 			player.thirst = Int32.Parse(values[4]);
 			player.tired = Int32.Parse(values[5]);
+			player.money = Int32.Parse(values[6]);
 
 			Debug.Write("Player got updated info " + player);
 		}
@@ -397,7 +400,17 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
                         break;
 
-                    case "INV":
+					case "LOOK":
+					case "BROWSE":
+						ParseBrowseCommand(command);
+						break;
+
+					case "BUY":
+					case "PURCHASE":
+						ParseBuyCommand(command);
+						break;
+
+					case "INV":
                     case "INVENTORY":
                         List<String> builder = new List<String>();
                         foreach (Item i in players[command.PlayerId].inventory)
@@ -436,6 +449,43 @@ namespace TOJAM12
 					network.SendCommand(new Command(Command.CommandType.Text, message, pair.Key));
 					return;
 				}
+			}
+		}
+
+		void ParseBrowseCommand(Command command)
+		{
+			Player p = players[command.PlayerId];
+			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+			{
+				foreach (Item i in Item.GetPurchaseableItems())
+				{
+					network.SendCommand(new Command(Command.CommandType.Text, i.GetPrimaryName() + ": " + i.GetPrice() + "$", command.PlayerId));
+				}
+			}
+		}
+
+		void ParseBuyCommand(Command command)
+		{
+			String[] tokens = command.Data.Split(' ');
+			Player p = players[command.PlayerId];
+			if (this.world.GetLocation(p.worldLocation).Name.ToLower().Contains("walmart"))
+			{
+				if (tokens.Length < 2)
+				{
+					network.SendCommand(new Command(Command.CommandType.Text, "what do you want to buy?", command.PlayerId));
+					return;
+				}
+				Item g = Item.Get(tokens[1]);
+				if (g.GetPrice() > p.money)
+				{
+					network.SendCommand(new Command(Command.CommandType.Text, "You're too poor to afford " + g.GetPrimaryName(), command.PlayerId));
+					return;
+				}
+
+				p.inventory.Add(g);
+				p.money -= g.GetPrice();
+				network.SendCommand(new Command(Command.CommandType.Text, "you bought a " + g.GetPrimaryName() + " (" + g.GetPrice() + ")", command.PlayerId));
+
 			}
 		}
 

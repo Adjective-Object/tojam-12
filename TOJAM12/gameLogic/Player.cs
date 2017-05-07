@@ -52,6 +52,7 @@ namespace TOJAM12
 		public int tired = 100;
 		public int thirst = 100;
 		public int health = 100;
+		public int money = 50;
 
 		public Player(string name)
 		{

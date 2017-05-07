@@ -33,7 +33,7 @@ namespace TOJAM12
 			);
 		}
 
-		public void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
+		public virtual void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
 		{
 		}
 	}
