@@ -373,6 +373,7 @@ namespace TOJAM12
                 {
                     TojamGame.StartMusic();
                 }
+                
                 didsomething = true;
             }
 
