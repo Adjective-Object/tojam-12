@@ -11,13 +11,13 @@ of the font in your game, and to change the characters which are available to dr
     <!--
     Modify this string to change the font that will be imported.
     -->
-    <FontName>Consolas.ttf</FontName>
+    <FontName>04b_03__.TTF</FontName>
 
     <!--
     Size is a float value, measured in points. Modify this value to change
     the size of the font.
     -->
-    <Size>9</Size>
+    <Size>6</Size>
 
     <!--
     Spacing is a float value, measured in pixels. Modify this value to change

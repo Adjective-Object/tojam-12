@@ -58,7 +58,7 @@ namespace TOJAM12
 				game.GameFont,
 				new Rectangle(
 					0,
-					screenBounds.Height - game.GameFont.LineSpacing,
+					screenBounds.Height - game.GameFont.LineSpacing + 2,
 					screenBounds.Width - messageBufferWidth,
 					game.GameFont.LineSpacing
 				));
@@ -150,7 +150,14 @@ namespace TOJAM12
 
 			Rectangle realScreenBounds = game.GraphicsDevice.PresentationParameters.Bounds;
 			Rectangle renderTargetBounds = this.renderTarget.Bounds;
-			float ratio = Math.Max((float)renderTarget.Width / realScreenBounds.Width, (float)renderTarget.Height / realScreenBounds.Height);
+			float ratio = Math.Min((float)realScreenBounds.Width / renderTarget.Width,
+			                       (float)realScreenBounds.Height / renderTarget.Height);
+			//Debug.WriteLine(
+			//	(float)realScreenBounds.Width / renderTarget.Width +
+			//	", " +
+			//	(float)realScreenBounds.Height / renderTarget.Height
+			//);
+
 			Rectangle scaledRenderTarget = new Rectangle(
 				0,
 				0,

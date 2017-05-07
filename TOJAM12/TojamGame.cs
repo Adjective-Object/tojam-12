@@ -49,8 +49,9 @@ namespace TOJAM12
 		public TojamGame()
 		{
 			graphics = new GraphicsDeviceManager(this);
-			graphics.PreferredBackBufferHeight = 430;
-			graphics.PreferredBackBufferWidth = 1300;
+			graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+			graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+			graphics.IsFullScreen = true;
 			Content.RootDirectory = "Content";
 			activeScene = scenes[(int) activeSceneType];
 
