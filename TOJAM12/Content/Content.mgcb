@@ -788,3 +788,9 @@
 /processorParam:TextureFormat=Color
 /build:backgrounds/RoadGoatFarm.png
 
+#begin sounds/ontheroad.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sounds/ontheroad.mp3
+
