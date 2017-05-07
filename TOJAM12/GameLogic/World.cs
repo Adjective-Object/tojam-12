@@ -116,6 +116,8 @@ namespace TOJAM12
             Location FruitStand = new Location("Fruit Stand", CarPicture.Background.FruitStand, false);
 			FruitStand.Description = "Hey look, a fruit stand. MM, tasty artisain fruits.";
             Drive2.DriveLocation = FruitStand;
+            FruitStand.PurchaseableItems.Add(Item.Get("peach"));
+            FruitStand.LocationItems.Add(Item.Get("pig"));
             Add(FruitStand);
 
             Location DriveAntique = new Location("Road To Antique Store", CarPicture.Background.Driving2, true, 10000);
@@ -126,7 +128,6 @@ namespace TOJAM12
             DriveAntique.DriveLocation = AntiqueStore;
 			AntiqueStore.Description = "You decide to stop at a dusty old antique store.";
             AntiqueStore.PurchaseableItems.Add(Item.Get("potion"));
-            AntiqueStore.LocationItems.Add(Item.Get("pig"));
             Add(AntiqueStore);
             AntiqueStore.LocationItems.Add(Item.Get("tractor"));
 
