@@ -151,6 +151,7 @@
     <Content Include="Content\backgrounds\YellowLine_01.png" />
     <Content Include="Content\backgrounds\YellowLine_02.png" />
     <Content Include="Content\backgrounds\YellowLine_03.png" />
+    <Content Include="Content\sounds\ontheroad.mp3" />
     <Content Include="x64\libopenal.so.1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
