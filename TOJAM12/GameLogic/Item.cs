@@ -197,18 +197,37 @@ namespace TOJAM12
 				new String[]{ "sheep", "ram" },
 				new ItemAction[] {
 					new ItemAction(new String[] {"pet"}, (args) => {
-						args.g.sendToPlayer(args.p, "you try to pet the sheep but it's too fluffy");
-					}),
+                        if (!args.p.HasFlag("pet-sheep")) {
+                            args.p.SetFlag("pet-sheep");
+                            args.g.sendToPlayer(args.p, "you try to pet the sheep but it's too fluffy. You feel happier.");
+                            args.p.HealHappyness(random.Next(1,3));
+                        }
+                    }),
 					new ItemAction(new String[] {"look"}, (args) => {
 						args.g.sendToPlayer(args.p, "gosh dang, that's a big 'ol fluffer");
 					}),
 					new ItemAction(new String[] {"lick"}, (args) => {
-						args.g.sendToPlayer(args.p, "you get a hair stuck in your mouth");
-					}),
+						args.g.sendToPlayer(args.p, "you get a hair stuck in your mouth. You feel unhappy.");
+                        args.p.HealHappyness(-random.Next(1,3));
+                    }),
 					noHittingAnimals,
 				},
 				15
 			),
+
+            new Item(
+                new String[]{ "tractor" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"sit in"}, (args) => {
+                        if (!args.p.HasFlag("ride-tractor")) {
+                            args.p.SetFlag("ride-tractor");
+                            args.g.sendToPlayer(args.p, "you take a seat in the tractor. You feel happier.");
+                            args.p.HealHappyness(random.Next(1,3));
+                        }
+                    })
+                },
+                15
+            ),
 
 			// goose
 			new Item(

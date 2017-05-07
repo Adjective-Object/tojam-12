@@ -408,7 +408,7 @@ namespace TOJAM12
                 didsomething = true;
             }
 
-            if (upper.Contains("take picture"))
+            if (upper.Contains("take picture") || upper.Contains("selfie"))
             {
                 if (!players[command.PlayerId].LocationsPictured.Contains(players[command.PlayerId].worldLocation))
                 {
