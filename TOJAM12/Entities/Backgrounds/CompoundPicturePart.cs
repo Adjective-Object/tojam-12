@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace TOJAM12
@@ -16,6 +17,14 @@ namespace TOJAM12
 			foreach (PicturePart part in parts)
 			{
 				part.Draw(bounds, game, gameTime);
+			}
+		}
+
+		public void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
+		{
+			foreach (PicturePart part in parts)
+			{
+				part.TriggerEvent(eventName, eventParameters);
 			}
 		}
 	}

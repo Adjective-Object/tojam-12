@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -30,6 +31,10 @@ namespace TOJAM12
 				scaledDest,
 				Color.White
 			);
+		}
+
+		public void TriggerEvent(string eventName, Dictionary<string, object> eventParameters = null)
+		{
 		}
 	}
 }

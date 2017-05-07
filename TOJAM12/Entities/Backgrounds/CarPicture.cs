@@ -58,13 +58,22 @@ namespace TOJAM12
 			knownSkies[Sky.Storm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/SkyStorm"));
 
 			knownBackgrounds[Background.None] = null;
-            knownBackgrounds[Background.Driving] = new CompoundPicturePart(
+			knownBackgrounds[Background.Driving] = new CompoundPicturePart(
 				new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadBasic")),
+
 				new LoopingImage(new Texture2D[] {
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
 					game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-				}, 300)
+				}, 300),
+
+				// special animation of a sign on the side of a road
+				// uses the "name" parameter of the passed in dict
+				new SignAnimation(
+					game.GameFont,
+					game.Content.Load<Texture2D>("backgrounds/Sign"),
+					game
+				)
             );
             knownBackgrounds[Background.Driving2] = new CompoundPicturePart(
                 new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadPines")),
@@ -144,7 +153,7 @@ namespace TOJAM12
 
 			if (sky != null)
 			{
-				sky.Draw(this.bounds, game, gameTime);
+				sky.Draw( this.bounds, game, gameTime);
 			}
 
 			if (background != null)
@@ -171,6 +180,15 @@ namespace TOJAM12
 		public void Draw(TojamGame game, GameTime gameTime)
 		{
 			game.spriteBatch.Draw(renderTarget, this.bounds, Color.White);
+		}
+
+		public void TriggerEvent(string eventName, Dictionary<String, Object> eventParameters = null)
+		{
+			if (sky != null) sky.TriggerEvent(eventName, eventParameters);
+			if (background != null) background.TriggerEvent(eventName, eventParameters);
+			if (midground != null) midground.TriggerEvent(eventName, eventParameters);
+			if (foreground != null) foreground.TriggerEvent(eventName, eventParameters);
+
 		}
 
 	}
