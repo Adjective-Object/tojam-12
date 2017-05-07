@@ -49,10 +49,18 @@ namespace TOJAM12
             Add(Walmart);
             Add(InsideWalmart);
 
+            Location DriveFarm = new Location("Road to Farm", CarPicture.Background.DrivingFarm, true, 5000);
+            Add(DriveFarm);
+            Walmart.DriveLocation = DriveFarm;
+
+
+            Location Farm = new Location("Farm", CarPicture.Background.Farm, false);
+            DriveFarm.DriveLocation = Farm;
+            Add(Farm);
 
             Location DriveApple = new Location("Road to Big Apple", CarPicture.Background.Driving, true, 5000);
             Add(DriveApple);
-            Walmart.DriveLocation = DriveApple;
+            Farm.DriveLocation = DriveApple;
 
             Location BigApple = new Location("Big Apple", CarPicture.Background.BigApple, false);
             DriveApple.DriveLocation = BigApple;

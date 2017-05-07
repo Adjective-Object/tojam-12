@@ -27,6 +27,8 @@ namespace TOJAM12
             Driving,
             Driving2,
             Driving3,
+            DrivingFarm,
+            Farm,
 			Walmart,
             Walmart_Inside,
             GasStation,
@@ -96,7 +98,17 @@ namespace TOJAM12
                 }, 300)
             );
 
+            knownBackgrounds[Background.DrivingFarm] = new CompoundPicturePart(
+                new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFarm")),
+                new LoopingImage(new Texture2D[] {
+                    game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
+                    game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
+                    game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
+                }, 300)
+            );
+
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
+            knownBackgrounds[Background.Farm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGoatFarm"));
             knownBackgrounds[Background.Walmart_Inside] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadMountains"));
             knownBackgrounds[Background.GasStation] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGas"));
             knownBackgrounds[Background.FruitStand] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFruit"));
