@@ -28,6 +28,8 @@ namespace TOJAM12
         int statsUpdate = 0;
         Random rand;
 
+        bool gameStarted = false;
+
         public GameInstance(TojamGame game)
         {
 			this.game = game;
@@ -40,7 +42,7 @@ namespace TOJAM12
 
         public bool GameStarted()
         {
-            if (network != null && network.IsServer() && players[0] != null)
+            if (network != null && network.IsServer() && gameStarted) //players[0] != null)
                 return true;
             else if (network != null && !network.IsServer() && myPlayerId != 0)
                 return true;
@@ -54,7 +56,7 @@ namespace TOJAM12
 			{
 
                 // Update game state for server only
-                if (network.IsServer())
+                if (network.IsServer() && GameStarted())
                 {
                     if (carIsDriving)
                     {
@@ -166,7 +168,7 @@ namespace TOJAM12
 
         public void SendPlayerCommand(String command)
         {
-			if (network != null)
+			if (network != null && GameStarted())
 			{
 				if (network.IsServer())
 				{
@@ -214,6 +216,8 @@ namespace TOJAM12
 			switch (tokens[0])
 			{
 				case "join":
+                    if (network != null)
+                        break;
 					string ip = (tokens.Length > 1) ? tokens[1] : "10.206.236.146";
 					IPAddress address;
 					if (!IPAddress.TryParse(ip, out address))
@@ -227,13 +231,31 @@ namespace TOJAM12
 					network.Start(false, ip);
 					break;
 				case "host":
-					network = new Network();
+                    if (network != null)
+                        break;
+                    network = new Network();
 					network.Start(true, null);
                     string lip = GetLocalIPAddress();
-					chatScene.AddMessage("started hosting on: " + lip);
+					chatScene.AddMessage("Started hosting on: " + lip);
 					break;
+                case "start":
+                    if (network.IsServer())
+                    {
+                        gameStarted = true;
+                        network.SendCommand(new Command(Command.CommandType.Text, "The game has started!", Network.SEND_ALL));
+                    }
+                    break;
 				default:
-					chatScene.AddMessage("you must 'join <ip>' or 'host' a game ");
+                    if (network != null)
+                    {
+                        if (network.IsServer())
+                            chatScene.AddMessage("Type 'start' when everyone has joined.");
+                        else
+                            chatScene.AddMessage("Wait for the host to start the game.");
+                        break;
+                    }
+                    else
+                        chatScene.AddMessage("You must 'join <ip>' or 'host' a game ");
 					break;
 			}
 
@@ -259,7 +281,7 @@ namespace TOJAM12
 
             // Player command is a command issued by the player
             // Only handled by server
-            if (network.IsServer() && command.Type == Command.CommandType.Player)
+            if (network.IsServer() && GameStarted() && command.Type == Command.CommandType.Player)
             {
 				ParsePlayerCommand(command);
             }
@@ -283,7 +305,7 @@ namespace TOJAM12
 			{
 				Command.ParsePlayerInfoCommand(players[myPlayerId], command.Data);
 			}
-			else if (command.Type == Command.CommandType.PictureEvent)
+			else if (GameStarted() && command.Type == Command.CommandType.PictureEvent)
 			{
 				CarPicture.PictureEvent evt = Command.ParsePictureEventCommand(command.Data);
 				ChatScene chatScene = (ChatScene) this.game.GetScene(TojamGame.GameScenes.Chat);
