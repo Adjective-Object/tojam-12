@@ -84,33 +84,42 @@ namespace TOJAM12
                         {
                             if (p.alive)
                             {
-                                //bool die = false;
-                                //bool alreadyDead = false;
-
-                                //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
-
-                                //if (!alreadyDead)
+                                if (this.world.GetLocation(p.worldLocation).Name.ToLower() == "algonquin")
                                 {
-                                    if (p.hunger > 0) { p.hunger -= rand.Next(0, 2); if (p.hunger == 0) { p.alive = false; } }
-                                    if (p.thirst > 0) { p.thirst-= rand.Next(0, 2); if (p.thirst == 0) { p.alive = false; } }
+                                    p.hunger = 100;
+                                    p.thirst = 100;
+                                    p.tired = 100;
+                                }
+                                else
+                                {
+                                    //bool die = false;
+                                    //bool alreadyDead = false;
 
-                                    if (p.carLocation == Player.CarLocation.NotInCar ||
-                                        (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                    //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
+
+                                    //if (!alreadyDead)
                                     {
-                                        if (p.tired > 0) { p.tired-= rand.Next(0, 2); if (p.tired == 0) { p.alive = false; } }
-                                    }
-                                    else p.tired += rand.Next(0, 2);
+                                        if (p.hunger > 0) { p.hunger -= rand.Next(0, 2); if (p.hunger == 0) { p.alive = false; } }
+                                        if (p.thirst > 0) { p.thirst -= rand.Next(0, 2); if (p.thirst == 0) { p.alive = false; } }
 
-                                    if (p.tired > 100) p.tired = 100;
+                                        if (p.carLocation == Player.CarLocation.NotInCar ||
+                                            (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                        {
+                                            if (p.tired > 0) { p.tired -= rand.Next(0, 2); if (p.tired == 0) { p.alive = false; } }
+                                        }
+                                        else p.tired += rand.Next(0, 2);
 
-                                    if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
-                                    {
-                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
-                                    }
+                                        if (p.tired > 100) p.tired = 100;
 
-                                    if (!p.alive)
-                                    {
-                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                        if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                        {
+                                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
+                                        }
+
+                                        if (!p.alive)
+                                        {
+                                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                        }
                                     }
                                 }
                             }
