@@ -37,6 +37,12 @@ namespace TOJAM12
 						args.p.inventory.Add(Item.Get("bottle"));
 					});
 
+		static ItemAction noHittingAnimals = new ItemAction(new String[] { "kick", "punch", "hit", "attack", "hurt" }, (args) =>
+		{
+			args.g.sendToPlayer(args.p, "Why would you do that?");
+		});
+
+
 		static Random random = new Random();
 
 		private static List<Item> AllItems = new List<Item> {
@@ -77,65 +83,65 @@ namespace TOJAM12
 				new ItemAction[] {
 					new ItemAction(new String[] {"smash", "break"}, (args) => {
 						args.p.inventory.Remove(args.i);
-						int damage = random.Next(7, 15);
-					    args.p.HealHappyness(damage);
+						int damage = random.Next(2, 5);
+						args.p.HealHappyness(-damage);
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
-						args.g.sendToPlayer(args.p, "Shards of broken glass fly everywhere");
-						args.g.sendToPlayer(args.p, "You feel joy.");
+						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
+						args.g.sendToPlayer(args.p, "You take " + damage + " damage");
 					}),
 				},
-                1
+				1
 			),
 
             // burger
 			new Item(
-                new String[]{ "burger", "hamburger" },
-                new ItemAction[] {
-                    new ItemAction(new String[] {"eat"}, (args) => {
-                        args.p.inventory.Remove(args.i);
-                        args.p.HealHunger(10);
-                        args.p.HealTired(5);
-                        args.g.sendToPlayer(args.p, "you ate the burger");
-                    }),
-                    pour
-                },
-                10
-            ),
+				new String[]{ "burger", "hamburger" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"eat"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						args.p.HealHunger(10);
+						args.p.HealTired(5);
+						args.g.sendToPlayer(args.p, "you ate the burger");
+					}),
+					pour
+				},
+				10
+			),
 
             // apple pie
 			new Item(
-                new String[]{ "applepie", "apple pie" },
-                new ItemAction[] {
-                    new ItemAction(new String[] {"eat"}, (args) => {
-                        args.p.inventory.Remove(args.i);
-                        args.p.HealHunger(25);
-                        args.p.HealTired(25);
-                        args.g.sendToPlayer(args.p, "you ate the apple pie");
-                    }),
-                    pour
-                },
-                20
-            ),
+				new String[]{ "applepie", "apple pie" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"eat"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						args.p.HealHunger(25);
+						args.p.HealTired(25);
+						args.g.sendToPlayer(args.p, "you ate the apple pie");
+					}),
+					pour
+				},
+				20
+			),
 
             // potion
 			new Item(
-                new String[]{ "potion" },
-                new ItemAction[] {
-                    new ItemAction(new String[] {"drink", "quaff"}, (args) => {
-                        args.p.inventory.Remove(args.i);
-                        Random rand = new Random();
-                        args.p.happyness = rand.Next(5, 100);
-                        args.p.thirst = rand.Next(5, 100);
-                        args.p.tired = rand.Next(5, 100);
-                        args.p.inventory.Add(Item.Get("bottle"));
-                        args.g.sendToPlayer(args.p, "you feel weird...");
-                    }),
-                    pour
-                },
-                15
-            ),
+				new String[]{ "potion" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"drink", "quaff"}, (args) => {
+						args.p.inventory.Remove(args.i);
+						Random rand = new Random();
+						args.p.happyness = rand.Next(5, 100);
+						args.p.thirst = rand.Next(5, 100);
+						args.p.tired = rand.Next(5, 100);
+						args.p.inventory.Add(Item.Get("bottle"));
+						args.g.sendToPlayer(args.p, "you feel weird...");
+					}),
+					pour
+				},
+				15
+			),
 
-		            // potion
+		    // goat
 			new Item(
 				new String[]{ "goat", "billy", "animal" },
 				new ItemAction[] {
@@ -144,11 +150,94 @@ namespace TOJAM12
 						int happyInc = random.Next(3,6);
 						args.g.sendToPlayer(args.p, "you pet the goat. Happiness +" + happyInc);
 						args.p.SetFlag("pet-billy");
+						args.p.HealHappyness(happyInc);
 					} else {
 						args.g.sendToPlayer(args.p, "yep, still a goat");
 					}
 					}),
-					pour
+					new ItemAction(new String[] {"look"}, (args) => {
+						args.g.sendToPlayer(args.p, "A goat! It has weird goat eyes");
+					}),
+					noHittingAnimals,
+				},
+				15
+			),
+
+			new Item(
+				new String[]{ "barn" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"look"}, (args) => {
+						args.g.sendToPlayer(args.p, "A big red barn! You wish you could go inside, but you can't. That would be tresspassing");
+					})
+				},
+				15
+			),
+
+			new Item(
+				new String[]{ "factory", "giftshop" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"look"}, (args) => {
+						args.g.sendToPlayer(args.p, "Is that an apple factory? That doesn't make sense..");
+					})
+				},
+				15
+			),
+
+			new Item(
+				new String[]{ "puddle", "gas" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"look"}, (args) => {
+						args.g.sendToPlayer(args.p, "you contemplate the state of the environment.. deep.");
+					})
+				},
+				15
+			),
+
+			new Item(
+				new String[]{ "sheep", "ram" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"pet"}, (args) => {
+						args.g.sendToPlayer(args.p, "you try to pet the sheep but it's too fluffy");
+					}),
+					new ItemAction(new String[] {"look"}, (args) => {
+						args.g.sendToPlayer(args.p, "gosh dang, that's a big 'ol fluffer");
+					}),
+					new ItemAction(new String[] {"lick"}, (args) => {
+						args.g.sendToPlayer(args.p, "you get a hair stuck in your mouth");
+					}),
+					noHittingAnimals,
+				},
+				15
+			),
+
+			// goose
+			new Item(
+				new String[]{ "goose", "mallard" },
+				new ItemAction[] {
+					new ItemAction(new String[] {"pet"}, (args) => {
+					if (!args.p.HasFlag("pet-goose")) {
+						if (random.Next(0, 10) < 8) {
+							int happyInc = random.Next(1, 2);
+							args.g.sendToPlayer(args.p, "you pet the goose. Happiness +" + happyInc);
+							args.p.HealHappyness(happyInc);
+						} else {
+							int happyInc = random.Next(1, 5);
+							args.g.sendToPlayer(args.p, "The goose attacks you! Happiness -" + happyInc);
+							args.p.HealHappyness(-happyInc);
+							args.p.SetFlag("pet-goose");
+						}
+					} else {
+						args.g.sendToPlayer(args.p, "That goose is mean");
+					}
+					}),
+					new ItemAction(new String[] {"look"}, (args) => {
+					if (!args.p.HasFlag("pet-goose")) {
+						args.g.sendToPlayer(args.p, "A cute goose");
+					} else {
+						args.g.sendToPlayer(args.p, "A mean goose");
+					}
+					}),
+					noHittingAnimals,
 				},
 				15
 			),

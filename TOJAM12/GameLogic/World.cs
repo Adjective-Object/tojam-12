@@ -66,7 +66,9 @@ namespace TOJAM12
 
             Location Farm = new Location("Farm", CarPicture.Background.Farm, false);
 			Farm.LocationItems.Add(Item.Get("goat"));
-			Farm.Description = "You stop at a goat farm. There are goats grazing all around you!";
+			Farm.LocationItems.Add(Item.Get("sheep"));
+			Farm.LocationItems.Add(Item.Get("barn"));
+			Farm.Description = "You stop at a goat farm. There are goats and sheep grazing all around you!";
             DriveFarm.DriveLocation = Farm;
             Add(Farm);
 
@@ -76,6 +78,8 @@ namespace TOJAM12
 
             Location BigApple = new Location("Big Apple", CarPicture.Background.BigApple, false);
             DriveApple.DriveLocation = BigApple;
+			BigApple.LocationItems.Add(Item.Get("goose"));
+			BigApple.LocationItems.Add(Item.Get("factory"));
             BigApple.PurchaseableItems.Add(Item.Get("water"));
             BigApple.PurchaseableItems.Add(Item.Get("apple pie"));
 			BigApple.Description = "Welcome to the Big Apple! It's not New York, It's the literal big apple. In Canada!";
@@ -88,6 +92,7 @@ namespace TOJAM12
             Location GasStation = new Location("Gas Station", CarPicture.Background.GasStation, false);
             GasStation.PurchaseableItems.Add(Item.Get("soda"));
             GasStation.PurchaseableItems.Add(Item.Get("water"));
+			BigApple.LocationItems.Add(Item.Get("puddle"));
 			GasStation.Description = "You arrive at a gas station. Anyone need to use the bathroom? JK that's not implemented";
             Drive1.DriveLocation = GasStation;
             Add(GasStation);

@@ -83,7 +83,7 @@ namespace TOJAM12
 									network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + NewLocation.Name, pId));
 									if (NewLocation.HasDescription())
 									{
-										network.SendCommand(new Command(Command.CommandType.Text, NewLocation.Description, Network.SEND_ALL));
+										network.SendCommand(new Command(Command.CommandType.Text, NewLocation.Description, pId));
 									}
 								}
                             }
@@ -388,53 +388,12 @@ namespace TOJAM12
                 didsomething = true;
             }
 
-            if (upper.Contains("take picture"))
-            {
-                if (!players[command.PlayerId].LocationsPictured.Contains(players[command.PlayerId].worldLocation))
-                {
-                    players[command.PlayerId].LocationsPictured.Add(players[command.PlayerId].worldLocation);
-                    network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " takes a picture", Network.SEND_ALL, command.PlayerId));
-                    if (players[command.PlayerId].carLocation == Player.CarLocation.NotInCar)
-                        players[command.PlayerId].HealHappyness(5);
-                    else
-                        players[command.PlayerId].HealHappyness(2);
-
-                    SendPlayerInfoCommand(command.PlayerId, command.PlayerId);
-                }
-                else
-                    network.SendCommand(new Command(Command.CommandType.Text, "You already took a picture here", command.PlayerId));
-                return;
-            }
-
             if (!didsomething)
             {
 
 
                 switch (tokens[0].ToUpper())
                 {
-                    case "PEE":
-                        if (players[command.PlayerId].hasPeed)
-                        {
-                            network.SendCommand(new Command(Command.CommandType.Text, "You peed recently...", command.PlayerId));
-                            return;
-                        }
-                        players[command.PlayerId].hasPeed = true;
-                        if (players[command.PlayerId].carLocation == Player.CarLocation.NotInCar)
-                        {
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " pees and feels a bit relieved", Network.SEND_ALL, command.PlayerId));
-                            players[command.PlayerId].HealHappyness(5);
-                            SendPlayerInfoCommand(command.PlayerId, command.PlayerId);
-                        }
-                        else
-                        {
-                            network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " pees in the car... everyone is angry", Network.SEND_ALL, command.PlayerId));
-                            foreach (Player player in players.Values)
-                            {
-                                players[command.PlayerId].HealHappyness(-5);
-                            }
-                            SendAllPlayerInfoCommand();
-                        }
-                        break;
                     case "SAY":
                         if (tokens.Length == 1)
                             network.SendCommand(new Command(Command.CommandType.Text, players[command.PlayerId].name + " said nothing", Network.SEND_ALL, command.PlayerId));
@@ -495,7 +454,6 @@ namespace TOJAM12
                         network.SendCommand(new Command(Command.CommandType.Text, helpText, command.PlayerId));
                         break;
 
-					case "LOOK":
 					case "BROWSE":
 						ParseBrowseCommand(command);
 						break;
