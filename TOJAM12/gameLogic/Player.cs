@@ -47,6 +47,8 @@ namespace TOJAM12
 		public int health = 100;
 		public int money = 50;
 
+        public bool alive = true;
+
 		public Player(string name)
 		{
 			this.name = name;

@@ -77,26 +77,37 @@ namespace TOJAM12
                     statsUpdate = 0;
                     foreach (Player p in players.Values)
                     {
-                        p.hunger--;
-                        p.thirst--;
-
-                        if (p.carLocation == Player.CarLocation.NotInCar ||
-                            (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
-                            p.tired--;
-                        else
-                            p.tired += 1;
-
-                        if (p.tired > 100)
-                            p.tired = 100;
-
-                        if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                        if (p.alive)
                         {
-                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
-                        }
+                            //bool die = false;
+                            //bool alreadyDead = false;
 
-                        if (p.tired <= 0 || p.hunger <= 0 || p.thirst <= 0)
-                        {
-                            network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                            //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
+
+                            //if (!alreadyDead)
+                            {
+                                if (p.hunger > 0) { p.hunger--; if (p.hunger == 0) { p.alive = false; } }
+                                if (p.thirst > 0) { p.thirst--; if (p.thirst == 0) { p.alive = false; } }
+
+                                if (p.carLocation == Player.CarLocation.NotInCar ||
+                                    (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                {
+                                    if (p.tired > 0) { p.tired--; if (p.tired == 0) { p.alive = false; } }
+                                }
+                                else p.tired += 1;
+
+                                if (p.tired > 100) p.tired = 100;
+
+                                if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                {
+                                    network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
+                                }
+
+                                if (!p.alive)
+                                {
+                                    network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                }
+                            }
                         }
                     }
                     SendAllPlayerInfoCommand();
