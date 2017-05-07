@@ -49,68 +49,72 @@ namespace TOJAM12
 			if (network != null)
 			{
 
-                if (carIsDriving)
+                // Update game state for server only
+                if (network.IsServer())
                 {
-                    driveTime += gameTime.ElapsedGameTime.Milliseconds;
-
-                    if (driveTime >= world.GetLocation(carLocation).DriveLength)
+                    if (carIsDriving)
                     {
-                        Console.WriteLine("Finished drive");
-                        int newLocation = world.GetLocation(carLocation).DriveLocation.Id;
-                        carLocation = newLocation;
+                        driveTime += gameTime.ElapsedGameTime.Milliseconds;
+
+                        if (driveTime >= world.GetLocation(carLocation).DriveLength)
+                        {
+                            Console.WriteLine("Finished drive");
+                            int newLocation = world.GetLocation(carLocation).DriveLocation.Id;
+                            carLocation = newLocation;
+                            foreach (Player p in players.Values)
+                            {
+                                if (p.carLocation != Player.CarLocation.NotInCar)
+                                    p.worldLocation = carLocation;
+                            }
+                            driveTime = 0;
+                            carIsDriving = false;
+                            network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
+
+                            SendAllPlayerInfoCommand();
+                        }
+                    }
+
+                    statsUpdate += gameTime.ElapsedGameTime.Milliseconds;
+                    if (statsUpdate > 2000)
+                    {
+                        statsUpdate = 0;
                         foreach (Player p in players.Values)
                         {
-                            if (p.carLocation != Player.CarLocation.NotInCar)
-                                p.worldLocation = carLocation;
-                        }
-                        driveTime = 0;
-                        carIsDriving = false;
-                        network.SendCommand(new Command(Command.CommandType.Text, "You have reached your next stop " + world.GetLocation(newLocation).Name, Network.SEND_ALL));
-
-                        SendAllPlayerInfoCommand();
-                    }
-                }
-
-                statsUpdate += gameTime.ElapsedGameTime.Milliseconds;
-                if (statsUpdate > 2000)
-                {
-                    statsUpdate = 0;
-                    foreach (Player p in players.Values)
-                    {
-                        if (p.alive)
-                        {
-                            //bool die = false;
-                            //bool alreadyDead = false;
-
-                            //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
-
-                            //if (!alreadyDead)
+                            if (p.alive)
                             {
-                                if (p.hunger > 0) { p.hunger--; if (p.hunger == 0) { p.alive = false; } }
-                                if (p.thirst > 0) { p.thirst--; if (p.thirst == 0) { p.alive = false; } }
+                                //bool die = false;
+                                //bool alreadyDead = false;
 
-                                if (p.carLocation == Player.CarLocation.NotInCar ||
-                                    (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                //if (p.hunger < 1 || p.hunger < 1 || p.thirst < 1) alreadyDead = true;
+
+                                //if (!alreadyDead)
                                 {
-                                    if (p.tired > 0) { p.tired--; if (p.tired == 0) { p.alive = false; } }
-                                }
-                                else p.tired += 1;
+                                    if (p.hunger > 0) { p.hunger--; if (p.hunger == 0) { p.alive = false; } }
+                                    if (p.thirst > 0) { p.thirst--; if (p.thirst == 0) { p.alive = false; } }
 
-                                if (p.tired > 100) p.tired = 100;
+                                    if (p.carLocation == Player.CarLocation.NotInCar ||
+                                        (carIsDriving && p.carLocation == Player.CarLocation.DriversSeat))
+                                    {
+                                        if (p.tired > 0) { p.tired--; if (p.tired == 0) { p.alive = false; } }
+                                    }
+                                    else p.tired += 1;
 
-                                if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
-                                {
-                                    network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
-                                }
+                                    if (p.tired > 100) p.tired = 100;
 
-                                if (!p.alive)
-                                {
-                                    network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                    if (p.tired == 40 || p.hunger == 40 || p.thirst == 40)
+                                    {
+                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " is looking sick...", Network.SEND_ALL));
+                                    }
+
+                                    if (!p.alive)
+                                    {
+                                        network.SendCommand(new Command(Command.CommandType.Text, p.name + " has died", Network.SEND_ALL));
+                                    }
                                 }
                             }
                         }
+                        SendAllPlayerInfoCommand();
                     }
-                    SendAllPlayerInfoCommand();
                 }
 
                 if (network.IsServer())
