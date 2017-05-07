@@ -778,6 +778,7 @@ namespace TOJAM12
             if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
                 world.GetLocation(players[PlayerId].worldLocation).IsExitable)
             {
+                network.SendCommand(new Command(Command.CommandType.Text, "You leave " + world.GetLocation(players[PlayerId].worldLocation).Name, PlayerId));
                 players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
                 SendPlayerInfoCommand(PlayerId, PlayerId);
                 return;
@@ -802,8 +803,7 @@ namespace TOJAM12
 
         private void ParseEnterCommand(String data, int PlayerId, String[] tokens)
         {
-
-
+            
             if (tokens.Length > 1)
             {
                 string destination = data.Substring(6).ToUpper();
@@ -811,8 +811,16 @@ namespace TOJAM12
                 if (world.GetLocation(players[PlayerId].worldLocation).WalkLocation != null &&
                     destination.Contains(world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Name.ToUpper()))
                 {
-                    players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
-                    SendPlayerInfoCommand(PlayerId, PlayerId);
+                    if (players[PlayerId].carLocation == Player.CarLocation.NotInCar)
+                    {
+                        players[PlayerId].worldLocation = world.GetLocation(players[PlayerId].worldLocation).WalkLocation.Id;
+                        SendPlayerInfoCommand(PlayerId, PlayerId);
+                        network.SendCommand(new Command(Command.CommandType.Text, "You enter " + world.GetLocation(players[PlayerId].worldLocation).Name, PlayerId));
+                    }
+                    else
+                    {
+                        network.SendCommand(new Command(Command.CommandType.Text, "You're in a car...", PlayerId));
+                    }
                     return;
                 }
 
