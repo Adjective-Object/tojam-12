@@ -78,15 +78,31 @@ namespace TOJAM12
 					new ItemAction(new String[] {"smash", "break"}, (args) => {
 						args.p.inventory.Remove(args.i);
 						int damage = random.Next(2, 5);
-					args.p.HealHealth(-damage);
+					    args.p.HealHealth(-damage);
 						args.p.inventory.Add(Item.Get("bottle"));
 						args.g.sendToPlayer(args.p, "you " + args.c[0] + " the " + args.c[1]);
 						args.g.sendToPlayer(args.p, "Shards of broken glass cut into your hand");
 						args.g.sendToPlayer(args.p, "You take " + damage + " damage");
 					}),
-				}
+				},
+                1
 			),
-		};
+
+            // burger
+			new Item(
+                new String[]{ "burger", "hamburger" },
+                new ItemAction[] {
+                    new ItemAction(new String[] {"eat"}, (args) => {
+                        args.p.inventory.Remove(args.i);
+                        args.p.HealHunger(10);
+                        args.p.HealTired(5);
+                        args.g.sendToPlayer(args.p, "you ate the burger");
+                    }),
+                    pour
+                },
+                10
+            ),
+        };
 
 
 		public static Item Get(String name)

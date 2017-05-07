@@ -480,6 +480,10 @@ namespace TOJAM12
 					network.SendCommand(new Command(Command.CommandType.Text, i.GetPrimaryName() + ": " + i.GetPrice() + "$", command.PlayerId));
 				}
 			}
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "You look around and see nothing of interest...", command.PlayerId));
+            }
 		}
 
 		void ParseBuyCommand(Command command)
@@ -503,8 +507,11 @@ namespace TOJAM12
 				p.inventory.Add(g);
 				p.money -= g.GetPrice();
 				network.SendCommand(new Command(Command.CommandType.Text, "you bought a " + g.GetPrimaryName() + " (" + g.GetPrice() + ")", command.PlayerId));
-
 			}
+            else
+            {
+                network.SendCommand(new Command(Command.CommandType.Text, "There is nothing to buy here?", command.PlayerId));
+            }
 		}
 
         private void ParseStopCommand(Command command)
