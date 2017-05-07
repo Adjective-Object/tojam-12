@@ -498,13 +498,21 @@ namespace TOJAM12
 						break;
 
 					case "GIVE":
-						if (tokens.Length != 4 || tokens[2] != "to")
+						if (tokens.Length != 4 || (tokens[2] != "to" && tokens[2] != "a"))
 						{
 							network.SendCommand(new Command(Command.CommandType.Text, "give <item> to <player>", command.PlayerId));
 							break;
 						}
-						Item toGive = Item.Get(tokens[1]);
-						Player recipient = FindPlayerByName(tokens[3]);
+						Item toGive;
+						Player recipient;
+						if (tokens[2] == "to")
+						{
+							toGive = Item.Get(tokens[1]);
+							recipient = FindPlayerByName(tokens[3]);
+						} else {
+							toGive = Item.Get(tokens[3]);
+							recipient = FindPlayerByName(tokens[1]);
+						}
 						Player giver = players[command.PlayerId];
 						if (toGive == null)
 						{
