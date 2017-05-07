@@ -91,7 +91,7 @@ namespace TOJAM12
 				animationStartTime = time;
 			}
 
-			if (eventName == "driving-stop")
+			if (eventName == "driving-stop" && animating)
 			{
 				paused = true;
 				animating = false;

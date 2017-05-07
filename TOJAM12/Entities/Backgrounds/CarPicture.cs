@@ -110,8 +110,16 @@ namespace TOJAM12
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-                }, 300)
-            );
+                }, 300, "driving"),
+
+				// special animation of a sign on the side of a road
+				// uses the "name" parameter of the passed in dict
+				new SignAnimation(
+					game.GameFont,
+					game.Content.Load<Texture2D>("backgrounds/Sign"),
+					game
+				)
+			);
 
             knownBackgrounds[Background.DrivingFarm] = new CompoundPicturePart(
                 new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadFarm")),
@@ -119,8 +127,16 @@ namespace TOJAM12
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_01"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_02"),
                     game.Content.Load<Texture2D>("backgrounds/YellowLine_03"),
-                }, 300)
-            );
+                }, 300, "driving"),
+			
+				// special animation of a sign on the side of a road
+				// uses the "name" parameter of the passed in dict
+				new SignAnimation(
+					game.GameFont,
+					game.Content.Load<Texture2D>("backgrounds/Sign"),
+					game
+				)
+			);
 
             knownBackgrounds[Background.Walmart] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadWalmart"));
             knownBackgrounds[Background.Farm] = new StaticImage(game.Content.Load<Texture2D>("backgrounds/RoadGoatFarm"));

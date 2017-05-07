@@ -40,7 +40,6 @@
 #begin fonts/Cutive_Mono.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Color
 /build:fonts/Cutive_Mono.spritefont
 
@@ -793,4 +792,16 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:sounds/ontheroad.mp3
+
+#begin backgrounds/InsideBigApple.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:backgrounds/InsideBigApple.png
 
