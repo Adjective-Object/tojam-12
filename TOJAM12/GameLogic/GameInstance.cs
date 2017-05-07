@@ -238,7 +238,8 @@ namespace TOJAM12
 					network.Start(true, null);
                     string lip = GetLocalIPAddress();
 					chatScene.AddMessage("Started hosting on: " + lip);
-					break;
+                    chatScene.AddMessage("Type 'start' when everyone has joined.");
+                    break;
                 case "start":
                     if (network.IsServer())
                     {
